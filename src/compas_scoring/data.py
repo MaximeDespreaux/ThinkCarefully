@@ -1,5 +1,4 @@
-"""Loading, validation and splitting of the COMPAS two-year recidivism cohort.
-"""
+"""Loading, validation and splitting of the COMPAS two-year recidivism cohort."""
 
 from __future__ import annotations
 
