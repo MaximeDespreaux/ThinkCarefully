@@ -1,4 +1,4 @@
-"""Project configuration"""
+"""Project configuration."""
 
 from __future__ import annotations
 
