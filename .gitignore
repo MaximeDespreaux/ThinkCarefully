@@ -5,7 +5,7 @@ data
 .venv/
 
 # Generated analysis outputs -- rebuilt locally, never committed
-models/
+# models/
 artifacts/
 reports/figures/
 reports/EDA.md
