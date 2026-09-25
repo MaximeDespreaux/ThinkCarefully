@@ -94,15 +94,6 @@ race_aware = [
     "Female",
     "Misdemeanor",
 ]
-# FS2: derived by scripts/select_features.py from an L1 path scored with
-# train-only 5-fold CV. Committed so the choice is reproducible; a test
-# re-derives it and fails if it has drifted from the data. Notable: it discards
-# every race indicator on predictive grounds, without being asked to.
-selected = [
-    "Number_of_Priors",
-    "Age_Above_FourtyFive",
-    "Age_Below_TwentyFive",
-]
 # Race-blind: the "fairness through unawareness" variant. The analysis shows
 # this does not remove disparity, because priors proxies for race.
 race_blind = [
