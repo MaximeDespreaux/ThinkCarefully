@@ -90,7 +90,7 @@ def save_model(search: RandomizedSearchCV, feature_set: str = "race_aware") -> P
 
 
 def load_model(feature_set: str = "race_aware") -> XGBClassifier:
-    """The saved, fitted model for one feature set. Run this module first to create it."""
+    """The saved, fitted model for one feature set. """
     model_path, _ = model_paths(feature_set)
     if not model_path.is_file():
         raise FileNotFoundError(f"{model_path} not found - run `python xgboost/xgb_model.py` first")
