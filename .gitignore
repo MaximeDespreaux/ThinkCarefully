@@ -1,0 +1,24 @@
+# Data is distributed separately, not committed
+data
+
+# uv-managed environment (uv.lock IS committed -- it is the reproducibility deliverable)
+.venv/
+
+# Generated analysis outputs -- rebuilt locally, never committed
+models/
+artifacts/
+reports/figures/
+reports/EDA.md
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
