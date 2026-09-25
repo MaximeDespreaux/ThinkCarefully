@@ -1085,9 +1085,9 @@ mean {facts["priors_mean"]:.2f}, max {facts["priors_max"]:.0f}, heavily right-sk
 Its effect is strongly **concave**. The first five priors move the re-arrest rate
 {facts["priors_0"]:.0%} → {facts["priors_5"]:.0%}; the next ten move it only
 {facts["priors_5"]:.0%} → {facts["priors_15"]:.0%}. A raw linear term underfits the low end
-and overstates the tail, which is exactly why `data.engineered()` hands logistic regression
-a `log_priors` term, a capped term and a `no_priors` flag — the non-linearity a tree gets
-for free.
+and overstates the tail, which is exactly why `engineered()` in `logreg/features.py` hands
+logistic regression a `log_priors` term, a capped term and a `no_priors` flag — the
+non-linearity a tree gets for free.
 
 ## 5. Association — `05_association_matrix.png`
 
