@@ -52,10 +52,28 @@ Each run is fitted on every feature set in `pyproject.toml`. This is the
 | `sex_blind` | 9 | `Female` |
 | `age_blind` | 8 | both age dummies |
 | `protected_blind` | 2 | race, sex and age: only priors and charge degree remain |
+| `race_priors_blind` | 4 | race and priors, the dominant race proxy |
+| `race_proxy_blind` | 2 | race and every race proxy: under 25 and sex remain |
 
 Comparing each blind set with `race_aware` shows what that attribute adds to performance.
 Whether removing it reduces disparity is a fairness question, answered from the same
 prediction files, which keep every group label whatever the feature set.
+
+**Race proxies.** Dropping the race columns does not remove race. The EDA shows the
+pairwise links (association matrix; figure 09 for priors). `make proxy-check` adds the
+joint effect: how well race can be predicted from each feature set.
+It uses a cross-validated AUC, African-American vs Caucasian, where 0.5 means no race
+information:
+
+| Feature set | Race leakage (AUC) |
+|---|---|
+| all features / no race | **0.671** / **0.671**: the race-blind set carries as much race as the full one |
+| no race or priors | 0.615 |
+| no race or proxies | 0.569: much less, not none |
+
+A feature counts as a proxy if its Cramér's V with any race group is ≥ 0.1 in the EDA
+association matrix. That flags priors (0.225), over 45 (0.157) and misdemeanour (0.103).
+Under 25 (0.09) sits just below the cutoff and stays, which is why some leakage remains.
 
 **Split balance.** X1/X2/X3 are stratified on outcome × race × sex × age band. Each
 part matches the cohort's race, sex and age mix within 0.12 percentage points. With the
@@ -122,7 +140,8 @@ $40k per missed re-offence). Both are fixed in advance, so neither is tuned on t
 
 ## For the analysis
 
-**Radar chart (`10_radar_holdout.png`).** It has one line per TabPFN variant, with a spoke
+**Radar charts (`10_radar_protected.png`, `11_radar_race_proxies.png`).** They have
+one line per TabPFN variant, with a spoke
 per metric. For now the spokes are the performance metrics. To add a dimension, write
 `tabpfn/artifacts/radar_extra.csv` with one row per `feature_set`. Give it one column per
 new score, already scaled to 0–1 with higher = better (e.g. `1 - |FPR gap|`, or

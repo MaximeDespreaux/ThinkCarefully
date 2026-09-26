@@ -67,7 +67,16 @@ FS_NAMES = {
     "sex_blind": "no sex",
     "age_blind": "no age",
     "protected_blind": "no race, sex or age",
+    "race_priors_blind": "no race or priors",
+    "race_proxy_blind": "no race or race proxies",
 }
+# The two radars, so no chart carries more than five variants.
+RADARS = [
+    ("10_radar_protected.png", "Protected attributes removed",
+     ["race_aware", "race_blind", "sex_blind", "age_blind", "protected_blind"]),
+    ("11_radar_race_proxies.png", "Race and its proxies removed",
+     ["race_aware", "race_blind", "race_priors_blind", "race_proxy_blind"]),
+]  # fmt: skip
 
 
 def style() -> None:
@@ -467,6 +476,8 @@ VARIANT_STYLE = {
     "sex_blind": (RED, "^", "-."),
     "age_blind": ("#eda100", "D", ":"),
     "protected_blind": (VIOLET, "v", (0, (5, 1, 1, 1))),
+    "race_priors_blind": ("#e87ba4", "P", (0, (3, 1, 1, 1, 1, 1))),
+    "race_proxy_blind": ("#008300", "X", (0, (1, 1))),
 }
 # Spokes: (column in performance.csv, label, transform). All read "higher is better", 0-1.
 RADAR_SPOKES = [
@@ -501,16 +512,17 @@ def radar_scores(perf: pd.DataFrame, point: str) -> pd.DataFrame:
     return table
 
 
-def fig_radar(perf: pd.DataFrame) -> None:
-    """Every TabPFN variant on every metric, at both operating points (like the brief's radar)."""
+def fig_radar(perf: pd.DataFrame, filename: str, title: str, sets: list[str]) -> None:
+    """TabPFN variants on every metric, at both operating points (like the brief's radar)."""
+    sets = [fs for fs in sets if fs in set(perf["feature_set"])]
     points = [("0.5", "t = 0.5"), ("break_even", f"t = {BREAK_EVEN:.3f} (break-even)")]
-    tables = {op: radar_scores(perf, op) for op, _ in points}
+    tables = {op: radar_scores(perf, op).loc[[*sets, TOOL]] for op, _ in points}
     spokes = list(tables["0.5"].columns)
     angles = np.linspace(0, 2 * np.pi, len(spokes), endpoint=False)
     closed = np.r_[angles, angles[:1]]
 
     fig, axes = plt.subplots(1, 2, figsize=(13, 6.6), subplot_kw={"projection": "polar"})
-    for ax, (op, title) in zip(axes, points):
+    for ax, (op, panel_title) in zip(axes, points):
         table = tables[op]
         ax.set_theta_offset(np.pi / 2)
         ax.set_theta_direction(-1)
@@ -527,27 +539,28 @@ def fig_radar(perf: pd.DataFrame) -> None:
         values = table.loc[TOOL].to_numpy(float)
         ax.plot(closed, np.r_[values, values[:1]], color=TEXT_2, lw=1.4, ls=(0, (4, 3)),
                 label=TOOL_DECISION, zorder=2)  # fmt: skip
-        for fs in [fs for fs in VARIANT_STYLE if fs in table.index]:
+        for fs in sets:
             colour, marker, style = VARIANT_STYLE[fs]
             values = table.loc[fs].to_numpy(float)
             ax.plot(closed, np.r_[values, values[:1]], color=colour, lw=1.8, ls=style,
                     marker=marker, ms=6, mec=SURFACE, mew=1, label=f"TabPFN, {FS_NAMES[fs]}",
                     zorder=3)  # fmt: skip
-        ax.set_title(title, fontsize=11, pad=22, loc="center")
+        ax.set_title(panel_title, fontsize=11, pad=22, loc="center")
 
     handles, labels = axes[0].get_legend_handles_labels()
     order = list(range(1, len(handles))) + [0]  # variants first, the tool last
     fig.legend([handles[i] for i in order], [labels[i] for i in order], loc="lower center",
                ncol=3, bbox_to_anchor=(0.5, -0.02))  # fmt: skip
-    fig.suptitle("TabPFN with and without protected attributes, holdout (n = 1,852)", x=0.02,
+    fig.suptitle(f"TabPFN: {title}, holdout (n = 1,852)", x=0.02,
                  ha="left", fontweight="bold", fontsize=12)  # fmt: skip
     fig.tight_layout(rect=(0, 0.1, 1, 0.94))
-    save(fig, "10_radar_holdout.png")
+    save(fig, filename)
 
     # The table view of the same numbers (accessibility, and exact values for the report).
     long = pd.concat({op: t for op, t in tables.items()}, names=["operating_point", "model"])
-    long.round(4).to_csv(OUT / "10_radar_holdout.csv")
-    print(f"  -> {(OUT / '10_radar_holdout.csv').relative_to(project_root())}")
+    table_path = OUT / filename.replace(".png", ".csv")
+    long.round(4).to_csv(table_path)
+    print(f"  -> {table_path.relative_to(project_root())}")
 
 
 def feature_sets(perf: pd.DataFrame) -> list[str]:
@@ -565,7 +578,8 @@ def main() -> int:
     fig_auc_by_run(perf)
     fig_ablation_auc(perf)
     fig_ablation_metrics(perf)
-    fig_radar(perf)
+    for filename, title, sets in RADARS:
+        fig_radar(perf, filename, title, sets)
     # One folder per feature set: that set's holdout figures.
     for fs in feature_sets(perf):
         holdout = predictions("holdout", fs)
