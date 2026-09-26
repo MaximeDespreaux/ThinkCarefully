@@ -80,6 +80,18 @@ incumbent = "score_factor"
 expected_rows = 6172
 expected_base_rate = 0.4551
 
+# The modelling table carries no dates, so the time-ordered stability design runs on a
+# dated cohort rebuilt from the raw ProPublica export (see data.load_dated).
+dated_data_path = "data/cox-violent-parsed.csv"
+
+[tool.compas_scoring.splits]
+# Stability design 1: stratified random partition X1 / X2 / X3 of the modelling table.
+# Train on X1 and on X2, test both on the shared reference set X3.
+partition = [0.4, 0.4, 0.2]
+# Stability design 2: time-ordered windows on the dated cohort, as [train_end, test_end]
+# fractions of the date-sorted rows: train on [0, train_end), test on [train_end, test_end).
+temporal_windows = [[0.4, 0.6], [0.7, 1.0]]
+
 [tool.compas_scoring.features]
 # Race-aware: every predictor except the target and the incumbent benchmark.
 race_aware = [
@@ -102,6 +114,49 @@ race_blind = [
     "Age_Below_TwentyFive",
     "Female",
     "Misdemeanor",
+]
+# Protected-attribute ablations: the race-aware set minus one protected attribute at a time,
+# and minus all of them. They measure what each attribute contributes to performance; the
+# fairness analysis measures what removing it does (or does not do) to disparity.
+sex_blind = [
+    "Number_of_Priors",
+    "Age_Above_FourtyFive",
+    "Age_Below_TwentyFive",
+    "African_American",
+    "Asian",
+    "Hispanic",
+    "Native_American",
+    "Other",
+    "Misdemeanor",
+]
+age_blind = [
+    "Number_of_Priors",
+    "African_American",
+    "Asian",
+    "Hispanic",
+    "Native_American",
+    "Other",
+    "Female",
+    "Misdemeanor",
+]
+protected_blind = [
+    "Number_of_Priors",
+    "Misdemeanor",
+]
+# Race *and its proxies* removed. Dropping the race columns alone leaves race recoverable
+# from the other features (make proxy-check). Proxies are read off the EDA association matrix
+# (artifacts/eda_association.csv): features with Cramer's V >= 0.1 with a race dummy.
+#   race_priors_blind: race and the dominant proxy (priors, V = 0.225)
+#   race_proxy_blind:  race and every proxy (priors 0.225, over 45 0.157, misdemeanour 0.103)
+race_priors_blind = [
+    "Age_Above_FourtyFive",
+    "Age_Below_TwentyFive",
+    "Female",
+    "Misdemeanor",
+]
+race_proxy_blind = [
+    "Age_Below_TwentyFive",
+    "Female",
 ]
 race_dummies = [
     "African_American",

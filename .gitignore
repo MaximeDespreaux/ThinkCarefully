@@ -4,9 +4,11 @@ data
 # uv-managed environment (uv.lock IS committed -- it is the reproducibility deliverable)
 .venv/
 
-# Generated analysis outputs -- rebuilt locally, never committed
+# Generated analysis outputs -- rebuilt locally, never committed.
+# /artifacts/ is anchored to the root: each model folder's <model>/artifacts/ IS committed,
+# so the analysis can start from saved predictions without refitting the model.
 models/
-artifacts/
+/artifacts/
 reports/figures/
 reports/EDA.md
 
