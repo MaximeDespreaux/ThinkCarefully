@@ -143,6 +143,21 @@ protected_blind = [
     "Number_of_Priors",
     "Misdemeanor",
 ]
+# Race *and its proxies* removed. Dropping the race columns alone leaves race recoverable
+# from the other features (compas_scoring.proxies; make proxy-check). A feature is a proxy
+# if its bias-corrected Cramer's V with any race dummy is >= 0.1 on the training split;
+# tests/test_proxies.py fails if these lists drift from what the data implies.
+#   race_priors_blind: race and the dominant proxy (priors, V = 0.20)
+#   race_proxy_blind:  race and every proxy (priors, both age bands, charge degree)
+race_priors_blind = [
+    "Age_Above_FourtyFive",
+    "Age_Below_TwentyFive",
+    "Female",
+    "Misdemeanor",
+]
+race_proxy_blind = [
+    "Female",
+]
 race_dummies = [
     "African_American",
     "Asian",

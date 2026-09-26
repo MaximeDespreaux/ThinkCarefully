@@ -135,4 +135,7 @@ FEATURE_SET_LABELS = {
     "sex_blind": "FS3-sex",
     "age_blind": "FS3-age",
     "protected_blind": "FS3-all",
+    # Race and its proxies removed (see compas_scoring.proxies).
+    "race_priors_blind": "FS3-race-priors",
+    "race_proxy_blind": "FS3-race-proxies",
 }
