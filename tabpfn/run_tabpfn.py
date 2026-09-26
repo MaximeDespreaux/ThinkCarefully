@@ -9,7 +9,8 @@ Designs, all defined in compas_scoring.data so the other models use the same cut
                  on the dated cohort             stability design 2: does the story hold
                                                  once the model sees newer defendants?
 
-Outputs, in tabpfn/artifacts/ (git-ignored, rebuilt by this script):
+Outputs, in tabpfn/artifacts/ (committed, so the analysis needs no refit; rerun after any
+change to the model or the splits, then commit the new files):
 
     predictions/<run>__<feature_set>.csv   one row per test defendant: y, TabPFN score,
                                            COMPAS score_factor, race / sex / age band /

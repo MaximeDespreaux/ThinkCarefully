@@ -8,7 +8,7 @@ performance**. It also saves the per-defendant predictions that the **interpreta
 
 ```bash
 make tabpfn-smoke   # once: checks TabPFN installs, downloads its weights, predicts
-make tabpfn         # fits every design -> tabpfn/artifacts/   (cached; --force to refit)
+make tabpfn         # fits every design -> tabpfn/artifacts/ (committed; cached, --force refits)
 make tabpfn-test    # unit tests for the metrics and the adapter
 uv run python tabpfn/run_tabpfn.py --help     # pick designs / feature sets
 ```
@@ -40,7 +40,11 @@ screened from Jan 2013 to Mar 2014, with a **33.4%** base rate, against 45.5% in
 modelling table. The docstring explains how it is built. Compare temporal runs with each
 other, never with the headline numbers.
 
-## Outputs (`tabpfn/artifacts/`, git-ignored)
+## Outputs (`tabpfn/artifacts/`, committed)
+
+These are committed, so the analysis can start without refitting. After any change to the
+model or the splits, rerun `uv run python tabpfn/run_tabpfn.py --force` (~25 min on 8 cores)
+and commit the new files.
 
 - `predictions/<run>__<feature_set>.csv` has one row per test defendant: `y`, `tabpfn`
   (score), `compas` (COMPAS `score_factor`), `race`, `sex`, `age_band`, `charge_degree`.
@@ -88,8 +92,10 @@ $40k per missed re-offence). Both are fixed in advance, so neither is tuned on t
 
 The runner saves predictions. Anything that needs the model itself (SHAP, LIME, PDP, ICE,
 permutation importance) refits it: `build_model().fit(train.X, train.y)`, with the train
-set from `compas_scoring.data`. Refitting is quick; **prediction is the slow part** (see
-Runtime below), so explain a fixed, small sample of test rows and cache the results.
+set from `compas_scoring.data`. A fit takes ~1–3 min (it builds the prediction cache), and
+after that each `predict_proba` call is cheap. So **fit once per design and reuse the
+model**, explain a fixed, small sample of test rows, and save the results (see Runtime
+below).
 
 ### Interpretability
 
