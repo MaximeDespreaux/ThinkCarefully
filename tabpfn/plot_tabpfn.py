@@ -2,7 +2,8 @@
 
 Reads only the committed outputs of run_tabpfn.py (tabpfn/artifacts/), so it needs no model
 fit and runs in seconds. Writes PNGs to reports/figures/tabpfn/ (git-ignored, like the EDA
-figures). Performance only: fairness and stability figures belong to the analysis.
+figures): the cross-feature-set figures at the top, and one folder per feature set with
+its holdout figures. Performance only: fairness and stability figures belong to the analysis.
 
 "COMPAS tool" is Northpointe's risk score, the dataset's ``score_factor`` column (1 = rated
 medium or high risk): the incumbent that TabPFN is compared against on the same defendants.
@@ -59,6 +60,14 @@ RUN_LABELS = {
     "temporal_2": "Time: first 70% → last 30%",
 }
 BREAK_EVEN = break_even_threshold()
+# Readable names for the feature sets, in ablation order (see pyproject.toml).
+FS_NAMES = {
+    "race_aware": "all features",
+    "race_blind": "no race",
+    "sex_blind": "no sex",
+    "age_blind": "no age",
+    "protected_blind": "no race, sex or age",
+}
 
 
 def style() -> None:
@@ -102,8 +111,10 @@ def perf_row(perf: pd.DataFrame, run: str, feature_set: str, model: str, point: 
     return perf[mask].iloc[0]
 
 
-def save(fig, name: str) -> None:
-    path = OUT / name
+def save(fig, name: str, feature_set: str | None = None) -> None:
+    folder = OUT / feature_set if feature_set else OUT
+    folder.mkdir(parents=True, exist_ok=True)
+    path = folder / name
     fig.savefig(path, dpi=160, bbox_inches="tight")
     plt.close(fig)
     print(f"  -> {path.relative_to(project_root())}")
@@ -134,14 +145,14 @@ def note(ax, text, xy, offset) -> None:
 # --------------------------------------------------------------------------------- figures
 
 
-def fig_roc(perf: pd.DataFrame, df: pd.DataFrame) -> None:
+def fig_roc(perf: pd.DataFrame, df: pd.DataFrame, fs: str) -> None:
     """ROC on the holdout, with the two operating points and the COMPAS tool's one point."""
     fig, ax = plt.subplots(figsize=(6.2, 5.6))
     ax.plot([0, 1], [0, 1], color=MUTED, lw=1, ls=":", zorder=1)
     ax.text(0.8, 0.72, "chance", color=MUTED, fontsize=8.5, rotation=40)
 
-    label, colour = SERIES[AWARE]
-    auc = perf_row(perf, "holdout", "race_aware", "TabPFN", "0.5")["auc"]
+    label, colour = f"TabPFN, {FS_NAMES[fs]}", BLUE
+    auc = perf_row(perf, "holdout", fs, "TabPFN", "0.5")["auc"]
     fpr, tpr, _ = roc_curve(df["y"], df["tabpfn"])
     ax.plot(fpr, tpr, color=colour, label=f"{label}  (AUC {auc:.3f})", zorder=3)
     for t in (0.5, BREAK_EVEN):
@@ -150,7 +161,7 @@ def fig_roc(perf: pd.DataFrame, df: pd.DataFrame) -> None:
         note(ax, f"t = {t:.3g}", (m["type_i_error"], m["recall"]), (8, -12))
 
     label, colour = SERIES[(TOOL, "race_aware")]
-    auc = perf_row(perf, "holdout", "race_aware", TOOL, "0.5")["auc"]
+    auc = perf_row(perf, "holdout", fs, TOOL, "0.5")["auc"]
     m = at_threshold(df["y"], df["compas_tool"], 0.5)
     ax.plot(
         [0, m["type_i_error"], 1],
@@ -166,9 +177,9 @@ def fig_roc(perf: pd.DataFrame, df: pd.DataFrame) -> None:
     ax.set(xlim=(0, 1), ylim=(0, 1.01), aspect="equal")
     ax.set_xlabel("False positive rate  (Type I error)")
     ax.set_ylabel("True positive rate  (power)")
-    ax.set_title("ROC curve, holdout test set (n = 1,852)")
+    ax.set_title(f"ROC, holdout (n = 1,852), TabPFN on {FS_NAMES[fs]}")
     ax.legend(loc="lower right")
-    save(fig, "01_roc_holdout.png")
+    save(fig, "01_roc_holdout.png", fs)
 
 
 def fig_auc_by_run(perf: pd.DataFrame) -> None:
@@ -211,7 +222,7 @@ def fig_auc_by_run(perf: pd.DataFrame) -> None:
     save(fig, "02_auc_by_run.png")
 
 
-def fig_confusion(df: pd.DataFrame) -> None:
+def fig_confusion(df: pd.DataFrame, fs: str) -> None:
     """Confusion matrices on the holdout: TabPFN at both thresholds, and the COMPAS tool."""
     panels = [
         ("TabPFN, t = 0.5", df["tabpfn"], 0.5),
@@ -238,13 +249,13 @@ def fig_confusion(df: pd.DataFrame) -> None:
         for spine in ax.spines.values():
             spine.set_visible(False)
         ax.set_title(title, fontsize=10.5)
-    fig.suptitle("Confusion matrices, holdout test set (n = 1,852)", x=0.02, ha="left",
-                 fontweight="bold", fontsize=12)  # fmt: skip
+    title = f"Confusion matrices, holdout (n = 1,852), TabPFN on {FS_NAMES[fs]}"
+    fig.suptitle(title, x=0.02, ha="left", fontweight="bold", fontsize=12)
     fig.tight_layout()
-    save(fig, "03_confusion_holdout.png")
+    save(fig, "03_confusion_holdout.png", fs)
 
 
-def fig_threshold_tradeoff(df: pd.DataFrame) -> None:
+def fig_threshold_tradeoff(df: pd.DataFrame, fs: str) -> None:
     """Error rates and expected cost across thresholds: two charts, one y-axis each."""
     ts = np.linspace(0.01, 0.99, 197)
     rows = pd.DataFrame([at_threshold(df["y"], df["tabpfn"], t) for t in ts])
@@ -258,7 +269,7 @@ def fig_threshold_tradeoff(df: pd.DataFrame) -> None:
     top.plot(ts, rows["type_ii_error"], color=RED,
              label="Type II error (FNR): released, then re-offended")  # fmt: skip
     top.set(ylim=(0, 1), ylabel="error rate")
-    top.set_title("TabPFN error rates and cost by threshold, holdout (race-aware)")
+    top.set_title(f"TabPFN error rates and cost by threshold, holdout ({FS_NAMES[fs]})")
     top.legend(loc="upper center", bbox_to_anchor=(0.5, -0.08), ncol=1)
     top.tick_params(labelbottom=True)
 
@@ -285,10 +296,10 @@ def fig_threshold_tradeoff(df: pd.DataFrame) -> None:
     for ax in (top, bottom):
         threshold_line(ax, BREAK_EVEN, f"break-even {BREAK_EVEN:.3f}")
         threshold_line(ax, 0.5, "0.5")
-    save(fig, "04_threshold_tradeoff.png")
+    save(fig, "04_threshold_tradeoff.png", fs)
 
 
-def fig_calibration(df: pd.DataFrame) -> None:
+def fig_calibration(df: pd.DataFrame, fs: str) -> None:
     """Reliability diagram: do TabPFN's probabilities mean what they say?"""
     bins = np.linspace(0, 1, 11)
     idx = np.clip(np.digitize(df["tabpfn"], bins) - 1, 0, 9)
@@ -303,7 +314,7 @@ def fig_calibration(df: pd.DataFrame) -> None:
     ax.plot([0, 1], [0, 1], color=MUTED, lw=1, ls=":")
     ax.text(0.02, 0.07, "perfect calibration", color=MUTED, fontsize=8.5, rotation=43)
     ax.plot(table["p"], table["obs"], "-o", color=BLUE, ms=7, mec=SURFACE, mew=1.5,
-            label="TabPFN, race-aware")  # fmt: skip
+            label=f"TabPFN, {FS_NAMES[fs]}")  # fmt: skip
     for _, r in table.iterrows():
         ax.annotate(f"n={int(r['n'])}", (r["p"], r["obs"]), xytext=(6, -10),
                     textcoords="offset points", fontsize=7.5, color=TEXT_2)  # fmt: skip
@@ -311,12 +322,12 @@ def fig_calibration(df: pd.DataFrame) -> None:
     ax.set(xlim=(0, 1), ylim=(0, 1), aspect="equal")
     ax.set_xlabel("mean predicted probability")
     ax.set_ylabel("observed re-offence rate")
-    ax.set_title(f"Calibration, holdout (Brier {brier:.3f})")
+    ax.set_title(f"Calibration, holdout, {FS_NAMES[fs]} (Brier {brier:.3f})")
     ax.legend(loc="upper left")
-    save(fig, "05_calibration_holdout.png")
+    save(fig, "05_calibration_holdout.png", fs)
 
 
-def fig_score_distribution(df: pd.DataFrame) -> None:
+def fig_score_distribution(df: pd.DataFrame, fs: str) -> None:
     """How well the scores separate the two outcomes, with both thresholds."""
     bins = np.linspace(0, 1, 41)
     fig, ax = plt.subplots(figsize=(8, 4.4))
@@ -329,21 +340,21 @@ def fig_score_distribution(df: pd.DataFrame) -> None:
     ax.set(xlim=(0, 1), ylabel="defendants")
     ax.set_xlabel("TabPFN score (predicted probability of re-offence)")
     ax.grid(axis="x", visible=False)
-    ax.set_title("TabPFN score distribution by actual outcome, holdout (race-aware)")
+    ax.set_title(f"TabPFN score distribution by actual outcome, holdout ({FS_NAMES[fs]})")
     ax.legend(loc="upper right")
-    save(fig, "06_score_distribution.png")
+    save(fig, "06_score_distribution.png", fs)
 
 
-def fig_metrics(perf: pd.DataFrame) -> None:
+def fig_metrics(perf: pd.DataFrame, fs: str) -> None:
     """Threshold metrics on the holdout: TabPFN at both operating points, the COMPAS tool."""
     series = [
-        ("TabPFN, t = 0.5", perf_row(perf, "holdout", "race_aware", "TabPFN", "0.5"), BLUE),
+        ("TabPFN, t = 0.5", perf_row(perf, "holdout", fs, "TabPFN", "0.5"), BLUE),
         (
             f"TabPFN, t = {BREAK_EVEN:.3f}",
-            perf_row(perf, "holdout", "race_aware", "TabPFN", "break_even"),
+            perf_row(perf, "holdout", fs, "TabPFN", "break_even"),
             VIOLET,
         ),
-        (TOOL_DECISION, perf_row(perf, "holdout", "race_aware", TOOL, "0.5"), ORANGE),
+        (TOOL_DECISION, perf_row(perf, "holdout", fs, TOOL, "0.5"), ORANGE),
     ]
     metrics = ["accuracy", "precision", "recall", "f1", "specificity"]
     names = ["Accuracy", "Precision", "Recall\n(power)", "F1", "Specificity"]
@@ -359,24 +370,211 @@ def fig_metrics(perf: pd.DataFrame) -> None:
     ax.set_xticks(x, names)
     ax.set(ylim=(0, 1.05), ylabel="score")
     ax.grid(axis="x", visible=False)
-    ax.set_title("Threshold metrics, holdout test set (race-aware)")
+    ax.set_title(f"Threshold metrics, holdout, TabPFN on {FS_NAMES[fs]}")
     ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.16), ncol=3)
-    save(fig, "07_metrics_holdout.png")
+    save(fig, "07_metrics_holdout.png", fs)
+
+
+def fig_ablation_auc(perf: pd.DataFrame) -> None:
+    """AUC per feature set: what removing each protected attribute costs in ranking power."""
+    designs = [
+        ("holdout", "Holdout 70/30"),
+        ("X1+X2_to_X3", "X1+X2 \u2192 X3"),
+        ("temporal_2", "Time: first 70% \u2192 last 30%"),
+    ]
+    sets = feature_sets(perf)
+    auc = perf[perf["operating_point"] == "0.5"]
+    fig, axes = plt.subplots(1, len(designs), figsize=(12, 3.8), sharey=True)
+    for ax, (run, title) in zip(axes, designs):
+        rows = auc[(auc["run"] == run) & (auc["model"] == "TabPFN")]
+        rows = rows.set_index("feature_set").loc[sets]
+        y = np.arange(len(sets))
+        ax.errorbar(
+            rows["auc"],
+            y,
+            xerr=[rows["auc"] - rows["auc_ci_low"], rows["auc_ci_high"] - rows["auc"]],
+            fmt="o",
+            ms=7,
+            color=BLUE,
+            elinewidth=1.6,
+            mec=SURFACE,
+            mew=1.5,
+            zorder=3,
+            label="TabPFN (95% CI)",
+        )
+        for yi, v in zip(y, rows["auc"]):
+            note(ax, f"{v:.3f}", (v, yi), (-10, 7))
+        tool = auc[(auc["run"] == run) & (auc["model"] == TOOL)]["auc"].iat[0]
+        ax.axvline(tool, color=ORANGE, lw=1.4, zorder=2, label=f"COMPAS tool ({tool:.3f})")
+        ax.set_title(title, fontsize=10.5)
+        ax.grid(axis="y", visible=False)
+        ax.set_xlabel("AUC")
+    axes[0].set_yticks(range(len(sets)), [FS_NAMES[fs] for fs in sets])
+    axes[0].set_ylim(len(sets) - 0.5, -0.6)
+    fig.legend(
+        [mpl.lines.Line2D([], [], color=ORANGE, lw=1.4), axes[0].containers[0]],
+        ["COMPAS tool (AUC on the same test set)", "TabPFN (95% bootstrap CI)"],
+        loc="lower center",
+        ncol=2,
+    )
+    fig.suptitle("TabPFN AUC with protected attributes removed", x=0.02, ha="left",
+                 fontweight="bold", fontsize=12)  # fmt: skip
+    fig.tight_layout(rect=(0, 0.08, 1, 1))
+    save(fig, "08_ablation_auc.png")
+
+
+def fig_ablation_metrics(perf: pd.DataFrame) -> None:
+    """Threshold metrics and cost per feature set on the holdout, at both operating points."""
+    sets = feature_sets(perf)
+    hold = perf[perf["run"] == "holdout"]
+    panels = [
+        ("recall", "Recall (power)", 1),
+        ("type_i_error", "Type I error (FPR)", 1),
+        ("accuracy", "Accuracy", 1),
+        ("cost_per_defendant", "Cost per defendant ($k)", 1000),
+    ]
+    points = [
+        ("0.5", "TabPFN, t = 0.5", BLUE),
+        ("break_even", f"TabPFN, t = {BREAK_EVEN:.3f}", VIOLET),
+    ]
+    y = np.arange(len(sets))
+    fig, axes = plt.subplots(1, len(panels), figsize=(13, 3.8), sharey=True)
+    for ax, (metric, title, scale) in zip(axes, panels):
+        for (op, label, colour), dy in zip(points, (-0.12, 0.12)):
+            rows = hold[(hold["model"] == "TabPFN") & (hold["operating_point"] == op)]
+            values = rows.set_index("feature_set").loc[sets, metric] / scale
+            ax.plot(values, y + dy, "o", ms=7, color=colour, mec=SURFACE, mew=1.5, label=label)
+        tool = hold[(hold["model"] == TOOL) & (hold["operating_point"] == "0.5")][metric].iat[0]
+        ax.axvline(tool / scale, color=ORANGE, lw=1.4, zorder=1, label=TOOL_DECISION)
+        ax.set_title(title, fontsize=10.5)
+        ax.grid(axis="y", visible=False)
+    axes[0].set_yticks(range(len(sets)), [FS_NAMES[fs] for fs in sets])
+    axes[0].set_ylim(len(sets) - 0.5, -0.6)
+    handles, labels = axes[0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc="lower center", ncol=3, bbox_to_anchor=(0.5, -0.02))
+    fig.suptitle("Holdout operating points with protected attributes removed", x=0.02,
+                 ha="left", fontweight="bold", fontsize=12)  # fmt: skip
+    fig.tight_layout(rect=(0, 0.07, 1, 1))
+    save(fig, "09_ablation_metrics.png")
+
+
+# Radar: one line per TabPFN variant. Five hues on crossing lines sit in the colour-blind
+# warning band (validated: worst CVD dE 6.9), so each variant also gets its own marker and
+# line style. The COMPAS tool is a neutral dashed reference, not a sixth hue.
+VARIANT_STYLE = {
+    "race_aware": (BLUE, "o", "-"),
+    "race_blind": (AQUA, "s", "--"),
+    "sex_blind": (RED, "^", "-."),
+    "age_blind": ("#eda100", "D", ":"),
+    "protected_blind": (VIOLET, "v", (0, (5, 1, 1, 1))),
+}
+# Spokes: (column in performance.csv, label, transform). All read "higher is better", 0-1.
+RADAR_SPOKES = [
+    ("auc", "Discrimination\n(AUC)", lambda v: v),
+    ("balanced_accuracy", "Balanced\naccuracy", lambda v: v),
+    ("recall", "Sensitivity\n(1 - FNR)", lambda v: v),
+    ("specificity", "Specificity\n(1 - FPR)", lambda v: v),
+    ("precision", "Precision", lambda v: v),
+    ("f1", "F1", lambda v: v),
+    ("ece", "Calibration\n(1 - ECE)", lambda v: 1 - v),
+]
+# TODO(analysis): add the interpretability, stability and fairness dimensions as spokes.
+# Write tabpfn/artifacts/radar_extra.csv with one row per feature_set and one column per
+# new dimension, each already scaled to 0-1 with higher = better (e.g. 1 - |FPR gap|,
+# 1 - decision flip rate between X1 and X2). Every column in it becomes a spoke here.
+RADAR_EXTRA = ART / "radar_extra.csv"
+
+
+def radar_scores(perf: pd.DataFrame, point: str) -> pd.DataFrame:
+    """Holdout scores per variant (rows) and spoke (columns), plus the COMPAS tool."""
+    hold = perf[(perf["run"] == "holdout") & (perf["operating_point"] == point)]
+    rows = {}
+    for fs in feature_sets(perf):
+        row = hold[(hold["feature_set"] == fs) & (hold["model"] == "TabPFN")].iloc[0]
+        rows[fs] = {label: f(row[col]) for col, label, f in RADAR_SPOKES}
+    tool = hold[(hold["feature_set"] == "race_aware") & (hold["model"] == TOOL)].iloc[0]
+    rows[TOOL] = {label: f(tool[col]) for col, label, f in RADAR_SPOKES}
+    table = pd.DataFrame(rows).T
+    if RADAR_EXTRA.exists():
+        extra = pd.read_csv(RADAR_EXTRA, index_col="feature_set")
+        table = table.join(extra)
+    return table
+
+
+def fig_radar(perf: pd.DataFrame) -> None:
+    """Every TabPFN variant on every metric, at both operating points (like the brief's radar)."""
+    points = [("0.5", "t = 0.5"), ("break_even", f"t = {BREAK_EVEN:.3f} (break-even)")]
+    tables = {op: radar_scores(perf, op) for op, _ in points}
+    spokes = list(tables["0.5"].columns)
+    angles = np.linspace(0, 2 * np.pi, len(spokes), endpoint=False)
+    closed = np.r_[angles, angles[:1]]
+
+    fig, axes = plt.subplots(1, 2, figsize=(13, 6.6), subplot_kw={"projection": "polar"})
+    for ax, (op, title) in zip(axes, points):
+        table = tables[op]
+        ax.set_theta_offset(np.pi / 2)
+        ax.set_theta_direction(-1)
+        ax.set_ylim(0, 1)
+        ax.set_yticks([0.2, 0.4, 0.6, 0.8, 1.0], ["0.2", "0.4", "0.6", "0.8", "1.0"],
+                      fontsize=7.5, color=MUTED)  # fmt: skip
+        # Ring labels sit between the F1 and Precision spokes, where no line passes.
+        ax.set_rlabel_position(np.degrees(angles[4] + angles[5]) / 2)
+        ax.set_xticks(angles, spokes, fontsize=9)
+        ax.tick_params(axis="x", pad=10)
+        ax.grid(color=GRID, lw=0.6)
+        ax.spines["polar"].set_color(MUTED)
+
+        values = table.loc[TOOL].to_numpy(float)
+        ax.plot(closed, np.r_[values, values[:1]], color=TEXT_2, lw=1.4, ls=(0, (4, 3)),
+                label=TOOL_DECISION, zorder=2)  # fmt: skip
+        for fs in [fs for fs in VARIANT_STYLE if fs in table.index]:
+            colour, marker, style = VARIANT_STYLE[fs]
+            values = table.loc[fs].to_numpy(float)
+            ax.plot(closed, np.r_[values, values[:1]], color=colour, lw=1.8, ls=style,
+                    marker=marker, ms=6, mec=SURFACE, mew=1, label=f"TabPFN, {FS_NAMES[fs]}",
+                    zorder=3)  # fmt: skip
+        ax.set_title(title, fontsize=11, pad=22, loc="center")
+
+    handles, labels = axes[0].get_legend_handles_labels()
+    order = list(range(1, len(handles))) + [0]  # variants first, the tool last
+    fig.legend([handles[i] for i in order], [labels[i] for i in order], loc="lower center",
+               ncol=3, bbox_to_anchor=(0.5, -0.02))  # fmt: skip
+    fig.suptitle("TabPFN with and without protected attributes, holdout (n = 1,852)", x=0.02,
+                 ha="left", fontweight="bold", fontsize=12)  # fmt: skip
+    fig.tight_layout(rect=(0, 0.1, 1, 0.94))
+    save(fig, "10_radar_holdout.png")
+
+    # The table view of the same numbers (accessibility, and exact values for the report).
+    long = pd.concat({op: t for op, t in tables.items()}, names=["operating_point", "model"])
+    long.round(4).to_csv(OUT / "10_radar_holdout.csv")
+    print(f"  -> {(OUT / '10_radar_holdout.csv').relative_to(project_root())}")
+
+
+def feature_sets(perf: pd.DataFrame) -> list[str]:
+    """The feature sets present in performance.csv, in ablation order."""
+    present = set(perf["feature_set"])
+    return [fs for fs in FS_NAMES if fs in present]
 
 
 def main() -> int:
     style()
     OUT.mkdir(parents=True, exist_ok=True)
     perf = pd.read_csv(ART / "performance.csv")
-    holdout = predictions("holdout")
     print("TabPFN performance figures")
-    fig_roc(perf, holdout)
+    # Across feature sets, in reports/figures/tabpfn/.
     fig_auc_by_run(perf)
-    fig_confusion(holdout)
-    fig_threshold_tradeoff(holdout)
-    fig_calibration(holdout)
-    fig_score_distribution(holdout)
-    fig_metrics(perf)
+    fig_ablation_auc(perf)
+    fig_ablation_metrics(perf)
+    fig_radar(perf)
+    # One folder per feature set: that set's holdout figures.
+    for fs in feature_sets(perf):
+        holdout = predictions("holdout", fs)
+        fig_roc(perf, holdout, fs)
+        fig_confusion(holdout, fs)
+        fig_threshold_tradeoff(holdout, fs)
+        fig_calibration(holdout, fs)
+        fig_score_distribution(holdout, fs)
+        fig_metrics(perf, fs)
     return 0
 
 

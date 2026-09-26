@@ -19,7 +19,7 @@ uv run python tabpfn/run_tabpfn.py --help     # pick designs / feature sets
 | `pfn_model.py` | `TabPFNModel`, an sklearn-compatible adapter (works with PDP, permutation importance, scorers) |
 | `pfn_metrics.py` | the performance panel: AUC + bootstrap CI, accuracy, F1, recall, Type I/II errors, cost |
 | `run_tabpfn.py` | fits every design and feature set, and writes predictions and performance |
-| `plot_tabpfn.py` | performance figures from the committed artifacts (git-ignored PNGs) |
+| `plot_tabpfn.py` | performance figures from the committed artifacts (git-ignored PNGs): per feature set, across feature sets (ablation), and a radar of every variant |
 | `smoke_tabpfn.py` | the install/weights check |
 
 ## What "COMPAS tool" means
@@ -42,7 +42,29 @@ All splits live in `compas_scoring.data`, so the logreg and xgboost groups use t
 | `temporal_1` | first 40% → next 20% by screening date | dated cohort | stability 2: does the story hold on newer defendants? |
 | `temporal_2` | first 70% → last 30% by screening date | dated cohort | stability 2 |
 
-Each run is fitted on `race_aware` (FS1) and `race_blind` (FS3).
+Each run is fitted on every feature set in `pyproject.toml`. This is the
+**protected-attribute ablation**: the same model with each protected attribute removed.
+
+| Feature set | Features | Removes |
+|---|---|---|
+| `race_aware` (FS1) | all 10 | nothing |
+| `race_blind` (FS3) | 5 | the five race dummies |
+| `sex_blind` | 9 | `Female` |
+| `age_blind` | 8 | both age dummies |
+| `protected_blind` | 2 | race, sex and age: only priors and charge degree remain |
+
+Comparing each blind set with `race_aware` shows what that attribute adds to performance.
+Whether removing it reduces disparity is a fairness question, answered from the same
+prediction files, which keep every group label whatever the feature set.
+
+**Split balance.** X1/X2/X3 are stratified on outcome × race × sex × age band. Each
+part matches the cohort's race, sex and age mix within 0.12 percentage points. With the
+outcome alone, X3 was 3.7 points off on age. `make split-balance` reports the gap for
+every split:
+- The 70/30 split is within noise (p ≥ 0.18).
+- The time windows show real drift in who was screened: the sex mix, and later the age
+  mix (p ≤ 0.02). A change between time windows can therefore come from the population,
+  not only from the model.
 
 **Dated cohort caveat.** The modelling table has no dates, so the time-ordered runs use
 `data.load_dated()`. It rebuilds the cohort from `cox-violent-parsed.csv`: 5,686 people
@@ -99,6 +121,13 @@ $40k per missed re-offence). Both are fixed in advance, so neither is tuned on t
   Batch coalitions into single `predict_proba` calls to pay the per-call cost fewer times.
 
 ## For the analysis
+
+**Radar chart (`10_radar_holdout.png`).** It has one line per TabPFN variant, with a spoke
+per metric. For now the spokes are the performance metrics. To add a dimension, write
+`tabpfn/artifacts/radar_extra.csv` with one row per `feature_set`. Give it one column per
+new score, already scaled to 0–1 with higher = better (e.g. `1 - |FPR gap|`, or
+`1 - decision flip rate X1 vs X2`). Each column becomes a spoke; `plot_tabpfn.py` needs no
+change.
 
 The runner saves predictions. Anything that needs the model itself (SHAP, LIME, PDP, ICE,
 permutation importance) refits it: `build_model().fit(train.X, train.y)`, with the train
