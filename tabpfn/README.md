@@ -9,6 +9,7 @@ performance**. It also saves the per-defendant predictions that the **interpreta
 ```bash
 make tabpfn-smoke   # once: checks TabPFN installs, downloads its weights, predicts
 make tabpfn         # fits every design -> tabpfn/artifacts/ (committed; cached, --force refits)
+make tabpfn-plots   # performance figures -> reports/figures/tabpfn/ (seconds, no refit)
 make tabpfn-test    # unit tests for the metrics and the adapter
 uv run python tabpfn/run_tabpfn.py --help     # pick designs / feature sets
 ```
@@ -18,7 +19,16 @@ uv run python tabpfn/run_tabpfn.py --help     # pick designs / feature sets
 | `pfn_model.py` | `TabPFNModel`, an sklearn-compatible adapter (works with PDP, permutation importance, scorers) |
 | `pfn_metrics.py` | the performance panel: AUC + bootstrap CI, accuracy, F1, recall, Type I/II errors, cost |
 | `run_tabpfn.py` | fits every design and feature set, and writes predictions and performance |
+| `plot_tabpfn.py` | performance figures from the committed artifacts (git-ignored PNGs) |
 | `smoke_tabpfn.py` | the install/weights check |
+
+## What "COMPAS tool" means
+
+COMPAS is also the name of Northpointe's commercial risk-assessment tool, the one the
+dataset was collected to audit. The dataset's `score_factor` column is **that tool's own
+prediction** (1 = rated medium or high risk). It is never a feature. It is the benchmark
+("incumbent" in `pyproject.toml`): the model already in use, which TabPFN has to beat on the
+same test defendants. It is labelled "COMPAS tool" everywhere here.
 
 ## Designs
 
@@ -47,11 +57,11 @@ model or the splits, rerun `uv run python tabpfn/run_tabpfn.py --force` (~25 min
 and commit the new files.
 
 - `predictions/<run>__<feature_set>.csv` has one row per test defendant: `y`, `tabpfn`
-  (score), `compas` (COMPAS `score_factor`), `race`, `sex`, `age_band`, `charge_degree`.
+  (score), `compas_tool` (the COMPAS tool's own `score_factor`: 1 = medium/high risk), `race`, `sex`, `age_band`, `charge_degree`.
   The index `row` is the row in the cohort, so `X1_to_X3` and `X2_to_X3` line up
   defendant by defendant.
-- `performance.csv` has one row per run × feature set × model (TabPFN, COMPAS benchmark on
-  the same rows) × operating point.
+- `performance.csv` has one row per run × feature set × model (TabPFN, and the COMPAS
+  tool's score as the benchmark on the same rows) × operating point.
 - `runs.csv` holds sizes, base rates, date ranges, and fit/predict seconds.
 
 ## Performance
@@ -141,7 +151,7 @@ TODO(analysis):
 ### Fairness
 
 `predictions/*.csv` already carries `race`, `sex`, `age_band` and `charge_degree` next to
-`y`, the TabPFN score and the COMPAS score. Use either operating point to turn scores into
+`y`, the TabPFN score and the COMPAS tool's score. Use either operating point to turn scores into
 decisions.
 
 TODO(analysis):
