@@ -165,27 +165,54 @@ def train_test(feature_set: str = "race_aware") -> tuple[Dataset, Dataset]:
 # --------------------------------------------------------------------------- stability designs
 
 
+# Strata smaller than this are pooled by outcome alone, so every stratum can be cut 3 ways.
+MIN_STRATUM = 10
+
+
+def protected_strata(df: pd.DataFrame) -> pd.Series:
+    """Stratification key: outcome x race x sex x age band.
+
+    Stratifying on the outcome alone left X3 3.7 points off the cohort's age mix (p = 0.012):
+    age is a strong predictor, and X3 is the shared test set, so that is not a detail. Races
+    too small to stratify (Asian, Native American, Other: ~6% together) are pooled, and any
+    stratum under MIN_STRATUM rows falls back to the outcome alone.
+    """
+    groups = group_frame(df)
+    race = groups["race"].where(
+        groups["race"].isin(["African-American", "Caucasian", "Hispanic"]), "small groups"
+    )
+    key = (
+        df[CONFIG.target].astype(str)
+        + "|" + race + "|" + groups["sex"] + "|" + groups["age_band"]
+    )  # fmt: skip
+    rare = key.map(key.value_counts()) < MIN_STRATUM
+    return key.where(~rare, df[CONFIG.target].astype(str) + "|pooled")
+
+
 @lru_cache(maxsize=1)
 def partition_index() -> tuple[pd.Index, pd.Index, pd.Index]:
     """X1 / X2 / X3: the stratified random partition for stability design 1.
 
-    Each part keeps the cohort's base rate. Models are trained on X1 and on X2 separately
-    and both are tested on X3, so any difference between the two fits comes from the
-    training sample alone. X1 + X2 -> X3 is also a headline design in its own right.
-    Like split_index, it depends on the row index only, so it is shared by every feature set.
+    Each part keeps the cohort's base rate *and* its mix of race, sex and age band
+    (see protected_strata), so each part is a representative sample of the cohort.
+    Models are trained on X1 and on X2 separately and both are tested on X3, so any
+    difference between the two fits comes from the training sample alone. X1 + X2 -> X3 is
+    also a headline design in its own right. Like split_index, it depends on the row index
+    only, so it is shared by every feature set.
     """
     df = load_raw()
     f1, f2, f3 = CONFIG.splits.partition
     if abs(f1 + f2 + f3 - 1.0) > 1e-9:
         raise ValueError(f"Partition fractions must sum to 1, got {CONFIG.splits.partition}")
 
+    strata = protected_strata(df)
     rest_idx, x3_idx = train_test_split(
-        df.index, test_size=f3, stratify=df[CONFIG.target], random_state=CONFIG.random_state
+        df.index, test_size=f3, stratify=strata, random_state=CONFIG.random_state
     )
     x1_idx, x2_idx = train_test_split(
         rest_idx,
         test_size=f2 / (f1 + f2),
-        stratify=df.loc[rest_idx, CONFIG.target],
+        stratify=strata.loc[rest_idx],
         random_state=CONFIG.random_state,
     )
     return pd.Index(sorted(x1_idx)), pd.Index(sorted(x2_idx)), pd.Index(sorted(x3_idx))

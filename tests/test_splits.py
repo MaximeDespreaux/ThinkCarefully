@@ -7,6 +7,7 @@ import pytest
 from compas_scoring.config import CONFIG
 from compas_scoring.data import (
     FOLLOW_UP_CUTOFF,
+    build_dataset,
     load_dated,
     partition,
     partition_index,
@@ -25,6 +26,17 @@ def test_partition_sizes_and_base_rates_match_the_configuration():
     for name, fraction in zip(("X1", "X2", "X3"), CONFIG.splits.partition):
         assert len(parts[name]) == pytest.approx(fraction * CONFIG.expected_rows, abs=2)
         assert parts[name].base_rate == pytest.approx(CONFIG.expected_base_rate, abs=0.005)
+
+
+@pytest.mark.parametrize("attribute", ["race", "sex", "age_band"])
+def test_partition_keeps_the_cohorts_protected_group_shares(attribute):
+    """Each of X1 / X2 / X3 is a representative sample: every group within 0.5 points."""
+    parts = partition("race_aware")
+    cohort = build_dataset().groups[attribute].value_counts(normalize=True)
+    for name in ("X1", "X2", "X3"):
+        share = parts[name].groups[attribute].value_counts(normalize=True)
+        gap = (share.reindex(cohort.index, fill_value=0) - cohort).abs().max()
+        assert gap < 0.005, f"{name} is {gap:.1%} off the cohort's {attribute} mix"
 
 
 def test_partition_is_deterministic_and_shared_across_feature_sets():
