@@ -6,6 +6,8 @@ performance**. It also saves the per-defendant predictions that the **interpreta
 **stability** and **fairness** analyses start from. Those analyses are still to do: see
 [For the analysis](#for-the-analysis) below.
 
+**Results so far, with the numbers to quote: [FINDINGS.md](FINDINGS.md).**
+
 ```bash
 make tabpfn-smoke   # once: checks TabPFN installs, downloads its weights, predicts
 make tabpfn         # fits every design -> tabpfn/artifacts/ (committed; cached, --force refits)
