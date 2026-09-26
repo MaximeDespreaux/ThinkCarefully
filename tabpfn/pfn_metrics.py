@@ -63,6 +63,23 @@ def confusion(y_true, y_pred) -> dict[str, int]:
     }
 
 
+def expected_calibration_error(y_true, y_score, n_bins: int = 10) -> float:
+    """Mean |predicted - observed| over equal-width probability bins, weighted by size.
+
+    0 means "a score of 0.4 really means a 40% re-offence rate". Used as 1 - ECE for the
+    calibration spoke of the radar chart.
+    """
+    y_true = np.asarray(y_true, dtype=float)
+    y_score = np.asarray(y_score, dtype=float)
+    idx = np.clip(np.digitize(y_score, np.linspace(0, 1, n_bins + 1)) - 1, 0, n_bins - 1)
+    error = 0.0
+    for b in range(n_bins):
+        mask = idx == b
+        if mask.any():
+            error += mask.mean() * abs(y_score[mask].mean() - y_true[mask].mean())
+    return float(error)
+
+
 def _ratio(num: float, den: float) -> float:
     return float(num / den) if den else float("nan")
 
@@ -74,13 +91,15 @@ def at_threshold(y_true, y_score, threshold: float) -> dict[str, float]:
     n = len(y_pred)
     precision = _ratio(c["tp"], c["tp"] + c["fp"])
     recall = _ratio(c["tp"], c["tp"] + c["fn"])
+    specificity = _ratio(c["tn"], c["tn"] + c["fp"])
     return {
         "threshold": float(threshold),
         "accuracy": (c["tp"] + c["tn"]) / n,
         "precision": precision,
         "recall": recall,
         "f1": _ratio(2 * precision * recall, precision + recall),
-        "specificity": _ratio(c["tn"], c["tn"] + c["fp"]),
+        "specificity": specificity,
+        "balanced_accuracy": (recall + specificity) / 2,
         "type_i_error": _ratio(c["fp"], c["fp"] + c["tn"]),
         "type_ii_error": _ratio(c["fn"], c["fn"] + c["tp"]),
         "power": recall,
@@ -99,6 +118,7 @@ def performance(y_true, y_score, with_ci: bool = True) -> list[dict[str, float]]
         "base_rate": float(y_true.mean()),
         "auc": float(roc_auc_score(y_true, y_score)),
         "brier": float(brier_score_loss(y_true, y_score)),
+        "ece": expected_calibration_error(y_true, y_score),
     }
     if with_ci:
         common["auc_ci_low"], common["auc_ci_high"] = bootstrap_auc_ci(y_true, y_score)
