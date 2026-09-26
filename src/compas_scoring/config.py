@@ -131,4 +131,8 @@ FEATURE_SET_LABELS = {
     "race_aware": "FS1",
     "selected": "FS2",
     "race_blind": "FS3",
+    # Protected-attribute ablations (not in the brief).
+    "sex_blind": "FS3-sex",
+    "age_blind": "FS3-age",
+    "protected_blind": "FS3-all",
 }

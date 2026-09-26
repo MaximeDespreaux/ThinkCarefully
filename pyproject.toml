@@ -115,6 +115,34 @@ race_blind = [
     "Female",
     "Misdemeanor",
 ]
+# Protected-attribute ablations: the race-aware set minus one protected attribute at a time,
+# and minus all of them. They measure what each attribute contributes to performance; the
+# fairness analysis measures what removing it does (or does not do) to disparity.
+sex_blind = [
+    "Number_of_Priors",
+    "Age_Above_FourtyFive",
+    "Age_Below_TwentyFive",
+    "African_American",
+    "Asian",
+    "Hispanic",
+    "Native_American",
+    "Other",
+    "Misdemeanor",
+]
+age_blind = [
+    "Number_of_Priors",
+    "African_American",
+    "Asian",
+    "Hispanic",
+    "Native_American",
+    "Other",
+    "Female",
+    "Misdemeanor",
+]
+protected_blind = [
+    "Number_of_Priors",
+    "Misdemeanor",
+]
 race_dummies = [
     "African_American",
     "Asian",

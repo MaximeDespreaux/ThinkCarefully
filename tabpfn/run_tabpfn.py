@@ -50,8 +50,9 @@ ART = HERE / "artifacts"
 PRED = ART / "predictions"
 
 DESIGNS = ("holdout", "partition", "temporal")
-# The race-aware set plus the race-blind one, so the fairness analysis can compare the two.
-DEFAULT_FEATURE_SETS = ("race_aware", "race_blind")
+# Every feature set in pyproject.toml: race-aware, race-blind and the protected-attribute
+# ablations (sex-, age- and all-protected-blind), so each attribute's contribution shows.
+DEFAULT_FEATURE_SETS = tuple(CONFIG.feature_sets)
 
 
 @dataclass(frozen=True)
