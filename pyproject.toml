@@ -144,11 +144,10 @@ protected_blind = [
     "Misdemeanor",
 ]
 # Race *and its proxies* removed. Dropping the race columns alone leaves race recoverable
-# from the other features (compas_scoring.proxies; make proxy-check). A feature is a proxy
-# if its bias-corrected Cramer's V with any race dummy is >= 0.1 on the training split;
-# tests/test_proxies.py fails if these lists drift from what the data implies.
-#   race_priors_blind: race and the dominant proxy (priors, V = 0.20)
-#   race_proxy_blind:  race and every proxy (priors, both age bands, charge degree)
+# from the other features (make proxy-check). Proxies are read off the EDA association matrix
+# (artifacts/eda_association.csv): features with Cramer's V >= 0.1 with a race dummy.
+#   race_priors_blind: race and the dominant proxy (priors, V = 0.225)
+#   race_proxy_blind:  race and every proxy (priors 0.225, over 45 0.157, misdemeanour 0.103)
 race_priors_blind = [
     "Age_Above_FourtyFive",
     "Age_Below_TwentyFive",
@@ -156,6 +155,7 @@ race_priors_blind = [
     "Misdemeanor",
 ]
 race_proxy_blind = [
+    "Age_Below_TwentyFive",
     "Female",
 ]
 race_dummies = [
