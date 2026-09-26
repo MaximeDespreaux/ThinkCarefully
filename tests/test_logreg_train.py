@@ -1,8 +1,4 @@
-"""logreg/train.py: fitting, caching, the fit summary, and the train-only protocol.
-
-Every test runs against a temporary project root, so nothing here reads or overwrites the
-real models/ or artifacts/ directories. The data itself is still the real table.
-"""
+"""Test logreg/train.py"""
 
 from __future__ import annotations
 
