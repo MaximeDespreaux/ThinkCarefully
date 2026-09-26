@@ -13,11 +13,11 @@ Outputs, in tabpfn/artifacts/ (committed, so the analysis needs no refit; rerun 
 change to the model or the splits, then commit the new files):
 
     predictions/<run>__<feature_set>.csv   one row per test defendant: y, TabPFN score,
-                                           COMPAS score_factor, race / sex / age band /
+                                           COMPAS tool score (score_factor), race / sex / age band /
                                            charge degree -- everything the fairness and
                                            stability analyses need, without refitting
     performance.csv                        pfn_metrics.performance for TabPFN and for the
-                                           COMPAS benchmark on the same test rows
+                                           COMPAS tool (the incumbent) on the same test rows
     runs.csv                               sizes, base rates, periods and fit/predict seconds
 
 Fitted models are not saved: TabPFN "fitting" only stores the training rows, so refitting
@@ -112,7 +112,7 @@ def fit_and_predict(run: Run) -> tuple[pd.DataFrame, float, float]:
     predict_s = time.perf_counter() - start
 
     frame = pd.DataFrame(
-        {"y": run.test.y, "tabpfn": score, "compas": run.test.incumbent},
+        {"y": run.test.y, "tabpfn": score, "compas_tool": run.test.incumbent},
         index=run.test.X.index.rename("row"),
     ).join(run.test.groups)
     return frame, fit_s, predict_s
@@ -132,6 +132,12 @@ def main() -> int:
 
     PRED.mkdir(parents=True, exist_ok=True)
     perf_rows, run_rows = [], []
+    # Timings of cached runs come from the previous runs.csv, so a rerun does not blank them.
+    previous = (
+        pd.read_csv(ART / "runs.csv").set_index(["run", "feature_set"])
+        if (ART / "runs.csv").exists()
+        else pd.DataFrame()
+    )
 
     for design in args.designs:
         for feature_set in args.feature_sets:
@@ -140,7 +146,12 @@ def main() -> int:
                 label = f"{run.name:<12} {feature_set:<10}"
                 if path.exists() and not args.force:
                     frame = pd.read_csv(path, index_col="row")
-                    fit_s = predict_s = float("nan")
+                    key = (run.name, feature_set)
+                    fit_s, predict_s = (
+                        previous.loc[key, ["fit_seconds", "predict_seconds"]]
+                        if key in previous.index
+                        else (float("nan"), float("nan"))
+                    )
                     print(f"  {label} cached")
                 else:
                     frame, fit_s, predict_s = fit_and_predict(run)
@@ -161,7 +172,7 @@ def main() -> int:
                         "predict_seconds": predict_s,
                     }
                 )
-                for model, column in (("TabPFN", "tabpfn"), ("COMPAS", "compas")):
+                for model, column in (("TabPFN", "tabpfn"), ("COMPAS tool", "compas_tool")):
                     for row in performance(frame["y"], frame[column]):
                         perf_rows.append({**meta, "model": model, **row})
 
@@ -170,7 +181,7 @@ def main() -> int:
     runs.to_csv(ART / "runs.csv", index=False)
     perf.to_csv(ART / "performance.csv", index=False)
 
-    # COMPAS's score_factor is binary, so its two operating points coincide; show it once.
+    # The COMPAS tool's score_factor is binary, so its two operating points coincide; show it once.
     shown = perf[(perf["model"] == "TabPFN") | (perf["operating_point"] == "0.5")]
     columns = [
         "run", "feature_set", "model", "operating_point", "auc", "auc_ci_low", "auc_ci_high",

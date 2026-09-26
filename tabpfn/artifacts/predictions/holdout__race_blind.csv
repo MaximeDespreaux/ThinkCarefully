@@ -1,4 +1,4 @@
-row,y,tabpfn,compas,race,sex,age_band,charge_degree
+row,y,tabpfn,compas_tool,race,sex,age_band,charge_degree
 3,0,0.23560105,0,Other,Male,25 - 45,Misdemeanor
 6,0,0.19660854,0,Caucasian,Female,25 - 45,Misdemeanor
 7,0,0.27544436,0,Caucasian,Male,25 - 45,Felony
