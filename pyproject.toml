@@ -80,6 +80,18 @@ incumbent = "score_factor"
 expected_rows = 6172
 expected_base_rate = 0.4551
 
+# The modelling table carries no dates, so the time-ordered stability design runs on a
+# dated cohort rebuilt from the raw ProPublica export (see data.load_dated).
+dated_data_path = "data/cox-violent-parsed.csv"
+
+[tool.compas_scoring.splits]
+# Stability design 1: stratified random partition X1 / X2 / X3 of the modelling table.
+# Train on X1 and on X2, test both on the shared reference set X3.
+partition = [0.4, 0.4, 0.2]
+# Stability design 2: time-ordered windows on the dated cohort, as [train_end, test_end]
+# fractions of the date-sorted rows: train on [0, train_end), test on [train_end, test_end).
+temporal_windows = [[0.4, 0.6], [0.7, 1.0]]
+
 [tool.compas_scoring.features]
 # Race-aware: every predictor except the target and the incumbent benchmark.
 race_aware = [

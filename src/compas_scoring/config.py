@@ -53,6 +53,14 @@ class Iterations:
 
 
 @dataclass(frozen=True)
+class Splits:
+    """Fractions for the two stability designs. See [tool.compas_scoring.splits]."""
+
+    partition: tuple[float, float, float]
+    temporal_windows: tuple[tuple[float, float], ...]
+
+
+@dataclass(frozen=True)
 class Config:
     random_state: int
     test_size: float
@@ -61,6 +69,8 @@ class Config:
     incumbent: str
     expected_rows: int
     expected_base_rate: float
+    dated_data_path: Path
+    splits: Splits
     costs: Costs
     iterations: Iterations
     feature_sets: dict[str, list[str]] = field(default_factory=dict)
@@ -97,6 +107,11 @@ def load_config() -> Config:
         incumbent=table["incumbent"],
         expected_rows=table["expected_rows"],
         expected_base_rate=table["expected_base_rate"],
+        dated_data_path=root / table["dated_data_path"],
+        splits=Splits(
+            partition=tuple(table["splits"]["partition"]),
+            temporal_windows=tuple(tuple(w) for w in table["splits"]["temporal_windows"]),
+        ),
         costs=Costs(**table["costs"]),
         iterations=Iterations(**table["iterations"]),
         # Every key under [tool.compas_scoring.features] is a feature set, except the
