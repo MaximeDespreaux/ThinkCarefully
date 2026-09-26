@@ -15,7 +15,7 @@ RUN     := $(UV) run
 KERNEL  := compas-scoring
 
 .DEFAULT_GOAL := help
-.PHONY: help setup eda eda-plots lint format test clean distclean
+.PHONY: help setup eda eda-plots tabpfn-smoke tabpfn tabpfn-test lint format test clean distclean
 
 help: ## Show this help
 	@grep -hE '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) \
@@ -32,6 +32,15 @@ eda: ## WS1: distributions, Cramer's V association matrix, PCA
 
 eda-plots: ## WS1 figures only -> reports/figures/eda/ and reports/EDA.md
 	$(RUN) python scripts/plot_eda.py
+
+tabpfn-smoke: ## TabPFN: check it installs, downloads its weights and predicts
+	$(RUN) python tabpfn/smoke_tabpfn.py
+
+tabpfn: ## TabPFN: fit every design -> predictions + performance in tabpfn/artifacts/
+	$(RUN) python tabpfn/run_tabpfn.py
+
+tabpfn-test: ## TabPFN: unit tests for the metrics and the model adapter
+	$(RUN) pytest tabpfn
 
 lint: ## Check formatting and lint rules
 	$(RUN) ruff check src scripts tests
