@@ -9,7 +9,6 @@ data
 # so the analysis can start from saved predictions without refitting the model.
 models/
 /artifacts/
-reports/figures/
 reports/EDA.md
 
 # Python
