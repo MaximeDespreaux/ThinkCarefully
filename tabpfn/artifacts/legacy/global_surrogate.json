@@ -1,0 +1,19 @@
+{
+  "fidelity_r2": 0.9133981971171371,
+  "fidelity_correlation": 0.9557186809501724,
+  "surrogate_auc_vs_black_box": 0.9693402690708484,
+  "n_leaves": 13,
+  "max_depth": 4,
+  "importance": {
+    "Number_of_Priors": 0.7253312820267651,
+    "Age_Above_FourtyFive": 0.08024268698886261,
+    "Age_Below_TwentyFive": 0.19062865403087817,
+    "African_American": 0.0,
+    "Asian": 0.0,
+    "Hispanic": 0.0,
+    "Native_American": 0.0,
+    "Other": 0.0,
+    "Female": 0.0,
+    "Misdemeanor": 0.0037973769534940384
+  }
+}

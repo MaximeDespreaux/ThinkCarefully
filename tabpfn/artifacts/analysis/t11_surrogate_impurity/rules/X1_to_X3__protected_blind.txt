@@ -1,0 +1,30 @@
+Depth-4 regression tree on TabPFN's scores, X1_to_X3 x protected_blind, fidelity R^2 = 0.990
+
+|--- Number_of_Priors <= 1.500
+|   |--- Number_of_Priors <= 0.500
+|   |   |--- Misdemeanor <= 0.500
+|   |   |   |--- value: [0.272]
+|   |   |--- Misdemeanor >  0.500
+|   |   |   |--- value: [0.218]
+|   |--- Number_of_Priors >  0.500
+|   |   |--- Misdemeanor <= 0.500
+|   |   |   |--- value: [0.394]
+|   |   |--- Misdemeanor >  0.500
+|   |   |   |--- value: [0.328]
+|--- Number_of_Priors >  1.500
+|   |--- Number_of_Priors <= 4.500
+|   |   |--- Number_of_Priors <= 2.500
+|   |   |   |--- value: [0.486]
+|   |   |--- Number_of_Priors >  2.500
+|   |   |   |--- Misdemeanor <= 0.500
+|   |   |   |   |--- value: [0.595]
+|   |   |   |--- Misdemeanor >  0.500
+|   |   |   |   |--- value: [0.539]
+|   |--- Number_of_Priors >  4.500
+|   |   |--- Number_of_Priors <= 10.500
+|   |   |   |--- Number_of_Priors <= 6.500
+|   |   |   |   |--- value: [0.634]
+|   |   |   |--- Number_of_Priors >  6.500
+|   |   |   |   |--- value: [0.681]
+|   |   |--- Number_of_Priors >  10.500
+|   |   |   |--- value: [0.755]

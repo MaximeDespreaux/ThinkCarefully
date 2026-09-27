@@ -1,0 +1,13 @@
+{
+  "metric": "auc",
+  "n_repeats": 10,
+  "seconds": 875.7615159999114,
+  "model_calls": 101,
+  "seconds_per_call": 8.670906099009024,
+  "top_feature": "Number_of_Priors",
+  "top_importance": 0.17882215458265877,
+  "top_share": 0.7291995161802985,
+  "n_features_distinguishable_from_zero": 5,
+  "n_features": 10,
+  "share_in_top_feature": 0.7291995161802985
+}

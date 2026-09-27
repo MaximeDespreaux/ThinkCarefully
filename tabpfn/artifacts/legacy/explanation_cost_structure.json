@@ -1,0 +1,8 @@
+{
+  "fixed_seconds_per_call": 4.592491084320094,
+  "marginal_ms_per_row": 1.1266718474931003,
+  "fixed_share_at_2000_rows": 0.6708445693434428,
+  "xper_coalitions": 1024,
+  "xper_hours_one_call_each": 1.9472596705582348,
+  "xper_hours_batched_32": 0.6817732384344757
+}

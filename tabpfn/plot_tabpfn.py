@@ -489,10 +489,9 @@ RADAR_SPOKES = [
     ("f1", "F1", lambda v: v),
     ("ece", "Calibration\n(1 - ECE)", lambda v: 1 - v),
 ]
-# TODO(analysis): add the interpretability, stability and fairness dimensions as spokes.
-# Write tabpfn/artifacts/radar_extra.csv with one row per feature_set and one column per
-# new dimension, each already scaled to 0-1 with higher = better (e.g. 1 - |FPR gap|,
-# 1 - decision flip rate between X1 and X2). Every column in it becomes a spoke here.
+# The fairness and stability spokes come from tabpfn/artifacts/radar_extra.csv, written by
+# analysis/t18_radar_extra.py: one row per feature_set, one column per dimension, each scaled
+# to 0-1 with higher = better. Every column in it becomes a spoke here.
 RADAR_EXTRA = ART / "radar_extra.csv"
 
 

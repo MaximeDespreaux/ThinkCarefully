@@ -192,8 +192,8 @@ def main() -> int:
         print("\n" + shown[columns].round(3).to_string(index=False))
     print(f"\n-> {ART / 'performance.csv'}\n-> {ART / 'runs.csv'}\n-> {PRED}/")
 
-    # TODO(analysis): the predictions/ files are the input for the three analysis dimensions.
-    # See tabpfn/README.md, "For the analysis", for what each dimension still needs.
+    # The predictions/ files are the input for the analysis tests in tabpfn/analysis/
+    # (README, "The analysis, test by test").
     return 0
 
 

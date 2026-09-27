@@ -1,0 +1,36 @@
+{
+  "run": "holdout",
+  "feature_set": "race_aware",
+  "defendant_row": 31,
+  "defendant": {
+    "Number_of_Priors": 4.0,
+    "Age_Above_FourtyFive": 0.0,
+    "Age_Below_TwentyFive": 0.0,
+    "African_American": 0.0,
+    "Asian": 0.0,
+    "Hispanic": 0.0,
+    "Native_American": 0.0,
+    "Other": 0.0,
+    "Female": 1.0,
+    "Misdemeanor": 1.0
+  },
+  "prediction": 0.4822511076927185,
+  "n_runs": 15,
+  "n_distinct_top_features": 4,
+  "top_features_named": {
+    "Number_of_Priors": 6,
+    "Native_American": 5,
+    "Other": 3,
+    "Asian": 1
+  },
+  "distinct_by_sample_size": {
+    "1000": 1,
+    "2000": 3,
+    "5000": 2
+  },
+  "runs_naming_an_absent_feature": 9,
+  "earlier_study": {
+    "n_distinct_top_features": 4,
+    "runs_naming_an_absent_feature": 10
+  }
+}

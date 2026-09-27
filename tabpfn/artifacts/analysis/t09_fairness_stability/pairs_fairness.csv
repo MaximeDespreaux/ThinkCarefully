@@ -1,0 +1,757 @@
+pair,feature_set,model,operating_point,attribute,metric,a,b,delta
+X1_vs_X2,age_blind,COMPAS tool,tool,race,demographic_parity_difference,0.2434860736747529,0.2434860736747529,0.0
+X1_vs_X2,age_blind,COMPAS tool,tool,race,demographic_parity_difference_minimum_delta,0.2952134916803362,0.2952134916803362,0.0
+X1_vs_X2,age_blind,COMPAS tool,tool,race,equal_opportunity_difference,0.2627627627627628,0.2627627627627628,0.0
+X1_vs_X2,age_blind,COMPAS tool,tool,race,equalized_odds_difference,0.2627627627627628,0.2627627627627628,0.0
+X1_vs_X2,age_blind,COMPAS tool,tool,race,equalized_odds_difference_minimum_delta,0.3421151678994049,0.3421151678994049,0.0
+X1_vs_X2,age_blind,COMPAS tool,tool,race,fnr_difference,-0.2627627627627628,-0.2627627627627628,0.0
+X1_vs_X2,age_blind,COMPAS tool,tool,race,fpr_difference,0.1568172442244224,0.1568172442244224,0.0
+X1_vs_X2,age_blind,COMPAS tool,tool,race,fpr_difference_minimum_delta,0.221955342909102,0.221955342909102,0.0
+X1_vs_X2,age_blind,COMPAS tool,tool,race,ppv_difference,0.1182547993019197,0.1182547993019197,0.0
+X1_vs_X2,age_blind,COMPAS tool,tool,sex,demographic_parity_difference,-0.0218115218115217,-0.0218115218115217,0.0
+X1_vs_X2,age_blind,COMPAS tool,tool,sex,demographic_parity_difference_minimum_delta,0.0776851284060744,0.0776851284060744,0.0
+X1_vs_X2,age_blind,COMPAS tool,tool,sex,equal_opportunity_difference,0.0471636546184739,0.0471636546184739,0.0
+X1_vs_X2,age_blind,COMPAS tool,tool,sex,equalized_odds_difference,0.0471636546184739,0.0471636546184739,0.0
+X1_vs_X2,age_blind,COMPAS tool,tool,sex,equalized_odds_difference_minimum_delta,0.1378669979558617,0.1378669979558617,0.0
+X1_vs_X2,age_blind,COMPAS tool,tool,sex,fnr_difference,-0.0471636546184738,-0.0471636546184738,0.0
+X1_vs_X2,age_blind,COMPAS tool,tool,sex,fpr_difference,0.0031015240685894,0.0031015240685894,0.0
+X1_vs_X2,age_blind,COMPAS tool,tool,sex,fpr_difference_minimum_delta,0.0774026384523835,0.0774026384523835,0.0
+X1_vs_X2,age_blind,COMPAS tool,tool,sex,ppv_difference,-0.1089475280558083,-0.1089475280558083,0.0
+X1_vs_X2,age_blind,TabPFN,0.5,race,demographic_parity_difference,0.2205750224618149,0.2679245283018868,0.04734950584007189
+X1_vs_X2,age_blind,TabPFN,0.5,race,demographic_parity_difference_minimum_delta,0.268622914228536,0.3124535294726459,0.04383061524410986
+X1_vs_X2,age_blind,TabPFN,0.5,race,equal_opportunity_difference,0.2466673991064235,0.2901743206621255,0.043506921555702016
+X1_vs_X2,age_blind,TabPFN,0.5,race,equalized_odds_difference,0.2466673991064235,0.2901743206621255,0.043506921555702016
+X1_vs_X2,age_blind,TabPFN,0.5,race,equalized_odds_difference_minimum_delta,0.330372937841211,0.3662204836362139,0.03584754579500288
+X1_vs_X2,age_blind,TabPFN,0.5,race,fnr_difference,-0.2466673991064235,-0.2901743206621255,-0.043506921555702016
+X1_vs_X2,age_blind,TabPFN,0.5,race,fpr_difference,0.1523695338283828,0.2017326732673267,0.04936313943894388
+X1_vs_X2,age_blind,TabPFN,0.5,race,fpr_difference_minimum_delta,0.2136609028995513,0.2585855219545452,0.0449246190549939
+X1_vs_X2,age_blind,TabPFN,0.5,race,ppv_difference,0.1314182194616977,0.0706366803927779,-0.06078153906891981
+X1_vs_X2,age_blind,TabPFN,0.5,sex,demographic_parity_difference,-0.1842601842601842,-0.1797091797091797,0.004551004551004489
+X1_vs_X2,age_blind,TabPFN,0.5,sex,demographic_parity_difference_minimum_delta,0.2378470173382205,0.2256950291135344,-0.012151988224686106
+X1_vs_X2,age_blind,TabPFN,0.5,sex,equal_opportunity_difference,-0.2592118473895582,-0.2402861445783132,0.018925702811245004
+X1_vs_X2,age_blind,TabPFN,0.5,sex,equalized_odds_difference,0.2592118473895582,0.2402861445783132,-0.018925702811245004
+X1_vs_X2,age_blind,TabPFN,0.5,sex,equalized_odds_difference_minimum_delta,0.3480739053344232,0.3261380889934143,-0.021935816341008885
+X1_vs_X2,age_blind,TabPFN,0.5,sex,fnr_difference,0.2592118473895582,0.2402861445783132,-0.018925702811245004
+X1_vs_X2,age_blind,TabPFN,0.5,sex,fpr_difference,-0.0922067852194582,-0.0978759644595848,-0.005669179240126596
+X1_vs_X2,age_blind,TabPFN,0.5,sex,fpr_difference_minimum_delta,0.1583553416934423,0.1533353024682877,-0.005020039225154593
+X1_vs_X2,age_blind,TabPFN,0.5,sex,ppv_difference,-0.1880053908355795,-0.1581196581196581,0.029885732715921376
+X1_vs_X2,age_blind,TabPFN,break_even,race,demographic_parity_difference,0.3550763701707097,0.0669811320754716,-0.28809523809523807
+X1_vs_X2,age_blind,TabPFN,break_even,race,demographic_parity_difference_minimum_delta,0.394378992124636,0.0930960477450426,-0.3012829443795934
+X1_vs_X2,age_blind,TabPFN,break_even,race,equal_opportunity_difference,0.2472716619058083,0.052149710686296,-0.19512195121951229
+X1_vs_X2,age_blind,TabPFN,break_even,race,equalized_odds_difference,0.4186391295379538,0.0709828795379537,-0.3476562500000001
+X1_vs_X2,age_blind,TabPFN,break_even,race,equalized_odds_difference_minimum_delta,0.4753171542918351,0.1115581220740156,-0.36375903221781947
+X1_vs_X2,age_blind,TabPFN,break_even,race,fnr_difference,-0.2472716619058082,-0.052149710686296,0.1951219512195122
+X1_vs_X2,age_blind,TabPFN,break_even,race,fpr_difference,0.4186391295379538,0.0709828795379537,-0.3476562500000001
+X1_vs_X2,age_blind,TabPFN,break_even,race,fpr_difference_minimum_delta,0.4753171542918351,0.1093918170131032,-0.3659253372787319
+X1_vs_X2,age_blind,TabPFN,break_even,race,ppv_difference,0.0631552307740975,0.127964898696606,0.06480966792250849
+X1_vs_X2,age_blind,TabPFN,break_even,sex,demographic_parity_difference,-0.1652236652236652,-0.3020868020868021,-0.13686313686313692
+X1_vs_X2,age_blind,TabPFN,break_even,sex,demographic_parity_difference_minimum_delta,0.2196106838824249,0.3506252102283431,0.13101452634591818
+X1_vs_X2,age_blind,TabPFN,break_even,sex,equal_opportunity_difference,-0.1655120481927711,-0.2446787148594378,-0.07916666666666669
+X1_vs_X2,age_blind,TabPFN,break_even,sex,equalized_odds_difference,0.1655120481927711,0.3267150538317804,0.1612030056390093
+X1_vs_X2,age_blind,TabPFN,break_even,sex,equalized_odds_difference_minimum_delta,0.2523607155532228,0.3926868896218805,0.14032617406865766
+X1_vs_X2,age_blind,TabPFN,break_even,sex,fnr_difference,0.165512048192771,0.2446787148594377,0.07916666666666672
+X1_vs_X2,age_blind,TabPFN,break_even,sex,fpr_difference,-0.136695859973815,-0.3267150538317804,-0.1900191938579654
+X1_vs_X2,age_blind,TabPFN,break_even,sex,fpr_difference_minimum_delta,0.2079258949245457,0.392311508783916,0.18438561385937033
+X1_vs_X2,age_blind,TabPFN,break_even,sex,ppv_difference,-0.1283930324407004,-0.0938019069043539,0.03459112553634651
+X1_vs_X2,protected_blind,COMPAS tool,tool,race,demographic_parity_difference,0.2434860736747529,0.2434860736747529,0.0
+X1_vs_X2,protected_blind,COMPAS tool,tool,race,demographic_parity_difference_minimum_delta,0.2952134916803362,0.2952134916803362,0.0
+X1_vs_X2,protected_blind,COMPAS tool,tool,race,equal_opportunity_difference,0.2627627627627628,0.2627627627627628,0.0
+X1_vs_X2,protected_blind,COMPAS tool,tool,race,equalized_odds_difference,0.2627627627627628,0.2627627627627628,0.0
+X1_vs_X2,protected_blind,COMPAS tool,tool,race,equalized_odds_difference_minimum_delta,0.3421151678994049,0.3421151678994049,0.0
+X1_vs_X2,protected_blind,COMPAS tool,tool,race,fnr_difference,-0.2627627627627628,-0.2627627627627628,0.0
+X1_vs_X2,protected_blind,COMPAS tool,tool,race,fpr_difference,0.1568172442244224,0.1568172442244224,0.0
+X1_vs_X2,protected_blind,COMPAS tool,tool,race,fpr_difference_minimum_delta,0.221955342909102,0.221955342909102,0.0
+X1_vs_X2,protected_blind,COMPAS tool,tool,race,ppv_difference,0.1182547993019197,0.1182547993019197,0.0
+X1_vs_X2,protected_blind,COMPAS tool,tool,sex,demographic_parity_difference,-0.0218115218115217,-0.0218115218115217,0.0
+X1_vs_X2,protected_blind,COMPAS tool,tool,sex,demographic_parity_difference_minimum_delta,0.0776851284060744,0.0776851284060744,0.0
+X1_vs_X2,protected_blind,COMPAS tool,tool,sex,equal_opportunity_difference,0.0471636546184739,0.0471636546184739,0.0
+X1_vs_X2,protected_blind,COMPAS tool,tool,sex,equalized_odds_difference,0.0471636546184739,0.0471636546184739,0.0
+X1_vs_X2,protected_blind,COMPAS tool,tool,sex,equalized_odds_difference_minimum_delta,0.1378669979558617,0.1378669979558617,0.0
+X1_vs_X2,protected_blind,COMPAS tool,tool,sex,fnr_difference,-0.0471636546184738,-0.0471636546184738,0.0
+X1_vs_X2,protected_blind,COMPAS tool,tool,sex,fpr_difference,0.0031015240685894,0.0031015240685894,0.0
+X1_vs_X2,protected_blind,COMPAS tool,tool,sex,fpr_difference_minimum_delta,0.0774026384523835,0.0774026384523835,0.0
+X1_vs_X2,protected_blind,COMPAS tool,tool,sex,ppv_difference,-0.1089475280558083,-0.1089475280558083,0.0
+X1_vs_X2,protected_blind,TabPFN,0.5,race,demographic_parity_difference,0.1389038634321653,0.1547619047619047,0.01585804132973942
+X1_vs_X2,protected_blind,TabPFN,0.5,race,demographic_parity_difference_minimum_delta,0.1897777001500404,0.2038403229038569,0.014062622753816506
+X1_vs_X2,protected_blind,TabPFN,0.5,race,equal_opportunity_difference,0.1492895334358748,0.1778729949461657,0.028583461510290897
+X1_vs_X2,protected_blind,TabPFN,0.5,race,equalized_odds_difference,0.1492895334358748,0.1778729949461657,0.028583461510290897
+X1_vs_X2,protected_blind,TabPFN,0.5,race,equalized_odds_difference_minimum_delta,0.2341558506556337,0.2597988081243812,0.025642957468747507
+X1_vs_X2,protected_blind,TabPFN,0.5,race,fnr_difference,-0.1492895334358749,-0.1778729949461657,-0.028583461510290814
+X1_vs_X2,protected_blind,TabPFN,0.5,race,fpr_difference,0.0826629537953795,0.0873040429042904,0.004641089108910909
+X1_vs_X2,protected_blind,TabPFN,0.5,race,fpr_difference_minimum_delta,0.1447876958394553,0.1468403613987818,0.002052665559326483
+X1_vs_X2,protected_blind,TabPFN,0.5,race,ppv_difference,0.1405352330415527,0.1406518010291595,0.00011656798760681375
+X1_vs_X2,protected_blind,TabPFN,0.5,sex,demographic_parity_difference,-0.1144966144966145,-0.1143301143301143,0.0001665001665002025
+X1_vs_X2,protected_blind,TabPFN,0.5,sex,demographic_parity_difference_minimum_delta,0.1765418977913177,0.1680125259268519,-0.008529371864465812
+X1_vs_X2,protected_blind,TabPFN,0.5,sex,equal_opportunity_difference,-0.1695281124497992,-0.1904618473895581,-0.02093373493975889
+X1_vs_X2,protected_blind,TabPFN,0.5,sex,equalized_odds_difference,0.1695281124497992,0.1904618473895581,0.02093373493975889
+X1_vs_X2,protected_blind,TabPFN,0.5,sex,equalized_odds_difference_minimum_delta,0.2694166141669179,0.2821165632728521,0.012699949105934194
+X1_vs_X2,protected_blind,TabPFN,0.5,sex,fnr_difference,0.1695281124497992,0.1904618473895583,0.020933734939759086
+X1_vs_X2,protected_blind,TabPFN,0.5,sex,fpr_difference,-0.0338498303059577,-0.0211895107472893,0.0126603195586684
+X1_vs_X2,protected_blind,TabPFN,0.5,sex,fpr_difference_minimum_delta,0.1051530556091989,0.0873501690075292,-0.01780288660166969
+X1_vs_X2,protected_blind,TabPFN,0.5,sex,ppv_difference,-0.1845676845676846,-0.2202380952380951,-0.03567041067041049
+X1_vs_X2,protected_blind,TabPFN,break_even,race,demographic_parity_difference,0.08607367475292,0.08607367475292,0.0
+X1_vs_X2,protected_blind,TabPFN,break_even,race,demographic_parity_difference_minimum_delta,0.1251819596754916,0.1251819596754916,0.0
+X1_vs_X2,protected_blind,TabPFN,break_even,race,equal_opportunity_difference,0.0377755804585072,0.0377755804585072,0.0
+X1_vs_X2,protected_blind,TabPFN,break_even,race,equalized_odds_difference,0.0973081683168316,0.0973081683168316,0.0
+X1_vs_X2,protected_blind,TabPFN,break_even,race,equalized_odds_difference_minimum_delta,0.156109695418441,0.156109695418441,0.0
+X1_vs_X2,protected_blind,TabPFN,break_even,race,fnr_difference,-0.0377755804585072,-0.0377755804585072,0.0
+X1_vs_X2,protected_blind,TabPFN,break_even,race,fpr_difference,0.0973081683168316,0.0973081683168316,0.0
+X1_vs_X2,protected_blind,TabPFN,break_even,race,fpr_difference_minimum_delta,0.156109695418441,0.156109695418441,0.0
+X1_vs_X2,protected_blind,TabPFN,break_even,race,ppv_difference,0.1137595556200207,0.1137595556200207,0.0
+X1_vs_X2,protected_blind,TabPFN,break_even,sex,demographic_parity_difference,-0.0911865911865912,-0.0911865911865912,0.0
+X1_vs_X2,protected_blind,TabPFN,break_even,sex,demographic_parity_difference_minimum_delta,0.1454577014945506,0.1454577014945506,0.0
+X1_vs_X2,protected_blind,TabPFN,break_even,sex,equal_opportunity_difference,-0.1057228915662651,-0.1057228915662651,0.0
+X1_vs_X2,protected_blind,TabPFN,break_even,sex,equalized_odds_difference,0.1057228915662651,0.1057228915662651,0.0
+X1_vs_X2,protected_blind,TabPFN,break_even,sex,equalized_odds_difference_minimum_delta,0.1886329122012269,0.1886329122012269,0.0
+X1_vs_X2,protected_blind,TabPFN,break_even,sex,fnr_difference,0.105722891566265,0.105722891566265,0.0
+X1_vs_X2,protected_blind,TabPFN,break_even,sex,fpr_difference,-0.0576069962247842,-0.0576069962247842,0.0
+X1_vs_X2,protected_blind,TabPFN,break_even,sex,fpr_difference_minimum_delta,0.1269344771379174,0.1269344771379174,0.0
+X1_vs_X2,protected_blind,TabPFN,break_even,sex,ppv_difference,-0.1381980795681962,-0.1381980795681962,0.0
+X1_vs_X2,race_aware,COMPAS tool,tool,race,demographic_parity_difference,0.2434860736747529,0.2434860736747529,0.0
+X1_vs_X2,race_aware,COMPAS tool,tool,race,demographic_parity_difference_minimum_delta,0.2952134916803362,0.2952134916803362,0.0
+X1_vs_X2,race_aware,COMPAS tool,tool,race,equal_opportunity_difference,0.2627627627627628,0.2627627627627628,0.0
+X1_vs_X2,race_aware,COMPAS tool,tool,race,equalized_odds_difference,0.2627627627627628,0.2627627627627628,0.0
+X1_vs_X2,race_aware,COMPAS tool,tool,race,equalized_odds_difference_minimum_delta,0.3421151678994049,0.3421151678994049,0.0
+X1_vs_X2,race_aware,COMPAS tool,tool,race,fnr_difference,-0.2627627627627628,-0.2627627627627628,0.0
+X1_vs_X2,race_aware,COMPAS tool,tool,race,fpr_difference,0.1568172442244224,0.1568172442244224,0.0
+X1_vs_X2,race_aware,COMPAS tool,tool,race,fpr_difference_minimum_delta,0.221955342909102,0.221955342909102,0.0
+X1_vs_X2,race_aware,COMPAS tool,tool,race,ppv_difference,0.1182547993019197,0.1182547993019197,0.0
+X1_vs_X2,race_aware,COMPAS tool,tool,sex,demographic_parity_difference,-0.0218115218115217,-0.0218115218115217,0.0
+X1_vs_X2,race_aware,COMPAS tool,tool,sex,demographic_parity_difference_minimum_delta,0.0776851284060744,0.0776851284060744,0.0
+X1_vs_X2,race_aware,COMPAS tool,tool,sex,equal_opportunity_difference,0.0471636546184739,0.0471636546184739,0.0
+X1_vs_X2,race_aware,COMPAS tool,tool,sex,equalized_odds_difference,0.0471636546184739,0.0471636546184739,0.0
+X1_vs_X2,race_aware,COMPAS tool,tool,sex,equalized_odds_difference_minimum_delta,0.1378669979558617,0.1378669979558617,0.0
+X1_vs_X2,race_aware,COMPAS tool,tool,sex,fnr_difference,-0.0471636546184738,-0.0471636546184738,0.0
+X1_vs_X2,race_aware,COMPAS tool,tool,sex,fpr_difference,0.0031015240685894,0.0031015240685894,0.0
+X1_vs_X2,race_aware,COMPAS tool,tool,sex,fpr_difference_minimum_delta,0.0774026384523835,0.0774026384523835,0.0
+X1_vs_X2,race_aware,COMPAS tool,tool,sex,ppv_difference,-0.1089475280558083,-0.1089475280558083,0.0
+X1_vs_X2,race_aware,TabPFN,0.5,race,demographic_parity_difference,0.2236747529200359,0.2484725965858041,0.024797843665768177
+X1_vs_X2,race_aware,TabPFN,0.5,race,demographic_parity_difference_minimum_delta,0.2757583823471549,0.3005146467058297,0.02475626435867484
+X1_vs_X2,race_aware,TabPFN,0.5,race,equal_opportunity_difference,0.2672306452794257,0.2827949901120633,0.015564344832637633
+X1_vs_X2,race_aware,TabPFN,0.5,race,equalized_odds_difference,0.2672306452794257,0.2827949901120633,0.015564344832637633
+X1_vs_X2,race_aware,TabPFN,0.5,race,equalized_odds_difference_minimum_delta,0.3486812420952206,0.3619134153251859,0.013232173229965283
+X1_vs_X2,race_aware,TabPFN,0.5,race,fnr_difference,-0.2672306452794257,-0.2827949901120632,-0.015564344832637522
+X1_vs_X2,race_aware,TabPFN,0.5,race,fpr_difference,0.1244843234323432,0.1554635932343234,0.030979269801980208
+X1_vs_X2,race_aware,TabPFN,0.5,race,fpr_difference_minimum_delta,0.1873598254103025,0.2174938583422031,0.030134032931900617
+X1_vs_X2,race_aware,TabPFN,0.5,race,ppv_difference,0.1409735799869653,0.1053738173273143,-0.03559976265965101
+X1_vs_X2,race_aware,TabPFN,0.5,sex,demographic_parity_difference,-0.1768786768786768,-0.1780996780996781,-0.0012210012210013
+X1_vs_X2,race_aware,TabPFN,0.5,sex,demographic_parity_difference_minimum_delta,0.2292983193765371,0.2314870168908368,0.0021886975142997034
+X1_vs_X2,race_aware,TabPFN,0.5,sex,equal_opportunity_difference,-0.2510542168674699,-0.2376506024096385,0.01340361445783142
+X1_vs_X2,race_aware,TabPFN,0.5,sex,equalized_odds_difference,0.2510542168674699,0.2376506024096385,-0.01340361445783142
+X1_vs_X2,race_aware,TabPFN,0.5,sex,equalized_odds_difference_minimum_delta,0.3540440710576905,0.3346932086196035,-0.01935086243808698
+X1_vs_X2,race_aware,TabPFN,0.5,sex,fnr_difference,0.2510542168674698,0.2376506024096386,-0.013403614457831226
+X1_vs_X2,race_aware,TabPFN,0.5,sex,fpr_difference,-0.0710935414574621,-0.0820378538470338,-0.010944312389571692
+X1_vs_X2,race_aware,TabPFN,0.5,sex,fpr_difference_minimum_delta,0.1350654758281165,0.1365205710210505,0.0014550951929339917
+X1_vs_X2,race_aware,TabPFN,0.5,sex,ppv_difference,-0.1794295980238042,-0.1531795946890286,0.026250003334775618
+X1_vs_X2,race_aware,TabPFN,break_even,race,demographic_parity_difference,0.2449685534591195,0.123539982030548,-0.1214285714285715
+X1_vs_X2,race_aware,TabPFN,break_even,race,demographic_parity_difference_minimum_delta,0.2890587229643766,0.1664794827722386,-0.12257924019213803
+X1_vs_X2,race_aware,TabPFN,break_even,race,equal_opportunity_difference,0.1505346810224859,0.0773639493151688,-0.07317073170731711
+X1_vs_X2,race_aware,TabPFN,break_even,race,equalized_odds_difference,0.2764542079207921,0.1241104579207921,-0.15234375
+X1_vs_X2,race_aware,TabPFN,break_even,race,equalized_odds_difference_minimum_delta,0.3431748190920363,0.187461867499205,-0.1557129515928313
+X1_vs_X2,race_aware,TabPFN,break_even,race,fnr_difference,-0.1505346810224859,-0.0773639493151688,0.07317073170731711
+X1_vs_X2,race_aware,TabPFN,break_even,race,fpr_difference,0.2764542079207921,0.1241104579207921,-0.15234375
+X1_vs_X2,race_aware,TabPFN,break_even,race,fpr_difference_minimum_delta,0.3431748190920363,0.187461867499205,-0.1557129515928313
+X1_vs_X2,race_aware,TabPFN,break_even,race,ppv_difference,0.0716963052729475,0.1136566988462444,0.041960393573296895
+X1_vs_X2,race_aware,TabPFN,break_even,sex,demographic_parity_difference,-0.1272061272061271,-0.192141192141192,-0.0649350649350649
+X1_vs_X2,race_aware,TabPFN,break_even,sex,demographic_parity_difference_minimum_delta,0.184632702686487,0.2504022117919486,0.06576950910546162
+X1_vs_X2,race_aware,TabPFN,break_even,sex,equal_opportunity_difference,-0.13054718875502,-0.1659638554216868,-0.03541666666666679
+X1_vs_X2,race_aware,TabPFN,break_even,sex,equalized_odds_difference,0.13054718875502,0.1724015202552402,0.04185433150022019
+X1_vs_X2,race_aware,TabPFN,break_even,sex,equalized_odds_difference_minimum_delta,0.216297917299525,0.2649444009317944,0.048646483632269394
+X1_vs_X2,race_aware,TabPFN,break_even,sex,fnr_difference,0.13054718875502,0.1659638554216867,0.03541666666666671
+X1_vs_X2,race_aware,TabPFN,break_even,sex,fpr_difference,-0.0802710020210751,-0.1724015202552402,-0.0921305182341651
+X1_vs_X2,race_aware,TabPFN,break_even,sex,fpr_difference_minimum_delta,0.1575410356864006,0.2491829354381216,0.09164189975172099
+X1_vs_X2,race_aware,TabPFN,break_even,sex,ppv_difference,-0.1352665799739922,-0.1123741007194245,0.022892479254567694
+X1_vs_X2,race_blind,COMPAS tool,tool,race,demographic_parity_difference,0.2434860736747529,0.2434860736747529,0.0
+X1_vs_X2,race_blind,COMPAS tool,tool,race,demographic_parity_difference_minimum_delta,0.2952134916803362,0.2952134916803362,0.0
+X1_vs_X2,race_blind,COMPAS tool,tool,race,equal_opportunity_difference,0.2627627627627628,0.2627627627627628,0.0
+X1_vs_X2,race_blind,COMPAS tool,tool,race,equalized_odds_difference,0.2627627627627628,0.2627627627627628,0.0
+X1_vs_X2,race_blind,COMPAS tool,tool,race,equalized_odds_difference_minimum_delta,0.3421151678994049,0.3421151678994049,0.0
+X1_vs_X2,race_blind,COMPAS tool,tool,race,fnr_difference,-0.2627627627627628,-0.2627627627627628,0.0
+X1_vs_X2,race_blind,COMPAS tool,tool,race,fpr_difference,0.1568172442244224,0.1568172442244224,0.0
+X1_vs_X2,race_blind,COMPAS tool,tool,race,fpr_difference_minimum_delta,0.221955342909102,0.221955342909102,0.0
+X1_vs_X2,race_blind,COMPAS tool,tool,race,ppv_difference,0.1182547993019197,0.1182547993019197,0.0
+X1_vs_X2,race_blind,COMPAS tool,tool,sex,demographic_parity_difference,-0.0218115218115217,-0.0218115218115217,0.0
+X1_vs_X2,race_blind,COMPAS tool,tool,sex,demographic_parity_difference_minimum_delta,0.0776851284060744,0.0776851284060744,0.0
+X1_vs_X2,race_blind,COMPAS tool,tool,sex,equal_opportunity_difference,0.0471636546184739,0.0471636546184739,0.0
+X1_vs_X2,race_blind,COMPAS tool,tool,sex,equalized_odds_difference,0.0471636546184739,0.0471636546184739,0.0
+X1_vs_X2,race_blind,COMPAS tool,tool,sex,equalized_odds_difference_minimum_delta,0.1378669979558617,0.1378669979558617,0.0
+X1_vs_X2,race_blind,COMPAS tool,tool,sex,fnr_difference,-0.0471636546184738,-0.0471636546184738,0.0
+X1_vs_X2,race_blind,COMPAS tool,tool,sex,fpr_difference,0.0031015240685894,0.0031015240685894,0.0
+X1_vs_X2,race_blind,COMPAS tool,tool,sex,fpr_difference_minimum_delta,0.0774026384523835,0.0774026384523835,0.0
+X1_vs_X2,race_blind,COMPAS tool,tool,sex,ppv_difference,-0.1089475280558083,-0.1089475280558083,0.0
+X1_vs_X2,race_blind,TabPFN,0.5,race,demographic_parity_difference,0.2205300988319856,0.2200359389038634,-0.000494159928122212
+X1_vs_X2,race_blind,TabPFN,0.5,race,demographic_parity_difference_minimum_delta,0.2729911546375763,0.270470524447058,-0.0025206301905182915
+X1_vs_X2,race_blind,TabPFN,0.5,race,equal_opportunity_difference,0.2733282062550355,0.2524902951732219,-0.020837911081813598
+X1_vs_X2,race_blind,TabPFN,0.5,race,equalized_odds_difference,0.2733282062550355,0.2524902951732219,-0.020837911081813598
+X1_vs_X2,race_blind,TabPFN,0.5,race,equalized_odds_difference_minimum_delta,0.3541669790158162,0.3364107484372054,-0.017756230578610754
+X1_vs_X2,race_blind,TabPFN,0.5,race,fnr_difference,-0.2733282062550355,-0.2524902951732219,0.020837911081813598
+X1_vs_X2,race_blind,TabPFN,0.5,race,fpr_difference,0.1139774133663366,0.1272431930693069,0.013265779702970298
+X1_vs_X2,race_blind,TabPFN,0.5,race,fpr_difference_minimum_delta,0.1770011494631266,0.1879092877080977,0.01090813824497111
+X1_vs_X2,race_blind,TabPFN,0.5,race,ppv_difference,0.1533669609079444,0.117100315836968,-0.036266645070976405
+X1_vs_X2,race_blind,TabPFN,0.5,sex,demographic_parity_difference,-0.163059163059163,-0.2285492285492285,-0.0654900654900655
+X1_vs_X2,race_blind,TabPFN,0.5,sex,demographic_parity_difference_minimum_delta,0.2163714141288069,0.2801136079607585,0.06374219383195162
+X1_vs_X2,race_blind,TabPFN,0.5,sex,equal_opportunity_difference,-0.2510542168674699,-0.3045933734939759,-0.05353915662650599
+X1_vs_X2,race_blind,TabPFN,0.5,sex,equalized_odds_difference,0.2510542168674699,0.3045933734939759,0.05353915662650599
+X1_vs_X2,race_blind,TabPFN,0.5,sex,equalized_odds_difference_minimum_delta,0.3542101455040349,0.3963402993270249,0.04213015382299001
+X1_vs_X2,race_blind,TabPFN,0.5,sex,fnr_difference,0.2510542168674698,0.3045933734939758,0.05353915662650599
+X1_vs_X2,race_blind,TabPFN,0.5,sex,fpr_difference,-0.0493066059920428,-0.120908594018126,-0.0716019880260832
+X1_vs_X2,race_blind,TabPFN,0.5,sex,fpr_difference_minimum_delta,0.1133706307287662,0.1736507412465281,0.0602801105177619
+X1_vs_X2,race_blind,TabPFN,0.5,sex,ppv_difference,-0.2040188787185355,-0.1379986919555265,0.066020186763009
+X1_vs_X2,race_blind,TabPFN,break_even,race,demographic_parity_difference,0.1812219227313567,0.1691374663072775,-0.01208445642407921
+X1_vs_X2,race_blind,TabPFN,break_even,race,demographic_parity_difference_minimum_delta,0.2278954517124896,0.2120599227668643,-0.015835528945625288
+X1_vs_X2,race_blind,TabPFN,break_even,race,equal_opportunity_difference,0.111404087013843,0.1043909763421958,-0.007013110671647199
+X1_vs_X2,race_blind,TabPFN,break_even,race,equalized_odds_difference,0.1861334570957096,0.190117058580858,0.003983601485148397
+X1_vs_X2,race_blind,TabPFN,break_even,race,equalized_odds_difference_minimum_delta,0.2554476942880436,0.2528509327368593,-0.002596761551184268
+X1_vs_X2,race_blind,TabPFN,break_even,race,fnr_difference,-0.1114040870138431,-0.1043909763421958,0.00701311067164731
+X1_vs_X2,race_blind,TabPFN,break_even,race,fpr_difference,0.1861334570957096,0.190117058580858,0.003983601485148397
+X1_vs_X2,race_blind,TabPFN,break_even,race,fpr_difference_minimum_delta,0.2554476942880436,0.2528509327368593,-0.002596761551184268
+X1_vs_X2,race_blind,TabPFN,break_even,race,ppv_difference,0.0915285066793893,0.1010063174372449,0.009477810757855601
+X1_vs_X2,race_blind,TabPFN,break_even,sex,demographic_parity_difference,-0.0741480741480741,-0.2360972360972361,-0.16194916194916198
+X1_vs_X2,race_blind,TabPFN,break_even,sex,demographic_parity_difference_minimum_delta,0.1322397375624817,0.2921683089479447,0.15992857138546301
+X1_vs_X2,race_blind,TabPFN,break_even,sex,equal_opportunity_difference,-0.095582329317269,-0.18679718875502,-0.091214859437751
+X1_vs_X2,race_blind,TabPFN,break_even,sex,equalized_odds_difference,0.095582329317269,0.2376606373377738,0.1420783080205048
+X1_vs_X2,race_blind,TabPFN,break_even,sex,equalized_odds_difference_minimum_delta,0.1794109801239323,0.3151459879397622,0.13573500781582987
+X1_vs_X2,race_blind,TabPFN,break_even,sex,fnr_difference,0.095582329317269,0.18679718875502,0.091214859437751
+X1_vs_X2,race_blind,TabPFN,break_even,sex,fpr_difference,-0.0124188074385732,-0.2376606373377738,-0.22524182989920058
+X1_vs_X2,race_blind,TabPFN,break_even,sex,fpr_difference_minimum_delta,0.0905217208487444,0.3124295170912455,0.22190779624250112
+X1_vs_X2,race_blind,TabPFN,break_even,sex,ppv_difference,-0.1519462801863893,-0.0970842824601367,0.05486199772625261
+X1_vs_X2,race_priors_blind,COMPAS tool,tool,race,demographic_parity_difference,0.2434860736747529,0.2434860736747529,0.0
+X1_vs_X2,race_priors_blind,COMPAS tool,tool,race,demographic_parity_difference_minimum_delta,0.2952134916803362,0.2952134916803362,0.0
+X1_vs_X2,race_priors_blind,COMPAS tool,tool,race,equal_opportunity_difference,0.2627627627627628,0.2627627627627628,0.0
+X1_vs_X2,race_priors_blind,COMPAS tool,tool,race,equalized_odds_difference,0.2627627627627628,0.2627627627627628,0.0
+X1_vs_X2,race_priors_blind,COMPAS tool,tool,race,equalized_odds_difference_minimum_delta,0.3421151678994049,0.3421151678994049,0.0
+X1_vs_X2,race_priors_blind,COMPAS tool,tool,race,fnr_difference,-0.2627627627627628,-0.2627627627627628,0.0
+X1_vs_X2,race_priors_blind,COMPAS tool,tool,race,fpr_difference,0.1568172442244224,0.1568172442244224,0.0
+X1_vs_X2,race_priors_blind,COMPAS tool,tool,race,fpr_difference_minimum_delta,0.221955342909102,0.221955342909102,0.0
+X1_vs_X2,race_priors_blind,COMPAS tool,tool,race,ppv_difference,0.1182547993019197,0.1182547993019197,0.0
+X1_vs_X2,race_priors_blind,COMPAS tool,tool,sex,demographic_parity_difference,-0.0218115218115217,-0.0218115218115217,0.0
+X1_vs_X2,race_priors_blind,COMPAS tool,tool,sex,demographic_parity_difference_minimum_delta,0.0776851284060744,0.0776851284060744,0.0
+X1_vs_X2,race_priors_blind,COMPAS tool,tool,sex,equal_opportunity_difference,0.0471636546184739,0.0471636546184739,0.0
+X1_vs_X2,race_priors_blind,COMPAS tool,tool,sex,equalized_odds_difference,0.0471636546184739,0.0471636546184739,0.0
+X1_vs_X2,race_priors_blind,COMPAS tool,tool,sex,equalized_odds_difference_minimum_delta,0.1378669979558617,0.1378669979558617,0.0
+X1_vs_X2,race_priors_blind,COMPAS tool,tool,sex,fnr_difference,-0.0471636546184738,-0.0471636546184738,0.0
+X1_vs_X2,race_priors_blind,COMPAS tool,tool,sex,fpr_difference,0.0031015240685894,0.0031015240685894,0.0
+X1_vs_X2,race_priors_blind,COMPAS tool,tool,sex,fpr_difference_minimum_delta,0.0774026384523835,0.0774026384523835,0.0
+X1_vs_X2,race_priors_blind,COMPAS tool,tool,sex,ppv_difference,-0.1089475280558083,-0.1089475280558083,0.0
+X1_vs_X2,race_priors_blind,TabPFN,0.5,race,demographic_parity_difference,0.1386792452830188,0.1386792452830188,0.0
+X1_vs_X2,race_priors_blind,TabPFN,0.5,race,demographic_parity_difference_minimum_delta,0.1916871296916932,0.1916871296916932,0.0
+X1_vs_X2,race_priors_blind,TabPFN,0.5,race,equal_opportunity_difference,0.1127957225518201,0.1127957225518201,0.0
+X1_vs_X2,race_priors_blind,TabPFN,0.5,race,equalized_odds_difference,0.1192373143564356,0.1192373143564356,0.0
+X1_vs_X2,race_priors_blind,TabPFN,0.5,race,equalized_odds_difference_minimum_delta,0.2032075032343593,0.2032075032343593,0.0
+X1_vs_X2,race_priors_blind,TabPFN,0.5,race,fnr_difference,-0.1127957225518201,-0.1127957225518201,0.0
+X1_vs_X2,race_priors_blind,TabPFN,0.5,race,fpr_difference,0.1192373143564356,0.1192373143564356,0.0
+X1_vs_X2,race_priors_blind,TabPFN,0.5,race,fpr_difference_minimum_delta,0.1873271889400921,0.1873271889400921,0.0
+X1_vs_X2,race_priors_blind,TabPFN,0.5,race,ppv_difference,0.1055152286163287,0.1055152286163287,0.0
+X1_vs_X2,race_priors_blind,TabPFN,0.5,sex,demographic_parity_difference,-0.5714285714285714,-0.5714285714285714,0.0
+X1_vs_X2,race_priors_blind,TabPFN,0.5,sex,demographic_parity_difference_minimum_delta,0.5977715850410171,0.5977715850410171,0.0
+X1_vs_X2,race_priors_blind,TabPFN,0.5,sex,equal_opportunity_difference,-0.6645833333333333,-0.6645833333333333,0.0
+X1_vs_X2,race_priors_blind,TabPFN,0.5,sex,equalized_odds_difference,0.6645833333333333,0.6645833333333333,0.0
+X1_vs_X2,race_priors_blind,TabPFN,0.5,sex,equalized_odds_difference_minimum_delta,0.6991558527542373,0.6991558527542373,0.0
+X1_vs_X2,race_priors_blind,TabPFN,0.5,sex,fnr_difference,0.6645833333333333,0.6645833333333333,0.0
+X1_vs_X2,race_priors_blind,TabPFN,0.5,sex,fpr_difference,-0.4856046065259117,-0.4856046065259117,0.0
+X1_vs_X2,race_priors_blind,TabPFN,0.5,sex,fpr_difference_minimum_delta,0.5234698639210019,0.5234698639210019,0.0
+X1_vs_X2,race_priors_blind,TabPFN,0.5,sex,ppv_difference,,,
+X1_vs_X2,race_priors_blind,TabPFN,break_even,race,demographic_parity_difference,0.0365678346810421,0.0365678346810421,0.0
+X1_vs_X2,race_priors_blind,TabPFN,break_even,race,demographic_parity_difference_minimum_delta,0.0544146929705892,0.0544146929705892,0.0
+X1_vs_X2,race_priors_blind,TabPFN,break_even,race,equal_opportunity_difference,0.0274848018750457,0.0274848018750457,0.0
+X1_vs_X2,race_priors_blind,TabPFN,break_even,race,equalized_odds_difference,0.04088025990099,0.04088025990099,0.0
+X1_vs_X2,race_priors_blind,TabPFN,break_even,race,equalized_odds_difference_minimum_delta,0.0671704502500619,0.0671704502500619,0.0
+X1_vs_X2,race_priors_blind,TabPFN,break_even,race,fnr_difference,-0.0274848018750457,-0.0274848018750457,0.0
+X1_vs_X2,race_priors_blind,TabPFN,break_even,race,fpr_difference,0.04088025990099,0.04088025990099,0.0
+X1_vs_X2,race_priors_blind,TabPFN,break_even,race,fpr_difference_minimum_delta,0.0651098789867528,0.0651098789867528,0.0
+X1_vs_X2,race_priors_blind,TabPFN,break_even,race,ppv_difference,0.1297940676365011,0.1297940676365011,0.0
+X1_vs_X2,race_priors_blind,TabPFN,break_even,sex,demographic_parity_difference,-0.1025641025641025,-0.1025641025641025,0.0
+X1_vs_X2,race_priors_blind,TabPFN,break_even,sex,demographic_parity_difference_minimum_delta,0.1360075117370892,0.1360075117370892,0.0
+X1_vs_X2,race_priors_blind,TabPFN,break_even,sex,equal_opportunity_difference,-0.072289156626506,-0.072289156626506,0.0
+X1_vs_X2,race_priors_blind,TabPFN,break_even,sex,equalized_odds_difference,0.119205298013245,0.119205298013245,0.0
+X1_vs_X2,race_priors_blind,TabPFN,break_even,sex,equalized_odds_difference_minimum_delta,0.1647383047707271,0.1647383047707271,0.0
+X1_vs_X2,race_priors_blind,TabPFN,break_even,sex,fnr_difference,0.072289156626506,0.072289156626506,0.0
+X1_vs_X2,race_priors_blind,TabPFN,break_even,sex,fpr_difference,-0.119205298013245,-0.119205298013245,0.0
+X1_vs_X2,race_priors_blind,TabPFN,break_even,sex,fpr_difference_minimum_delta,0.1647383047707271,0.1647383047707271,0.0
+X1_vs_X2,race_priors_blind,TabPFN,break_even,sex,ppv_difference,-0.1128538128538129,-0.1128538128538129,0.0
+X1_vs_X2,race_proxy_blind,COMPAS tool,tool,race,demographic_parity_difference,0.2434860736747529,0.2434860736747529,0.0
+X1_vs_X2,race_proxy_blind,COMPAS tool,tool,race,demographic_parity_difference_minimum_delta,0.2952134916803362,0.2952134916803362,0.0
+X1_vs_X2,race_proxy_blind,COMPAS tool,tool,race,equal_opportunity_difference,0.2627627627627628,0.2627627627627628,0.0
+X1_vs_X2,race_proxy_blind,COMPAS tool,tool,race,equalized_odds_difference,0.2627627627627628,0.2627627627627628,0.0
+X1_vs_X2,race_proxy_blind,COMPAS tool,tool,race,equalized_odds_difference_minimum_delta,0.3421151678994049,0.3421151678994049,0.0
+X1_vs_X2,race_proxy_blind,COMPAS tool,tool,race,fnr_difference,-0.2627627627627628,-0.2627627627627628,0.0
+X1_vs_X2,race_proxy_blind,COMPAS tool,tool,race,fpr_difference,0.1568172442244224,0.1568172442244224,0.0
+X1_vs_X2,race_proxy_blind,COMPAS tool,tool,race,fpr_difference_minimum_delta,0.221955342909102,0.221955342909102,0.0
+X1_vs_X2,race_proxy_blind,COMPAS tool,tool,race,ppv_difference,0.1182547993019197,0.1182547993019197,0.0
+X1_vs_X2,race_proxy_blind,COMPAS tool,tool,sex,demographic_parity_difference,-0.0218115218115217,-0.0218115218115217,0.0
+X1_vs_X2,race_proxy_blind,COMPAS tool,tool,sex,demographic_parity_difference_minimum_delta,0.0776851284060744,0.0776851284060744,0.0
+X1_vs_X2,race_proxy_blind,COMPAS tool,tool,sex,equal_opportunity_difference,0.0471636546184739,0.0471636546184739,0.0
+X1_vs_X2,race_proxy_blind,COMPAS tool,tool,sex,equalized_odds_difference,0.0471636546184739,0.0471636546184739,0.0
+X1_vs_X2,race_proxy_blind,COMPAS tool,tool,sex,equalized_odds_difference_minimum_delta,0.1378669979558617,0.1378669979558617,0.0
+X1_vs_X2,race_proxy_blind,COMPAS tool,tool,sex,fnr_difference,-0.0471636546184738,-0.0471636546184738,0.0
+X1_vs_X2,race_proxy_blind,COMPAS tool,tool,sex,fpr_difference,0.0031015240685894,0.0031015240685894,0.0
+X1_vs_X2,race_proxy_blind,COMPAS tool,tool,sex,fpr_difference_minimum_delta,0.0774026384523835,0.0774026384523835,0.0
+X1_vs_X2,race_proxy_blind,COMPAS tool,tool,sex,ppv_difference,-0.1089475280558083,-0.1089475280558083,0.0
+X1_vs_X2,race_proxy_blind,TabPFN,0.5,race,demographic_parity_difference,0.0781671159029649,0.0781671159029649,0.0
+X1_vs_X2,race_proxy_blind,TabPFN,0.5,race,demographic_parity_difference_minimum_delta,0.1156552990177019,0.1156552990177019,0.0
+X1_vs_X2,race_proxy_blind,TabPFN,0.5,race,equal_opportunity_difference,0.0814289899655753,0.0814289899655753,0.0
+X1_vs_X2,race_proxy_blind,TabPFN,0.5,race,equalized_odds_difference,0.0814289899655753,0.0814289899655753,0.0
+X1_vs_X2,race_proxy_blind,TabPFN,0.5,race,equalized_odds_difference_minimum_delta,0.1468615997458957,0.1468615997458957,0.0
+X1_vs_X2,race_proxy_blind,TabPFN,0.5,race,fnr_difference,-0.0814289899655752,-0.0814289899655752,0.0
+X1_vs_X2,race_proxy_blind,TabPFN,0.5,race,fpr_difference,0.0535530115511551,0.0535530115511551,0.0
+X1_vs_X2,race_proxy_blind,TabPFN,0.5,race,fpr_difference_minimum_delta,0.0985335672199161,0.0985335672199161,0.0
+X1_vs_X2,race_proxy_blind,TabPFN,0.5,race,ppv_difference,0.1193438140806562,0.1193438140806562,0.0
+X1_vs_X2,race_proxy_blind,TabPFN,0.5,sex,demographic_parity_difference,-0.2207792207792207,-0.2207792207792207,0.0
+X1_vs_X2,race_proxy_blind,TabPFN,0.5,sex,demographic_parity_difference_minimum_delta,0.2416310592960339,0.2416310592960339,0.0
+X1_vs_X2,race_proxy_blind,TabPFN,0.5,sex,equal_opportunity_difference,-0.2770833333333333,-0.2770833333333333,0.0
+X1_vs_X2,race_proxy_blind,TabPFN,0.5,sex,equalized_odds_difference,0.2770833333333333,0.2770833333333333,0.0
+X1_vs_X2,race_proxy_blind,TabPFN,0.5,sex,equalized_odds_difference_minimum_delta,0.3096793783466109,0.3096793783466109,0.0
+X1_vs_X2,race_proxy_blind,TabPFN,0.5,sex,fnr_difference,0.2770833333333333,0.2770833333333333,0.0
+X1_vs_X2,race_proxy_blind,TabPFN,0.5,sex,fpr_difference,-0.1689059500959693,-0.1689059500959693,0.0
+X1_vs_X2,race_proxy_blind,TabPFN,0.5,sex,fpr_difference_minimum_delta,0.1945651624639951,0.1945651624639951,0.0
+X1_vs_X2,race_proxy_blind,TabPFN,0.5,sex,ppv_difference,,,
+X1_vs_X2,race_proxy_blind,TabPFN,break_even,race,demographic_parity_difference,0.0,0.0,0.0
+X1_vs_X2,race_proxy_blind,TabPFN,break_even,race,demographic_parity_difference_minimum_delta,0.0,0.0,0.0
+X1_vs_X2,race_proxy_blind,TabPFN,break_even,race,equal_opportunity_difference,0.0,0.0,0.0
+X1_vs_X2,race_proxy_blind,TabPFN,break_even,race,equalized_odds_difference,0.0,0.0,0.0
+X1_vs_X2,race_proxy_blind,TabPFN,break_even,race,equalized_odds_difference_minimum_delta,0.0,0.0,0.0
+X1_vs_X2,race_proxy_blind,TabPFN,break_even,race,fnr_difference,0.0,0.0,0.0
+X1_vs_X2,race_proxy_blind,TabPFN,break_even,race,fpr_difference,0.0,0.0,0.0
+X1_vs_X2,race_proxy_blind,TabPFN,break_even,race,fpr_difference_minimum_delta,0.0,0.0,0.0
+X1_vs_X2,race_proxy_blind,TabPFN,break_even,race,ppv_difference,0.1331087151841869,0.1331087151841869,0.0
+X1_vs_X2,race_proxy_blind,TabPFN,break_even,sex,demographic_parity_difference,0.0,0.0,0.0
+X1_vs_X2,race_proxy_blind,TabPFN,break_even,sex,demographic_parity_difference_minimum_delta,0.0,0.0,0.0
+X1_vs_X2,race_proxy_blind,TabPFN,break_even,sex,equal_opportunity_difference,0.0,0.0,0.0
+X1_vs_X2,race_proxy_blind,TabPFN,break_even,sex,equalized_odds_difference,0.0,0.0,0.0
+X1_vs_X2,race_proxy_blind,TabPFN,break_even,sex,equalized_odds_difference_minimum_delta,0.0,0.0,0.0
+X1_vs_X2,race_proxy_blind,TabPFN,break_even,sex,fnr_difference,0.0,0.0,0.0
+X1_vs_X2,race_proxy_blind,TabPFN,break_even,sex,fpr_difference,0.0,0.0,0.0
+X1_vs_X2,race_proxy_blind,TabPFN,break_even,sex,fpr_difference_minimum_delta,0.0,0.0,0.0
+X1_vs_X2,race_proxy_blind,TabPFN,break_even,sex,ppv_difference,-0.1248196248196248,-0.1248196248196248,0.0
+X1_vs_X2,sex_blind,COMPAS tool,tool,race,demographic_parity_difference,0.2434860736747529,0.2434860736747529,0.0
+X1_vs_X2,sex_blind,COMPAS tool,tool,race,demographic_parity_difference_minimum_delta,0.2952134916803362,0.2952134916803362,0.0
+X1_vs_X2,sex_blind,COMPAS tool,tool,race,equal_opportunity_difference,0.2627627627627628,0.2627627627627628,0.0
+X1_vs_X2,sex_blind,COMPAS tool,tool,race,equalized_odds_difference,0.2627627627627628,0.2627627627627628,0.0
+X1_vs_X2,sex_blind,COMPAS tool,tool,race,equalized_odds_difference_minimum_delta,0.3421151678994049,0.3421151678994049,0.0
+X1_vs_X2,sex_blind,COMPAS tool,tool,race,fnr_difference,-0.2627627627627628,-0.2627627627627628,0.0
+X1_vs_X2,sex_blind,COMPAS tool,tool,race,fpr_difference,0.1568172442244224,0.1568172442244224,0.0
+X1_vs_X2,sex_blind,COMPAS tool,tool,race,fpr_difference_minimum_delta,0.221955342909102,0.221955342909102,0.0
+X1_vs_X2,sex_blind,COMPAS tool,tool,race,ppv_difference,0.1182547993019197,0.1182547993019197,0.0
+X1_vs_X2,sex_blind,COMPAS tool,tool,sex,demographic_parity_difference,-0.0218115218115217,-0.0218115218115217,0.0
+X1_vs_X2,sex_blind,COMPAS tool,tool,sex,demographic_parity_difference_minimum_delta,0.0776851284060744,0.0776851284060744,0.0
+X1_vs_X2,sex_blind,COMPAS tool,tool,sex,equal_opportunity_difference,0.0471636546184739,0.0471636546184739,0.0
+X1_vs_X2,sex_blind,COMPAS tool,tool,sex,equalized_odds_difference,0.0471636546184739,0.0471636546184739,0.0
+X1_vs_X2,sex_blind,COMPAS tool,tool,sex,equalized_odds_difference_minimum_delta,0.1378669979558617,0.1378669979558617,0.0
+X1_vs_X2,sex_blind,COMPAS tool,tool,sex,fnr_difference,-0.0471636546184738,-0.0471636546184738,0.0
+X1_vs_X2,sex_blind,COMPAS tool,tool,sex,fpr_difference,0.0031015240685894,0.0031015240685894,0.0
+X1_vs_X2,sex_blind,COMPAS tool,tool,sex,fpr_difference_minimum_delta,0.0774026384523835,0.0774026384523835,0.0
+X1_vs_X2,sex_blind,COMPAS tool,tool,sex,ppv_difference,-0.1089475280558083,-0.1089475280558083,0.0
+X1_vs_X2,sex_blind,TabPFN,0.5,race,demographic_parity_difference,0.226010781671159,0.2539532794249776,0.027942497753818574
+X1_vs_X2,sex_blind,TabPFN,0.5,race,demographic_parity_difference_minimum_delta,0.2786547274783948,0.3055293853333403,0.026874657854945472
+X1_vs_X2,sex_blind,TabPFN,0.5,race,equal_opportunity_difference,0.291529334212261,0.2918039991210723,0.000274664908811284
+X1_vs_X2,sex_blind,TabPFN,0.5,race,equalized_odds_difference,0.291529334212261,0.2918039991210723,0.000274664908811284
+X1_vs_X2,sex_blind,TabPFN,0.5,race,equalized_odds_difference_minimum_delta,0.3728005829700744,0.3701629835376614,-0.0026375994324129848
+X1_vs_X2,sex_blind,TabPFN,0.5,race,fnr_difference,-0.291529334212261,-0.2918039991210723,-0.000274664908811284
+X1_vs_X2,sex_blind,TabPFN,0.5,race,fpr_difference,0.1121596534653465,0.15815800330033,0.04599834983498351
+X1_vs_X2,sex_blind,TabPFN,0.5,race,fpr_difference_minimum_delta,0.175779911053489,0.2180739868079772,0.04229407575448821
+X1_vs_X2,sex_blind,TabPFN,0.5,race,ppv_difference,0.1696230598669622,0.1095972992524717,-0.060025760614490484
+X1_vs_X2,sex_blind,TabPFN,0.5,sex,demographic_parity_difference,-0.1208791208791208,-0.1333666333666334,-0.012487512487512606
+X1_vs_X2,sex_blind,TabPFN,0.5,sex,demographic_parity_difference_minimum_delta,0.174193200287887,0.1864784542293254,0.012285253941438395
+X1_vs_X2,sex_blind,TabPFN,0.5,sex,equal_opportunity_difference,-0.2186244979919678,-0.2035893574297188,0.015035140562249
+X1_vs_X2,sex_blind,TabPFN,0.5,sex,equalized_odds_difference,0.2186244979919678,0.2035893574297188,-0.015035140562249
+X1_vs_X2,sex_blind,TabPFN,0.5,sex,equalized_odds_difference_minimum_delta,0.3186679504378594,0.3049233085415755,-0.013744641896283882
+X1_vs_X2,sex_blind,TabPFN,0.5,sex,fnr_difference,0.2186244979919678,0.2035893574297189,-0.015035140562248889
+X1_vs_X2,sex_blind,TabPFN,0.5,sex,fpr_difference,-0.001893963468114,-0.0299220805633587,-0.0280281170952447
+X1_vs_X2,sex_blind,TabPFN,0.5,sex,fpr_difference_minimum_delta,0.0692628868995476,0.0886348055185316,0.019371918618984005
+X1_vs_X2,sex_blind,TabPFN,0.5,sex,ppv_difference,-0.2315462315462315,-0.1952814210878727,0.036264810458358804
+X1_vs_X2,sex_blind,TabPFN,break_even,race,demographic_parity_difference,0.1812219227313567,0.1169811320754716,-0.0642407906558851
+X1_vs_X2,sex_blind,TabPFN,break_even,race,demographic_parity_difference_minimum_delta,0.2278954517124896,0.1637018694112962,-0.0641935823011934
+X1_vs_X2,sex_blind,TabPFN,break_even,race,equal_opportunity_difference,0.111404087013843,0.059620596205962,-0.05178349080788099
+X1_vs_X2,sex_blind,TabPFN,break_even,race,equalized_odds_difference,0.1861334570957096,0.1131265470297029,-0.07300691006600671
+X1_vs_X2,sex_blind,TabPFN,break_even,race,equalized_odds_difference_minimum_delta,0.2554476942880436,0.1845565709874921,-0.0708911233005515
+X1_vs_X2,sex_blind,TabPFN,break_even,race,fnr_difference,-0.1114040870138431,-0.059620596205962,0.051783490807881104
+X1_vs_X2,sex_blind,TabPFN,break_even,race,fpr_difference,0.1861334570957096,0.1131265470297029,-0.07300691006600671
+X1_vs_X2,sex_blind,TabPFN,break_even,race,fpr_difference_minimum_delta,0.2554476942880436,0.1845565709874921,-0.0708911233005515
+X1_vs_X2,sex_blind,TabPFN,break_even,race,ppv_difference,0.0915285066793893,0.1076648206841316,0.016136314004742303
+X1_vs_X2,sex_blind,TabPFN,break_even,sex,demographic_parity_difference,-0.0741480741480741,-0.0757575757575756,-0.0016095016095014902
+X1_vs_X2,sex_blind,TabPFN,break_even,sex,demographic_parity_difference_minimum_delta,0.1322397375624817,0.1332184593305869,0.0009787217681052063
+X1_vs_X2,sex_blind,TabPFN,break_even,sex,equal_opportunity_difference,-0.095582329317269,-0.0860692771084337,0.00951305220883529
+X1_vs_X2,sex_blind,TabPFN,break_even,sex,equalized_odds_difference,0.095582329317269,0.0860692771084337,-0.00951305220883529
+X1_vs_X2,sex_blind,TabPFN,break_even,sex,equalized_odds_difference_minimum_delta,0.1794109801239323,0.1704408239282913,-0.00897015619564101
+X1_vs_X2,sex_blind,TabPFN,break_even,sex,fnr_difference,0.095582329317269,0.0860692771084337,-0.00951305220883529
+X1_vs_X2,sex_blind,TabPFN,break_even,sex,fpr_difference,-0.0124188074385732,-0.0232614305144207,-0.0108426230758475
+X1_vs_X2,sex_blind,TabPFN,break_even,sex,fpr_difference_minimum_delta,0.0905217208487444,0.0993050570305297,0.008783336181785312
+X1_vs_X2,sex_blind,TabPFN,break_even,sex,ppv_difference,-0.1519462801863893,-0.144429469901168,0.007516810285221304
+temporal_1_vs_2,age_blind,COMPAS tool,tool,race,demographic_parity_difference,0.2629626202812731,0.2114142612363253,-0.051548359044947784
+temporal_1_vs_2,age_blind,COMPAS tool,tool,race,demographic_parity_difference_minimum_delta,0.3118291039330823,0.2503204198599976,-0.061508684073084685
+temporal_1_vs_2,age_blind,COMPAS tool,tool,race,equal_opportunity_difference,0.2418021618675629,0.1570238877931185,-0.08477827407444441
+temporal_1_vs_2,age_blind,COMPAS tool,tool,race,equalized_odds_difference,0.2418021618675629,0.1965872082118437,-0.0452149536557192
+temporal_1_vs_2,age_blind,COMPAS tool,tool,race,equalized_odds_difference_minimum_delta,0.3350186182080648,0.2509312347157789,-0.0840873834922859
+temporal_1_vs_2,age_blind,COMPAS tool,tool,race,fnr_difference,-0.2418021618675629,-0.1570238877931186,0.0847782740744443
+temporal_1_vs_2,age_blind,COMPAS tool,tool,race,fpr_difference,0.2333333333333333,0.1965872082118437,-0.036746125121489615
+temporal_1_vs_2,age_blind,COMPAS tool,tool,race,fpr_difference_minimum_delta,0.2965888947045966,0.2415656826004966,-0.055023212104099994
+temporal_1_vs_2,age_blind,COMPAS tool,tool,race,ppv_difference,0.0863328749764081,0.0395672490857375,-0.0467656258906706
+temporal_1_vs_2,age_blind,COMPAS tool,tool,sex,demographic_parity_difference,-0.0632541658686075,-0.0612133767871472,0.002040789081460305
+temporal_1_vs_2,age_blind,COMPAS tool,tool,sex,demographic_parity_difference_minimum_delta,0.1231219031186058,0.1083799614431243,-0.014741941675481499
+temporal_1_vs_2,age_blind,COMPAS tool,tool,sex,equal_opportunity_difference,-0.0699472096530919,0.0258310178038488,0.0957782274569407
+temporal_1_vs_2,age_blind,COMPAS tool,tool,sex,equalized_odds_difference,0.0699472096530919,0.0438605092002483,-0.026086700452843593
+temporal_1_vs_2,age_blind,COMPAS tool,tool,sex,equalized_odds_difference_minimum_delta,0.1864263228410166,0.1260052013976099,-0.060421121443406695
+temporal_1_vs_2,age_blind,COMPAS tool,tool,sex,fnr_difference,0.0699472096530919,-0.0258310178038488,-0.0957782274569407
+temporal_1_vs_2,age_blind,COMPAS tool,tool,sex,fpr_difference,-0.0216152375239023,-0.0438605092002483,-0.022245271676346004
+temporal_1_vs_2,age_blind,COMPAS tool,tool,sex,fpr_difference_minimum_delta,0.0832238722753894,0.0958849363569522,0.012661064081562798
+temporal_1_vs_2,age_blind,COMPAS tool,tool,sex,ppv_difference,-0.1581799131866487,-0.1070791896869244,0.051100723499724304
+temporal_1_vs_2,age_blind,TabPFN,0.5,race,demographic_parity_difference,0.2090766099185788,0.1647898865909078,-0.044286723327671
+temporal_1_vs_2,age_blind,TabPFN,0.5,race,demographic_parity_difference_minimum_delta,0.2463094233883958,0.1933308042686681,-0.05297861911972768
+temporal_1_vs_2,age_blind,TabPFN,0.5,race,equal_opportunity_difference,0.3442637841765828,0.2080502593323105,-0.13621352484427232
+temporal_1_vs_2,age_blind,TabPFN,0.5,race,equalized_odds_difference,0.3442637841765828,0.2080502593323105,-0.13621352484427232
+temporal_1_vs_2,age_blind,TabPFN,0.5,race,equalized_odds_difference_minimum_delta,0.4128914367811733,0.2642160532428969,-0.14867538353827642
+temporal_1_vs_2,age_blind,TabPFN,0.5,race,fnr_difference,-0.3442637841765827,-0.2080502593323107,0.13621352484427202
+temporal_1_vs_2,age_blind,TabPFN,0.5,race,fpr_difference,0.1222222222222222,0.1250959128344161,0.002873690612193891
+temporal_1_vs_2,age_blind,TabPFN,0.5,race,fpr_difference_minimum_delta,0.1658073850046012,0.1541852070946782,-0.01162217790992301
+temporal_1_vs_2,age_blind,TabPFN,0.5,race,ppv_difference,0.3178767541183649,0.0040990910711103,-0.31377766304725463
+temporal_1_vs_2,age_blind,TabPFN,0.5,sex,demographic_parity_difference,-0.162296494924344,-0.0968334943744779,0.0654630005498661
+temporal_1_vs_2,age_blind,TabPFN,0.5,sex,demographic_parity_difference_minimum_delta,0.1906774863957606,0.1224623424929606,-0.0682151439028
+temporal_1_vs_2,age_blind,TabPFN,0.5,sex,equal_opportunity_difference,-0.2520739064856712,-0.085726047133889,0.1663478593517822
+temporal_1_vs_2,age_blind,TabPFN,0.5,sex,equalized_odds_difference,0.2520739064856712,0.085726047133889,-0.1663478593517822
+temporal_1_vs_2,age_blind,TabPFN,0.5,sex,equalized_odds_difference_minimum_delta,0.3202438421262001,0.1605183136466558,-0.1597255284795443
+temporal_1_vs_2,age_blind,TabPFN,0.5,sex,fnr_difference,0.2520739064856712,0.0857260471338891,-0.1663478593517821
+temporal_1_vs_2,age_blind,TabPFN,0.5,sex,fpr_difference,-0.1085261145063927,-0.0788639409092394,0.0296621735971533
+temporal_1_vs_2,age_blind,TabPFN,0.5,sex,fpr_difference_minimum_delta,0.1379947677735088,0.1004330485648562,-0.0375617192086526
+temporal_1_vs_2,age_blind,TabPFN,0.5,sex,ppv_difference,-0.1257142857142857,0.0815789473684209,0.20729323308270658
+temporal_1_vs_2,age_blind,TabPFN,break_even,race,demographic_parity_difference,0.2608900814211695,0.2837576862023713,0.02286760478120181
+temporal_1_vs_2,age_blind,TabPFN,break_even,race,demographic_parity_difference_minimum_delta,0.311681267447443,0.3232514904402126,0.011570222992769608
+temporal_1_vs_2,age_blind,TabPFN,break_even,race,equal_opportunity_difference,0.1937051503315469,0.2807363576594346,0.08703120732788772
+temporal_1_vs_2,age_blind,TabPFN,break_even,race,equalized_odds_difference,0.2561403508771929,0.2807363576594346,0.02459600678224172
+temporal_1_vs_2,age_blind,TabPFN,break_even,race,equalized_odds_difference_minimum_delta,0.3226493277770957,0.3495902562428415,0.026940928465745806
+temporal_1_vs_2,age_blind,TabPFN,break_even,race,fnr_difference,-0.1937051503315469,-0.2807363576594346,-0.08703120732788772
+temporal_1_vs_2,age_blind,TabPFN,break_even,race,fpr_difference,0.2561403508771929,0.2523146964039082,-0.003825654473284701
+temporal_1_vs_2,age_blind,TabPFN,break_even,race,fpr_difference_minimum_delta,0.3199844564115076,0.3013149978822657,-0.0186694585292419
+temporal_1_vs_2,age_blind,TabPFN,break_even,race,ppv_difference,0.0918414918414918,0.089857045609258,-0.0019844462322338025
+temporal_1_vs_2,age_blind,TabPFN,break_even,sex,demographic_parity_difference,-0.3329630339015513,-0.1728967753557918,0.1600662585457595
+temporal_1_vs_2,age_blind,TabPFN,break_even,sex,demographic_parity_difference_minimum_delta,0.3939731274249793,0.2181766717644177,-0.1757964556605616
+temporal_1_vs_2,age_blind,TabPFN,break_even,sex,equal_opportunity_difference,-0.2422699849170437,-0.0552639703612225,0.18700601455582122
+temporal_1_vs_2,age_blind,TabPFN,break_even,sex,equalized_odds_difference,0.3308743579168385,0.1702291074288328,-0.1606452504880057
+temporal_1_vs_2,age_blind,TabPFN,break_even,sex,equalized_odds_difference_minimum_delta,0.4048291069974102,0.2214148573865989,-0.1834142496108113
+temporal_1_vs_2,age_blind,TabPFN,break_even,sex,fnr_difference,0.2422699849170437,0.0552639703612226,-0.1870060145558211
+temporal_1_vs_2,age_blind,TabPFN,break_even,sex,fpr_difference,-0.3308743579168385,-0.1702291074288328,0.1606452504880057
+temporal_1_vs_2,age_blind,TabPFN,break_even,sex,fpr_difference_minimum_delta,0.3982210517546785,0.221207845593593,-0.17701320616108548
+temporal_1_vs_2,age_blind,TabPFN,break_even,sex,ppv_difference,-0.0521897112258558,-0.0596380718518123,-0.007448360625956503
+temporal_1_vs_2,protected_blind,COMPAS tool,tool,race,demographic_parity_difference,0.2629626202812731,0.2114142612363253,-0.051548359044947784
+temporal_1_vs_2,protected_blind,COMPAS tool,tool,race,demographic_parity_difference_minimum_delta,0.3118291039330823,0.2503204198599976,-0.061508684073084685
+temporal_1_vs_2,protected_blind,COMPAS tool,tool,race,equal_opportunity_difference,0.2418021618675629,0.1570238877931185,-0.08477827407444441
+temporal_1_vs_2,protected_blind,COMPAS tool,tool,race,equalized_odds_difference,0.2418021618675629,0.1965872082118437,-0.0452149536557192
+temporal_1_vs_2,protected_blind,COMPAS tool,tool,race,equalized_odds_difference_minimum_delta,0.3350186182080648,0.2509312347157789,-0.0840873834922859
+temporal_1_vs_2,protected_blind,COMPAS tool,tool,race,fnr_difference,-0.2418021618675629,-0.1570238877931186,0.0847782740744443
+temporal_1_vs_2,protected_blind,COMPAS tool,tool,race,fpr_difference,0.2333333333333333,0.1965872082118437,-0.036746125121489615
+temporal_1_vs_2,protected_blind,COMPAS tool,tool,race,fpr_difference_minimum_delta,0.2965888947045966,0.2415656826004966,-0.055023212104099994
+temporal_1_vs_2,protected_blind,COMPAS tool,tool,race,ppv_difference,0.0863328749764081,0.0395672490857375,-0.0467656258906706
+temporal_1_vs_2,protected_blind,COMPAS tool,tool,sex,demographic_parity_difference,-0.0632541658686075,-0.0612133767871472,0.002040789081460305
+temporal_1_vs_2,protected_blind,COMPAS tool,tool,sex,demographic_parity_difference_minimum_delta,0.1231219031186058,0.1083799614431243,-0.014741941675481499
+temporal_1_vs_2,protected_blind,COMPAS tool,tool,sex,equal_opportunity_difference,-0.0699472096530919,0.0258310178038488,0.0957782274569407
+temporal_1_vs_2,protected_blind,COMPAS tool,tool,sex,equalized_odds_difference,0.0699472096530919,0.0438605092002483,-0.026086700452843593
+temporal_1_vs_2,protected_blind,COMPAS tool,tool,sex,equalized_odds_difference_minimum_delta,0.1864263228410166,0.1260052013976099,-0.060421121443406695
+temporal_1_vs_2,protected_blind,COMPAS tool,tool,sex,fnr_difference,0.0699472096530919,-0.0258310178038488,-0.0957782274569407
+temporal_1_vs_2,protected_blind,COMPAS tool,tool,sex,fpr_difference,-0.0216152375239023,-0.0438605092002483,-0.022245271676346004
+temporal_1_vs_2,protected_blind,COMPAS tool,tool,sex,fpr_difference_minimum_delta,0.0832238722753894,0.0958849363569522,0.012661064081562798
+temporal_1_vs_2,protected_blind,COMPAS tool,tool,sex,ppv_difference,-0.1581799131866487,-0.1070791896869244,0.051100723499724304
+temporal_1_vs_2,protected_blind,TabPFN,0.5,race,demographic_parity_difference,0.1789692820133234,0.1224176365751485,-0.05655164543817491
+temporal_1_vs_2,protected_blind,TabPFN,0.5,race,demographic_parity_difference_minimum_delta,0.2162926186512647,0.1513698567120369,-0.0649227619392278
+temporal_1_vs_2,protected_blind,TabPFN,0.5,race,equal_opportunity_difference,0.3138341357071487,0.1686938417707648,-0.1451402939363839
+temporal_1_vs_2,protected_blind,TabPFN,0.5,race,equalized_odds_difference,0.3138341357071487,0.1686938417707648,-0.1451402939363839
+temporal_1_vs_2,protected_blind,TabPFN,0.5,race,equalized_odds_difference_minimum_delta,0.3928475487725927,0.226742670789213,-0.1661048779833797
+temporal_1_vs_2,protected_blind,TabPFN,0.5,race,fnr_difference,-0.3138341357071487,-0.1686938417707648,0.1451402939363839
+temporal_1_vs_2,protected_blind,TabPFN,0.5,race,fpr_difference,0.0906432748538011,0.0828473749722918,-0.007795899881509291
+temporal_1_vs_2,protected_blind,TabPFN,0.5,race,fpr_difference_minimum_delta,0.1369153936274238,0.1135664662975101,-0.0233489273299137
+temporal_1_vs_2,protected_blind,TabPFN,0.5,race,ppv_difference,0.3103122043519395,0.1313543126512931,-0.1789578917006464
+temporal_1_vs_2,protected_blind,TabPFN,0.5,sex,demographic_parity_difference,-0.1515705803485922,-0.0661019308560292,0.085468649492563
+temporal_1_vs_2,protected_blind,TabPFN,0.5,sex,demographic_parity_difference_minimum_delta,0.1843795913661093,0.0964838065200687,-0.08789578484604059
+temporal_1_vs_2,protected_blind,TabPFN,0.5,sex,equal_opportunity_difference,-0.2028657616892911,-0.0247504373777915,0.1781153243114996
+temporal_1_vs_2,protected_blind,TabPFN,0.5,sex,equalized_odds_difference,0.2028657616892911,0.0574974670719351,-0.145368294617356
+temporal_1_vs_2,protected_blind,TabPFN,0.5,sex,equalized_odds_difference_minimum_delta,0.2794972587895522,0.1049531997273578,-0.17454405906219445
+temporal_1_vs_2,protected_blind,TabPFN,0.5,sex,fnr_difference,0.202865761689291,0.0247504373777915,-0.17811532431149948
+temporal_1_vs_2,protected_blind,TabPFN,0.5,sex,fpr_difference,-0.1090978965918038,-0.0574974670719351,0.0516004295198687
+temporal_1_vs_2,protected_blind,TabPFN,0.5,sex,fpr_difference_minimum_delta,0.1396830445988711,0.0852874593820302,-0.0543955852168409
+temporal_1_vs_2,protected_blind,TabPFN,0.5,sex,ppv_difference,-0.0405405405405405,0.0065151755919274,0.0470557161324679
+temporal_1_vs_2,protected_blind,TabPFN,break_even,race,demographic_parity_difference,0.1480569948186528,0.1191741021541423,-0.02888289266451051
+temporal_1_vs_2,protected_blind,TabPFN,break_even,race,demographic_parity_difference_minimum_delta,0.1968450898328236,0.1623813815619326,-0.034463708270890986
+temporal_1_vs_2,protected_blind,TabPFN,break_even,race,equal_opportunity_difference,0.1289853756017803,0.1163525458397253,-0.012632829762055
+temporal_1_vs_2,protected_blind,TabPFN,break_even,race,equalized_odds_difference,0.1289853756017803,0.1163525458397253,-0.012632829762055
+temporal_1_vs_2,protected_blind,TabPFN,break_even,race,equalized_odds_difference_minimum_delta,0.2207020513002107,0.1891263606364957,-0.03157569066371499
+temporal_1_vs_2,protected_blind,TabPFN,break_even,race,fnr_difference,-0.1289853756017803,-0.1163525458397253,0.012632829762055
+temporal_1_vs_2,protected_blind,TabPFN,break_even,race,fpr_difference,0.1274853801169589,0.0911683462069671,-0.0363170339099918
+temporal_1_vs_2,protected_blind,TabPFN,break_even,race,fpr_difference_minimum_delta,0.1913713004811517,0.1424040258307498,-0.048967274650401904
+temporal_1_vs_2,protected_blind,TabPFN,break_even,race,ppv_difference,0.1278706630612788,0.119568408690546,-0.008302254370732814
+temporal_1_vs_2,protected_blind,TabPFN,break_even,sex,demographic_parity_difference,-0.1920321777437271,-0.1309510161969178,0.061081161546809315
+temporal_1_vs_2,protected_blind,TabPFN,break_even,sex,demographic_parity_difference_minimum_delta,0.2525820503139752,0.1788848570596165,-0.0736971932543587
+temporal_1_vs_2,protected_blind,TabPFN,break_even,sex,equal_opportunity_difference,-0.1666666666666667,-0.0153854070186271,0.15128125964803962
+temporal_1_vs_2,protected_blind,TabPFN,break_even,sex,equalized_odds_difference,0.1728094184694987,0.1333300650390561,-0.03947935343044262
+temporal_1_vs_2,protected_blind,TabPFN,break_even,sex,equalized_odds_difference_minimum_delta,0.2910815529855404,0.1890310654031545,-0.10205048758238588
+temporal_1_vs_2,protected_blind,TabPFN,break_even,sex,fnr_difference,0.1666666666666666,0.0153854070186271,-0.1512812596480395
+temporal_1_vs_2,protected_blind,TabPFN,break_even,sex,fpr_difference,-0.1728094184694987,-0.1333300650390561,0.03947935343044262
+temporal_1_vs_2,protected_blind,TabPFN,break_even,sex,fpr_difference_minimum_delta,0.2439038857135491,0.1889918101578831,-0.05491207555566599
+temporal_1_vs_2,protected_blind,TabPFN,break_even,sex,ppv_difference,-0.1176529388244702,-0.0825227987798061,0.035130140044664096
+temporal_1_vs_2,race_aware,COMPAS tool,tool,race,demographic_parity_difference,0.2629626202812731,0.2114142612363253,-0.051548359044947784
+temporal_1_vs_2,race_aware,COMPAS tool,tool,race,demographic_parity_difference_minimum_delta,0.3118291039330823,0.2503204198599976,-0.061508684073084685
+temporal_1_vs_2,race_aware,COMPAS tool,tool,race,equal_opportunity_difference,0.2418021618675629,0.1570238877931185,-0.08477827407444441
+temporal_1_vs_2,race_aware,COMPAS tool,tool,race,equalized_odds_difference,0.2418021618675629,0.1965872082118437,-0.0452149536557192
+temporal_1_vs_2,race_aware,COMPAS tool,tool,race,equalized_odds_difference_minimum_delta,0.3350186182080648,0.2509312347157789,-0.0840873834922859
+temporal_1_vs_2,race_aware,COMPAS tool,tool,race,fnr_difference,-0.2418021618675629,-0.1570238877931186,0.0847782740744443
+temporal_1_vs_2,race_aware,COMPAS tool,tool,race,fpr_difference,0.2333333333333333,0.1965872082118437,-0.036746125121489615
+temporal_1_vs_2,race_aware,COMPAS tool,tool,race,fpr_difference_minimum_delta,0.2965888947045966,0.2415656826004966,-0.055023212104099994
+temporal_1_vs_2,race_aware,COMPAS tool,tool,race,ppv_difference,0.0863328749764081,0.0395672490857375,-0.0467656258906706
+temporal_1_vs_2,race_aware,COMPAS tool,tool,sex,demographic_parity_difference,-0.0632541658686075,-0.0612133767871472,0.002040789081460305
+temporal_1_vs_2,race_aware,COMPAS tool,tool,sex,demographic_parity_difference_minimum_delta,0.1231219031186058,0.1083799614431243,-0.014741941675481499
+temporal_1_vs_2,race_aware,COMPAS tool,tool,sex,equal_opportunity_difference,-0.0699472096530919,0.0258310178038488,0.0957782274569407
+temporal_1_vs_2,race_aware,COMPAS tool,tool,sex,equalized_odds_difference,0.0699472096530919,0.0438605092002483,-0.026086700452843593
+temporal_1_vs_2,race_aware,COMPAS tool,tool,sex,equalized_odds_difference_minimum_delta,0.1864263228410166,0.1260052013976099,-0.060421121443406695
+temporal_1_vs_2,race_aware,COMPAS tool,tool,sex,fnr_difference,0.0699472096530919,-0.0258310178038488,-0.0957782274569407
+temporal_1_vs_2,race_aware,COMPAS tool,tool,sex,fpr_difference,-0.0216152375239023,-0.0438605092002483,-0.022245271676346004
+temporal_1_vs_2,race_aware,COMPAS tool,tool,sex,fpr_difference_minimum_delta,0.0832238722753894,0.0958849363569522,0.012661064081562798
+temporal_1_vs_2,race_aware,COMPAS tool,tool,sex,ppv_difference,-0.1581799131866487,-0.1070791896869244,0.051100723499724304
+temporal_1_vs_2,race_aware,TabPFN,0.5,race,demographic_parity_difference,0.2177276091783864,0.1562226004435504,-0.061505008734836
+temporal_1_vs_2,race_aware,TabPFN,0.5,race,demographic_parity_difference_minimum_delta,0.257977117141907,0.1886747288274815,-0.0693023883144255
+temporal_1_vs_2,race_aware,TabPFN,0.5,race,equal_opportunity_difference,0.317694613498047,0.2468770545693622,-0.0708175589286848
+temporal_1_vs_2,race_aware,TabPFN,0.5,race,equalized_odds_difference,0.317694613498047,0.2468770545693622,-0.0708175589286848
+temporal_1_vs_2,race_aware,TabPFN,0.5,race,equalized_odds_difference_minimum_delta,0.3952862496980144,0.3115877343554507,-0.08369851534256373
+temporal_1_vs_2,race_aware,TabPFN,0.5,race,fnr_difference,-0.317694613498047,-0.2468770545693622,0.0708175589286848
+temporal_1_vs_2,race_aware,TabPFN,0.5,race,fpr_difference,0.1444444444444444,0.0858441181987143,-0.0586003262457301
+temporal_1_vs_2,race_aware,TabPFN,0.5,race,fpr_difference_minimum_delta,0.1902355038253698,0.1196976530392971,-0.0705378507860727
+temporal_1_vs_2,race_aware,TabPFN,0.5,race,ppv_difference,0.187762825904121,0.1701897018970189,-0.017573124007102092
+temporal_1_vs_2,race_aware,TabPFN,0.5,sex,demographic_parity_difference,-0.1712794483815361,-0.1093660437922733,0.06191340458926281
+temporal_1_vs_2,race_aware,TabPFN,0.5,sex,demographic_parity_difference_minimum_delta,0.2028042852711625,0.1379885806769514,-0.0648157045942111
+temporal_1_vs_2,race_aware,TabPFN,0.5,sex,equal_opportunity_difference,-0.2092760180995475,-0.1150046310589688,0.09427138704057869
+temporal_1_vs_2,race_aware,TabPFN,0.5,sex,equalized_odds_difference,0.2092760180995475,0.1150046310589688,-0.09427138704057869
+temporal_1_vs_2,race_aware,TabPFN,0.5,sex,equalized_odds_difference_minimum_delta,0.2876497093545508,0.193801793935931,-0.09384791541861981
+temporal_1_vs_2,race_aware,TabPFN,0.5,sex,fnr_difference,0.2092760180995474,0.1150046310589688,-0.09427138704057861
+temporal_1_vs_2,race_aware,TabPFN,0.5,sex,fpr_difference,-0.133693899741292,-0.0761104029806843,0.0575834967606077
+temporal_1_vs_2,race_aware,TabPFN,0.5,sex,fpr_difference_minimum_delta,0.1646001345980854,0.1023430144592595,-0.062257120138825894
+temporal_1_vs_2,race_aware,TabPFN,0.5,sex,ppv_difference,0.0769230769230768,-0.0165714285714285,-0.0934945054945053
+temporal_1_vs_2,race_aware,TabPFN,break_even,race,demographic_parity_difference,0.3278960029607697,0.2573910751227787,-0.070504927837991
+temporal_1_vs_2,race_aware,TabPFN,break_even,race,demographic_parity_difference_minimum_delta,0.3810345546864507,0.2974104323957172,-0.08362412229073352
+temporal_1_vs_2,race_aware,TabPFN,break_even,race,equal_opportunity_difference,0.2448905441002815,0.1994301994301993,-0.0454603446700822
+temporal_1_vs_2,race_aware,TabPFN,break_even,race,equalized_odds_difference,0.3140350877192983,0.2455325933125309,-0.06850249440676737
+temporal_1_vs_2,race_aware,TabPFN,break_even,race,equalized_odds_difference_minimum_delta,0.3768826720775415,0.2977065057147254,-0.0791761663628161
+temporal_1_vs_2,race_aware,TabPFN,break_even,race,fnr_difference,-0.2448905441002816,-0.1994301994301994,0.0454603446700822
+temporal_1_vs_2,race_aware,TabPFN,break_even,race,fpr_difference,0.3140350877192983,0.2455325933125309,-0.06850249440676737
+temporal_1_vs_2,race_aware,TabPFN,break_even,race,fpr_difference_minimum_delta,0.3729614930299578,0.2941721571543864,-0.07878933587557141
+temporal_1_vs_2,race_aware,TabPFN,break_even,race,ppv_difference,0.0620245003223726,0.0644930512314357,0.0024685509090631025
+temporal_1_vs_2,race_aware,TabPFN,break_even,sex,demographic_parity_difference,-0.2954031794675349,-0.2664098196885082,0.02899335977902673
+temporal_1_vs_2,race_aware,TabPFN,break_even,sex,demographic_parity_difference_minimum_delta,0.3549498393474243,0.3123851769199698,-0.04256466242745449
+temporal_1_vs_2,race_aware,TabPFN,break_even,sex,equal_opportunity_difference,-0.2711161387631976,-0.1602860965318514,0.11083004223134621
+temporal_1_vs_2,race_aware,TabPFN,break_even,sex,equalized_odds_difference,0.2711161387631976,0.2549596365656764,-0.01615650219752124
+temporal_1_vs_2,race_aware,TabPFN,break_even,sex,equalized_odds_difference_minimum_delta,0.3930746837250466,0.3073376059821993,-0.08573707774284733
+temporal_1_vs_2,race_aware,TabPFN,break_even,sex,fnr_difference,0.2711161387631976,0.1602860965318514,-0.11083004223134621
+temporal_1_vs_2,race_aware,TabPFN,break_even,sex,fpr_difference,-0.2564770724757227,-0.2549596365656764,0.0015174359100463275
+temporal_1_vs_2,race_aware,TabPFN,break_even,sex,fpr_difference_minimum_delta,0.3243907154467499,0.3065877081696658,-0.017803007277084115
+temporal_1_vs_2,race_aware,TabPFN,break_even,sex,ppv_difference,-0.0875535399344923,-0.043557587240484,0.0439959526940083
+temporal_1_vs_2,race_blind,COMPAS tool,tool,race,demographic_parity_difference,0.2629626202812731,0.2114142612363253,-0.051548359044947784
+temporal_1_vs_2,race_blind,COMPAS tool,tool,race,demographic_parity_difference_minimum_delta,0.3118291039330823,0.2503204198599976,-0.061508684073084685
+temporal_1_vs_2,race_blind,COMPAS tool,tool,race,equal_opportunity_difference,0.2418021618675629,0.1570238877931185,-0.08477827407444441
+temporal_1_vs_2,race_blind,COMPAS tool,tool,race,equalized_odds_difference,0.2418021618675629,0.1965872082118437,-0.0452149536557192
+temporal_1_vs_2,race_blind,COMPAS tool,tool,race,equalized_odds_difference_minimum_delta,0.3350186182080648,0.2509312347157789,-0.0840873834922859
+temporal_1_vs_2,race_blind,COMPAS tool,tool,race,fnr_difference,-0.2418021618675629,-0.1570238877931186,0.0847782740744443
+temporal_1_vs_2,race_blind,COMPAS tool,tool,race,fpr_difference,0.2333333333333333,0.1965872082118437,-0.036746125121489615
+temporal_1_vs_2,race_blind,COMPAS tool,tool,race,fpr_difference_minimum_delta,0.2965888947045966,0.2415656826004966,-0.055023212104099994
+temporal_1_vs_2,race_blind,COMPAS tool,tool,race,ppv_difference,0.0863328749764081,0.0395672490857375,-0.0467656258906706
+temporal_1_vs_2,race_blind,COMPAS tool,tool,sex,demographic_parity_difference,-0.0632541658686075,-0.0612133767871472,0.002040789081460305
+temporal_1_vs_2,race_blind,COMPAS tool,tool,sex,demographic_parity_difference_minimum_delta,0.1231219031186058,0.1083799614431243,-0.014741941675481499
+temporal_1_vs_2,race_blind,COMPAS tool,tool,sex,equal_opportunity_difference,-0.0699472096530919,0.0258310178038488,0.0957782274569407
+temporal_1_vs_2,race_blind,COMPAS tool,tool,sex,equalized_odds_difference,0.0699472096530919,0.0438605092002483,-0.026086700452843593
+temporal_1_vs_2,race_blind,COMPAS tool,tool,sex,equalized_odds_difference_minimum_delta,0.1864263228410166,0.1260052013976099,-0.060421121443406695
+temporal_1_vs_2,race_blind,COMPAS tool,tool,sex,fnr_difference,0.0699472096530919,-0.0258310178038488,-0.0957782274569407
+temporal_1_vs_2,race_blind,COMPAS tool,tool,sex,fpr_difference,-0.0216152375239023,-0.0438605092002483,-0.022245271676346004
+temporal_1_vs_2,race_blind,COMPAS tool,tool,sex,fpr_difference_minimum_delta,0.0832238722753894,0.0958849363569522,0.012661064081562798
+temporal_1_vs_2,race_blind,COMPAS tool,tool,sex,ppv_difference,-0.1581799131866487,-0.1070791896869244,0.051100723499724304
+temporal_1_vs_2,race_blind,TabPFN,0.5,race,demographic_parity_difference,0.2250462620281273,0.141477699268199,-0.0835685627599283
+temporal_1_vs_2,race_blind,TabPFN,0.5,race,demographic_parity_difference_minimum_delta,0.2639690501477979,0.1748168509506613,-0.08915219919713663
+temporal_1_vs_2,race_blind,TabPFN,0.5,race,equal_opportunity_difference,0.3635661731310746,0.2286142157937029,-0.1349519573373717
+temporal_1_vs_2,race_blind,TabPFN,0.5,race,equalized_odds_difference,0.3635661731310746,0.2286142157937029,-0.1349519573373717
+temporal_1_vs_2,race_blind,TabPFN,0.5,race,equalized_odds_difference_minimum_delta,0.4353433857555797,0.2905008803464784,-0.14484250540910126
+temporal_1_vs_2,race_blind,TabPFN,0.5,race,fnr_difference,-0.3635661731310746,-0.228614215793703,0.1349519573373716
+temporal_1_vs_2,race_blind,TabPFN,0.5,race,fpr_difference,0.1286549707602339,0.0734266032363121,-0.05522836752392181
+temporal_1_vs_2,race_blind,TabPFN,0.5,race,fpr_difference_minimum_delta,0.1736375418705654,0.1080029733870204,-0.065634568483545
+temporal_1_vs_2,race_blind,TabPFN,0.5,race,ppv_difference,0.2475004716091303,0.1851271334029954,-0.062373338206134915
+temporal_1_vs_2,race_blind,TabPFN,0.5,sex,demographic_parity_difference,-0.1779448381536104,-0.1046166947806292,0.0733281433729812
+temporal_1_vs_2,race_blind,TabPFN,0.5,sex,demographic_parity_difference_minimum_delta,0.2092738676341168,0.1334861057952551,-0.07578776183886168
+temporal_1_vs_2,race_blind,TabPFN,0.5,sex,equal_opportunity_difference,-0.2217194570135746,-0.0863949778738293,0.1353244791397453
+temporal_1_vs_2,race_blind,TabPFN,0.5,sex,equalized_odds_difference,0.2217194570135746,0.0863949778738293,-0.1353244791397453
+temporal_1_vs_2,race_blind,TabPFN,0.5,sex,equalized_odds_difference_minimum_delta,0.3103300729453935,0.1671394773216351,-0.1431905956237584
+temporal_1_vs_2,race_blind,TabPFN,0.5,sex,fnr_difference,0.2217194570135746,0.0863949778738294,-0.1353244791397452
+temporal_1_vs_2,race_blind,TabPFN,0.5,sex,fpr_difference,-0.133693899741292,-0.079566624178841,0.054127275562451005
+temporal_1_vs_2,race_blind,TabPFN,0.5,sex,fpr_difference_minimum_delta,0.1637160450831546,0.1068660170400236,-0.056850028043130996
+temporal_1_vs_2,race_blind,TabPFN,0.5,sex,ppv_difference,0.0900221729490021,0.0223107569721114,-0.0677114159768907
+temporal_1_vs_2,race_blind,TabPFN,break_even,race,demographic_parity_difference,0.2450222057735011,0.2197695142148182,-0.0252526915586829
+temporal_1_vs_2,race_blind,TabPFN,break_even,race,demographic_parity_difference_minimum_delta,0.2972864093187877,0.2587314535083245,-0.0385549558104632
+temporal_1_vs_2,race_blind,TabPFN,break_even,race,equal_opportunity_difference,0.1845308384049413,0.1778252611585944,-0.0067055772463469054
+temporal_1_vs_2,race_blind,TabPFN,break_even,race,equalized_odds_difference,0.2228070175438596,0.198718604532201,-0.024088413011658594
+temporal_1_vs_2,race_blind,TabPFN,break_even,race,equalized_odds_difference_minimum_delta,0.2959473764205645,0.2605190985688963,-0.03542827785166819
+temporal_1_vs_2,race_blind,TabPFN,break_even,race,fnr_difference,-0.1845308384049414,-0.1778252611585945,0.006705577246346878
+temporal_1_vs_2,race_blind,TabPFN,break_even,race,fpr_difference,0.2228070175438596,0.198718604532201,-0.024088413011658594
+temporal_1_vs_2,race_blind,TabPFN,break_even,race,fpr_difference_minimum_delta,0.2854197926717596,0.2448844107586597,-0.04053538191309991
+temporal_1_vs_2,race_blind,TabPFN,break_even,race,ppv_difference,0.0904384983796495,0.0791068028388436,-0.011331695540805903
+temporal_1_vs_2,race_blind,TabPFN,break_even,sex,demographic_parity_difference,-0.2341313924535529,-0.2358133669609079,-0.001681974507354994
+temporal_1_vs_2,race_blind,TabPFN,break_even,sex,demographic_parity_difference_minimum_delta,0.2943712672019508,0.2820262370930649,-0.01234503010888588
+temporal_1_vs_2,race_blind,TabPFN,break_even,sex,equal_opportunity_difference,-0.225867269984917,-0.1455181640423999,0.0803491059425171
+temporal_1_vs_2,race_blind,TabPFN,break_even,sex,equalized_odds_difference,0.225867269984917,0.2178236428408014,-0.008043627144115578
+temporal_1_vs_2,race_blind,TabPFN,break_even,sex,equalized_odds_difference_minimum_delta,0.3464897271039839,0.2740985886690986,-0.07239113843488532
+temporal_1_vs_2,race_blind,TabPFN,break_even,sex,fnr_difference,0.225867269984917,0.1455181640423999,-0.0803491059425171
+temporal_1_vs_2,race_blind,TabPFN,break_even,sex,fpr_difference,-0.1894004724232312,-0.2178236428408014,-0.028423170417570226
+temporal_1_vs_2,race_blind,TabPFN,break_even,sex,fpr_difference_minimum_delta,0.2579627404944511,0.269645102450686,0.011682361956234899
+temporal_1_vs_2,race_blind,TabPFN,break_even,sex,ppv_difference,-0.1126623376623376,-0.0615612869133996,0.051101050748938004
+temporal_1_vs_2,race_priors_blind,COMPAS tool,tool,race,demographic_parity_difference,0.2629626202812731,0.2114142612363253,-0.051548359044947784
+temporal_1_vs_2,race_priors_blind,COMPAS tool,tool,race,demographic_parity_difference_minimum_delta,0.3118291039330823,0.2503204198599976,-0.061508684073084685
+temporal_1_vs_2,race_priors_blind,COMPAS tool,tool,race,equal_opportunity_difference,0.2418021618675629,0.1570238877931185,-0.08477827407444441
+temporal_1_vs_2,race_priors_blind,COMPAS tool,tool,race,equalized_odds_difference,0.2418021618675629,0.1965872082118437,-0.0452149536557192
+temporal_1_vs_2,race_priors_blind,COMPAS tool,tool,race,equalized_odds_difference_minimum_delta,0.3350186182080648,0.2509312347157789,-0.0840873834922859
+temporal_1_vs_2,race_priors_blind,COMPAS tool,tool,race,fnr_difference,-0.2418021618675629,-0.1570238877931186,0.0847782740744443
+temporal_1_vs_2,race_priors_blind,COMPAS tool,tool,race,fpr_difference,0.2333333333333333,0.1965872082118437,-0.036746125121489615
+temporal_1_vs_2,race_priors_blind,COMPAS tool,tool,race,fpr_difference_minimum_delta,0.2965888947045966,0.2415656826004966,-0.055023212104099994
+temporal_1_vs_2,race_priors_blind,COMPAS tool,tool,race,ppv_difference,0.0863328749764081,0.0395672490857375,-0.0467656258906706
+temporal_1_vs_2,race_priors_blind,COMPAS tool,tool,sex,demographic_parity_difference,-0.0632541658686075,-0.0612133767871472,0.002040789081460305
+temporal_1_vs_2,race_priors_blind,COMPAS tool,tool,sex,demographic_parity_difference_minimum_delta,0.1231219031186058,0.1083799614431243,-0.014741941675481499
+temporal_1_vs_2,race_priors_blind,COMPAS tool,tool,sex,equal_opportunity_difference,-0.0699472096530919,0.0258310178038488,0.0957782274569407
+temporal_1_vs_2,race_priors_blind,COMPAS tool,tool,sex,equalized_odds_difference,0.0699472096530919,0.0438605092002483,-0.026086700452843593
+temporal_1_vs_2,race_priors_blind,COMPAS tool,tool,sex,equalized_odds_difference_minimum_delta,0.1864263228410166,0.1260052013976099,-0.060421121443406695
+temporal_1_vs_2,race_priors_blind,COMPAS tool,tool,sex,fnr_difference,0.0699472096530919,-0.0258310178038488,-0.0957782274569407
+temporal_1_vs_2,race_priors_blind,COMPAS tool,tool,sex,fpr_difference,-0.0216152375239023,-0.0438605092002483,-0.022245271676346004
+temporal_1_vs_2,race_priors_blind,COMPAS tool,tool,sex,fpr_difference_minimum_delta,0.0832238722753894,0.0958849363569522,0.012661064081562798
+temporal_1_vs_2,race_priors_blind,COMPAS tool,tool,sex,ppv_difference,-0.1581799131866487,-0.1070791896869244,0.051100723499724304
+temporal_1_vs_2,race_priors_blind,TabPFN,0.5,race,demographic_parity_difference,0.0,0.0,0.0
+temporal_1_vs_2,race_priors_blind,TabPFN,0.5,race,demographic_parity_difference_minimum_delta,0.0,0.0,0.0
+temporal_1_vs_2,race_priors_blind,TabPFN,0.5,race,equal_opportunity_difference,0.0,0.0,0.0
+temporal_1_vs_2,race_priors_blind,TabPFN,0.5,race,equalized_odds_difference,0.0,0.0,0.0
+temporal_1_vs_2,race_priors_blind,TabPFN,0.5,race,equalized_odds_difference_minimum_delta,0.0,0.0,0.0
+temporal_1_vs_2,race_priors_blind,TabPFN,0.5,race,fnr_difference,0.0,0.0,0.0
+temporal_1_vs_2,race_priors_blind,TabPFN,0.5,race,fpr_difference,0.0,0.0,0.0
+temporal_1_vs_2,race_priors_blind,TabPFN,0.5,race,fpr_difference_minimum_delta,0.0,0.0,0.0
+temporal_1_vs_2,race_priors_blind,TabPFN,0.5,race,ppv_difference,,,
+temporal_1_vs_2,race_priors_blind,TabPFN,0.5,sex,demographic_parity_difference,0.0,0.0,0.0
+temporal_1_vs_2,race_priors_blind,TabPFN,0.5,sex,demographic_parity_difference_minimum_delta,0.0,0.0,0.0
+temporal_1_vs_2,race_priors_blind,TabPFN,0.5,sex,equal_opportunity_difference,0.0,0.0,0.0
+temporal_1_vs_2,race_priors_blind,TabPFN,0.5,sex,equalized_odds_difference,0.0,0.0,0.0
+temporal_1_vs_2,race_priors_blind,TabPFN,0.5,sex,equalized_odds_difference_minimum_delta,0.0,0.0,0.0
+temporal_1_vs_2,race_priors_blind,TabPFN,0.5,sex,fnr_difference,0.0,0.0,0.0
+temporal_1_vs_2,race_priors_blind,TabPFN,0.5,sex,fpr_difference,0.0,0.0,0.0
+temporal_1_vs_2,race_priors_blind,TabPFN,0.5,sex,fpr_difference_minimum_delta,0.0,0.0,0.0
+temporal_1_vs_2,race_priors_blind,TabPFN,0.5,sex,ppv_difference,,,
+temporal_1_vs_2,race_priors_blind,TabPFN,break_even,race,demographic_parity_difference,0.140201702442635,0.150830081202973,0.010628378760338009
+temporal_1_vs_2,race_priors_blind,TabPFN,break_even,race,demographic_parity_difference_minimum_delta,0.181990627318728,0.1896468855074378,0.007656258188709797
+temporal_1_vs_2,race_priors_blind,TabPFN,break_even,race,equal_opportunity_difference,0.0973294577164138,0.121721820439769,0.024392362723355196
+temporal_1_vs_2,race_priors_blind,TabPFN,break_even,race,equalized_odds_difference,0.1473684210526314,0.1411836922604736,-0.006184728792157812
+temporal_1_vs_2,race_priors_blind,TabPFN,break_even,race,equalized_odds_difference_minimum_delta,0.1989285241571906,0.1979544904504066,-0.0009740337067839777
+temporal_1_vs_2,race_priors_blind,TabPFN,break_even,race,fnr_difference,-0.0973294577164138,-0.1217218204397691,-0.024392362723355307
+temporal_1_vs_2,race_priors_blind,TabPFN,break_even,race,fpr_difference,0.1473684210526314,0.1411836922604736,-0.006184728792157812
+temporal_1_vs_2,race_priors_blind,TabPFN,break_even,race,fpr_difference_minimum_delta,0.1986074869615874,0.1895294578832702,-0.009078029078317201
+temporal_1_vs_2,race_priors_blind,TabPFN,break_even,race,ppv_difference,0.1159057298385827,0.1046743447789347,-0.011231385059648005
+temporal_1_vs_2,race_priors_blind,TabPFN,break_even,sex,demographic_parity_difference,-0.1933441869373683,-0.3113771474427212,-0.11803296050535292
+temporal_1_vs_2,race_priors_blind,TabPFN,break_even,sex,demographic_parity_difference_minimum_delta,0.2450488490028608,0.3579728157462863,0.1129239667434255
+temporal_1_vs_2,race_priors_blind,TabPFN,break_even,sex,equal_opportunity_difference,-0.1611990950226244,-0.2753936400123495,-0.11419454498972512
+temporal_1_vs_2,race_priors_blind,TabPFN,break_even,sex,equalized_odds_difference,0.1931686101008586,0.3022191718142301,0.10905056171337149
+temporal_1_vs_2,race_priors_blind,TabPFN,break_even,sex,equalized_odds_difference_minimum_delta,0.2737436105855484,0.3784146235153099,0.1046710129297615
+temporal_1_vs_2,race_priors_blind,TabPFN,break_even,sex,fnr_difference,0.1611990950226244,0.2753936400123494,0.114194544989725
+temporal_1_vs_2,race_priors_blind,TabPFN,break_even,sex,fpr_difference,-0.1931686101008586,-0.3022191718142301,-0.10905056171337149
+temporal_1_vs_2,race_priors_blind,TabPFN,break_even,sex,fpr_difference_minimum_delta,0.2543377178131513,0.3558898271277737,0.10155210931462239
+temporal_1_vs_2,race_priors_blind,TabPFN,break_even,sex,ppv_difference,-0.114542275434905,-0.1087629321779113,0.0057793432569936964
+temporal_1_vs_2,race_proxy_blind,COMPAS tool,tool,race,demographic_parity_difference,0.2629626202812731,0.2114142612363253,-0.051548359044947784
+temporal_1_vs_2,race_proxy_blind,COMPAS tool,tool,race,demographic_parity_difference_minimum_delta,0.3118291039330823,0.2503204198599976,-0.061508684073084685
+temporal_1_vs_2,race_proxy_blind,COMPAS tool,tool,race,equal_opportunity_difference,0.2418021618675629,0.1570238877931185,-0.08477827407444441
+temporal_1_vs_2,race_proxy_blind,COMPAS tool,tool,race,equalized_odds_difference,0.2418021618675629,0.1965872082118437,-0.0452149536557192
+temporal_1_vs_2,race_proxy_blind,COMPAS tool,tool,race,equalized_odds_difference_minimum_delta,0.3350186182080648,0.2509312347157789,-0.0840873834922859
+temporal_1_vs_2,race_proxy_blind,COMPAS tool,tool,race,fnr_difference,-0.2418021618675629,-0.1570238877931186,0.0847782740744443
+temporal_1_vs_2,race_proxy_blind,COMPAS tool,tool,race,fpr_difference,0.2333333333333333,0.1965872082118437,-0.036746125121489615
+temporal_1_vs_2,race_proxy_blind,COMPAS tool,tool,race,fpr_difference_minimum_delta,0.2965888947045966,0.2415656826004966,-0.055023212104099994
+temporal_1_vs_2,race_proxy_blind,COMPAS tool,tool,race,ppv_difference,0.0863328749764081,0.0395672490857375,-0.0467656258906706
+temporal_1_vs_2,race_proxy_blind,COMPAS tool,tool,sex,demographic_parity_difference,-0.0632541658686075,-0.0612133767871472,0.002040789081460305
+temporal_1_vs_2,race_proxy_blind,COMPAS tool,tool,sex,demographic_parity_difference_minimum_delta,0.1231219031186058,0.1083799614431243,-0.014741941675481499
+temporal_1_vs_2,race_proxy_blind,COMPAS tool,tool,sex,equal_opportunity_difference,-0.0699472096530919,0.0258310178038488,0.0957782274569407
+temporal_1_vs_2,race_proxy_blind,COMPAS tool,tool,sex,equalized_odds_difference,0.0699472096530919,0.0438605092002483,-0.026086700452843593
+temporal_1_vs_2,race_proxy_blind,COMPAS tool,tool,sex,equalized_odds_difference_minimum_delta,0.1864263228410166,0.1260052013976099,-0.060421121443406695
+temporal_1_vs_2,race_proxy_blind,COMPAS tool,tool,sex,fnr_difference,0.0699472096530919,-0.0258310178038488,-0.0957782274569407
+temporal_1_vs_2,race_proxy_blind,COMPAS tool,tool,sex,fpr_difference,-0.0216152375239023,-0.0438605092002483,-0.022245271676346004
+temporal_1_vs_2,race_proxy_blind,COMPAS tool,tool,sex,fpr_difference_minimum_delta,0.0832238722753894,0.0958849363569522,0.012661064081562798
+temporal_1_vs_2,race_proxy_blind,COMPAS tool,tool,sex,ppv_difference,-0.1581799131866487,-0.1070791896869244,0.051100723499724304
+temporal_1_vs_2,race_proxy_blind,TabPFN,0.5,race,demographic_parity_difference,0.0,0.0,0.0
+temporal_1_vs_2,race_proxy_blind,TabPFN,0.5,race,demographic_parity_difference_minimum_delta,0.0,0.0,0.0
+temporal_1_vs_2,race_proxy_blind,TabPFN,0.5,race,equal_opportunity_difference,0.0,0.0,0.0
+temporal_1_vs_2,race_proxy_blind,TabPFN,0.5,race,equalized_odds_difference,0.0,0.0,0.0
+temporal_1_vs_2,race_proxy_blind,TabPFN,0.5,race,equalized_odds_difference_minimum_delta,0.0,0.0,0.0
+temporal_1_vs_2,race_proxy_blind,TabPFN,0.5,race,fnr_difference,0.0,0.0,0.0
+temporal_1_vs_2,race_proxy_blind,TabPFN,0.5,race,fpr_difference,0.0,0.0,0.0
+temporal_1_vs_2,race_proxy_blind,TabPFN,0.5,race,fpr_difference_minimum_delta,0.0,0.0,0.0
+temporal_1_vs_2,race_proxy_blind,TabPFN,0.5,race,ppv_difference,,,
+temporal_1_vs_2,race_proxy_blind,TabPFN,0.5,sex,demographic_parity_difference,0.0,0.0,0.0
+temporal_1_vs_2,race_proxy_blind,TabPFN,0.5,sex,demographic_parity_difference_minimum_delta,0.0,0.0,0.0
+temporal_1_vs_2,race_proxy_blind,TabPFN,0.5,sex,equal_opportunity_difference,0.0,0.0,0.0
+temporal_1_vs_2,race_proxy_blind,TabPFN,0.5,sex,equalized_odds_difference,0.0,0.0,0.0
+temporal_1_vs_2,race_proxy_blind,TabPFN,0.5,sex,equalized_odds_difference_minimum_delta,0.0,0.0,0.0
+temporal_1_vs_2,race_proxy_blind,TabPFN,0.5,sex,fnr_difference,0.0,0.0,0.0
+temporal_1_vs_2,race_proxy_blind,TabPFN,0.5,sex,fpr_difference,0.0,0.0,0.0
+temporal_1_vs_2,race_proxy_blind,TabPFN,0.5,sex,fpr_difference_minimum_delta,0.0,0.0,0.0
+temporal_1_vs_2,race_proxy_blind,TabPFN,0.5,sex,ppv_difference,,,
+temporal_1_vs_2,race_proxy_blind,TabPFN,break_even,race,demographic_parity_difference,0.0,0.0270027105861857,0.0270027105861857
+temporal_1_vs_2,race_proxy_blind,TabPFN,break_even,race,demographic_parity_difference_minimum_delta,0.0,0.0625555960299192,0.0625555960299192
+temporal_1_vs_2,race_proxy_blind,TabPFN,break_even,race,equal_opportunity_difference,0.0,0.0478851632697786,0.0478851632697786
+temporal_1_vs_2,race_proxy_blind,TabPFN,break_even,race,equalized_odds_difference,0.0,0.0478851632697786,0.0478851632697786
+temporal_1_vs_2,race_proxy_blind,TabPFN,break_even,race,equalized_odds_difference_minimum_delta,0.0,0.1030860919546452,0.1030860919546452
+temporal_1_vs_2,race_proxy_blind,TabPFN,break_even,race,fnr_difference,0.0,-0.0478851632697786,-0.0478851632697786
+temporal_1_vs_2,race_proxy_blind,TabPFN,break_even,race,fpr_difference,0.0,0.0011594795982744,0.0011594795982744
+temporal_1_vs_2,race_proxy_blind,TabPFN,break_even,race,fpr_difference_minimum_delta,0.0,0.0462134844591102,0.0462134844591102
+temporal_1_vs_2,race_proxy_blind,TabPFN,break_even,race,ppv_difference,0.1276276831976314,0.1288314250528124,0.0012037418551809898
+temporal_1_vs_2,race_proxy_blind,TabPFN,break_even,sex,demographic_parity_difference,0.0,-1.0,-1.0
+temporal_1_vs_2,race_proxy_blind,TabPFN,break_even,sex,demographic_parity_difference_minimum_delta,0.0,1.0,1.0
+temporal_1_vs_2,race_proxy_blind,TabPFN,break_even,sex,equal_opportunity_difference,0.0,-1.0,-1.0
+temporal_1_vs_2,race_proxy_blind,TabPFN,break_even,sex,equalized_odds_difference,0.0,1.0,1.0
+temporal_1_vs_2,race_proxy_blind,TabPFN,break_even,sex,equalized_odds_difference_minimum_delta,0.0,1.0,1.0
+temporal_1_vs_2,race_proxy_blind,TabPFN,break_even,sex,fnr_difference,0.0,1.0,1.0
+temporal_1_vs_2,race_proxy_blind,TabPFN,break_even,sex,fpr_difference,0.0,-1.0,-1.0
+temporal_1_vs_2,race_proxy_blind,TabPFN,break_even,sex,fpr_difference_minimum_delta,0.0,1.0,1.0
+temporal_1_vs_2,race_proxy_blind,TabPFN,break_even,sex,ppv_difference,-0.1218732043669795,,
+temporal_1_vs_2,sex_blind,COMPAS tool,tool,race,demographic_parity_difference,0.2629626202812731,0.2114142612363253,-0.051548359044947784
+temporal_1_vs_2,sex_blind,COMPAS tool,tool,race,demographic_parity_difference_minimum_delta,0.3118291039330823,0.2503204198599976,-0.061508684073084685
+temporal_1_vs_2,sex_blind,COMPAS tool,tool,race,equal_opportunity_difference,0.2418021618675629,0.1570238877931185,-0.08477827407444441
+temporal_1_vs_2,sex_blind,COMPAS tool,tool,race,equalized_odds_difference,0.2418021618675629,0.1965872082118437,-0.0452149536557192
+temporal_1_vs_2,sex_blind,COMPAS tool,tool,race,equalized_odds_difference_minimum_delta,0.3350186182080648,0.2509312347157789,-0.0840873834922859
+temporal_1_vs_2,sex_blind,COMPAS tool,tool,race,fnr_difference,-0.2418021618675629,-0.1570238877931186,0.0847782740744443
+temporal_1_vs_2,sex_blind,COMPAS tool,tool,race,fpr_difference,0.2333333333333333,0.1965872082118437,-0.036746125121489615
+temporal_1_vs_2,sex_blind,COMPAS tool,tool,race,fpr_difference_minimum_delta,0.2965888947045966,0.2415656826004966,-0.055023212104099994
+temporal_1_vs_2,sex_blind,COMPAS tool,tool,race,ppv_difference,0.0863328749764081,0.0395672490857375,-0.0467656258906706
+temporal_1_vs_2,sex_blind,COMPAS tool,tool,sex,demographic_parity_difference,-0.0632541658686075,-0.0612133767871472,0.002040789081460305
+temporal_1_vs_2,sex_blind,COMPAS tool,tool,sex,demographic_parity_difference_minimum_delta,0.1231219031186058,0.1083799614431243,-0.014741941675481499
+temporal_1_vs_2,sex_blind,COMPAS tool,tool,sex,equal_opportunity_difference,-0.0699472096530919,0.0258310178038488,0.0957782274569407
+temporal_1_vs_2,sex_blind,COMPAS tool,tool,sex,equalized_odds_difference,0.0699472096530919,0.0438605092002483,-0.026086700452843593
+temporal_1_vs_2,sex_blind,COMPAS tool,tool,sex,equalized_odds_difference_minimum_delta,0.1864263228410166,0.1260052013976099,-0.060421121443406695
+temporal_1_vs_2,sex_blind,COMPAS tool,tool,sex,fnr_difference,0.0699472096530919,-0.0258310178038488,-0.0957782274569407
+temporal_1_vs_2,sex_blind,COMPAS tool,tool,sex,fpr_difference,-0.0216152375239023,-0.0438605092002483,-0.022245271676346004
+temporal_1_vs_2,sex_blind,COMPAS tool,tool,sex,fpr_difference_minimum_delta,0.0832238722753894,0.0958849363569522,0.012661064081562798
+temporal_1_vs_2,sex_blind,COMPAS tool,tool,sex,ppv_difference,-0.1581799131866487,-0.1070791896869244,0.051100723499724304
+temporal_1_vs_2,sex_blind,TabPFN,0.5,race,demographic_parity_difference,0.2024611398963731,0.1677468897026378,-0.03471425019373531
+temporal_1_vs_2,sex_blind,TabPFN,0.5,race,demographic_parity_difference_minimum_delta,0.240497076418134,0.2007084063026841,-0.0397886701154499
+temporal_1_vs_2,sex_blind,TabPFN,0.5,race,equal_opportunity_difference,0.3131074575347443,0.2563919935714808,-0.05671546396326349
+temporal_1_vs_2,sex_blind,TabPFN,0.5,race,equalized_odds_difference,0.3131074575347443,0.2563919935714808,-0.05671546396326349
+temporal_1_vs_2,sex_blind,TabPFN,0.5,race,equalized_odds_difference_minimum_delta,0.3869563843288982,0.3201384477717281,-0.06681793655717005
+temporal_1_vs_2,sex_blind,TabPFN,0.5,race,fnr_difference,-0.3131074575347443,-0.2563919935714808,0.05671546396326349
+temporal_1_vs_2,sex_blind,TabPFN,0.5,race,fpr_difference,0.1216374269005848,0.0963348508875134,-0.0253025760130714
+temporal_1_vs_2,sex_blind,TabPFN,0.5,race,fpr_difference_minimum_delta,0.1654092012370196,0.1297305962704089,-0.03567860496661071
+temporal_1_vs_2,sex_blind,TabPFN,0.5,race,ppv_difference,0.2045454545454545,0.137155297532656,-0.06739015701279849
+temporal_1_vs_2,sex_blind,TabPFN,0.5,sex,demographic_parity_difference,-0.1482666155908829,-0.0789128903883002,0.06935372520258269
+temporal_1_vs_2,sex_blind,TabPFN,0.5,sex,demographic_parity_difference_minimum_delta,0.1800739544038793,0.1102276163041679,-0.0698463380997114
+temporal_1_vs_2,sex_blind,TabPFN,0.5,sex,equal_opportunity_difference,-0.160444947209653,-0.0174436554492127,0.1430012917604403
+temporal_1_vs_2,sex_blind,TabPFN,0.5,sex,equalized_odds_difference,0.160444947209653,0.0644099094682485,-0.0960350377414045
+temporal_1_vs_2,sex_blind,TabPFN,0.5,sex,equalized_odds_difference_minimum_delta,0.2492733902419146,0.1091477893451577,-0.1401256008967569
+temporal_1_vs_2,sex_blind,TabPFN,0.5,sex,fnr_difference,0.160444947209653,0.0174436554492126,-0.1430012917604404
+temporal_1_vs_2,sex_blind,TabPFN,0.5,sex,fpr_difference,-0.1169153762513591,-0.0644099094682485,0.052505466783110605
+temporal_1_vs_2,sex_blind,TabPFN,0.5,sex,fpr_difference_minimum_delta,0.14538253485575,0.091428942118711,-0.05395359273703901
+temporal_1_vs_2,sex_blind,TabPFN,0.5,sex,ppv_difference,0.1227106227106227,0.0340179717586649,-0.0886926509519578
+temporal_1_vs_2,sex_blind,TabPFN,break_even,race,demographic_parity_difference,0.2500277572168763,0.2351848986538759,-0.01484285856300041
+temporal_1_vs_2,sex_blind,TabPFN,break_even,race,demographic_parity_difference_minimum_delta,0.3025582387229962,0.2747196717561094,-0.027838566966886802
+temporal_1_vs_2,sex_blind,TabPFN,break_even,race,equal_opportunity_difference,0.2036061404305568,0.1785923003871722,-0.02501384004338461
+temporal_1_vs_2,sex_blind,TabPFN,break_even,race,equalized_odds_difference,0.2187134502923977,0.2244786604600405,0.005765210167642809
+temporal_1_vs_2,sex_blind,TabPFN,break_even,race,equalized_odds_difference_minimum_delta,0.3079867063882409,0.278053919572487,-0.029932786815753898
+temporal_1_vs_2,sex_blind,TabPFN,break_even,race,fnr_difference,-0.2036061404305568,-0.1785923003871721,0.025013840043384694
+temporal_1_vs_2,sex_blind,TabPFN,break_even,race,fpr_difference,0.2187134502923977,0.2244786604600405,0.005765210167642809
+temporal_1_vs_2,sex_blind,TabPFN,break_even,race,fpr_difference_minimum_delta,0.2828453346775078,0.27326041521914,-0.009584919458367758
+temporal_1_vs_2,sex_blind,TabPFN,break_even,race,ppv_difference,0.0960927220850642,0.0722933477447929,-0.023799374340271295
+temporal_1_vs_2,sex_blind,TabPFN,break_even,sex,demographic_parity_difference,-0.1730319862095384,-0.0847144658620068,0.08831752034753161
+temporal_1_vs_2,sex_blind,TabPFN,break_even,sex,demographic_parity_difference_minimum_delta,0.2340015373361131,0.1328965476140868,-0.10110498972202628
+temporal_1_vs_2,sex_blind,TabPFN,break_even,sex,equal_opportunity_difference,-0.1706259426847662,-0.0235669445302048,0.1470589981545614
+temporal_1_vs_2,sex_blind,TabPFN,break_even,sex,equalized_odds_difference,0.1706259426847662,0.058249174755695,-0.1123767679290712
+temporal_1_vs_2,sex_blind,TabPFN,break_even,sex,equalized_odds_difference_minimum_delta,0.2869055217914752,0.125654275315865,-0.1612512464756102
+temporal_1_vs_2,sex_blind,TabPFN,break_even,sex,fnr_difference,0.1706259426847662,0.0235669445302048,-0.1470589981545614
+temporal_1_vs_2,sex_blind,TabPFN,break_even,sex,fpr_difference,-0.1262513591541374,-0.058249174755695,0.06800218439844241
+temporal_1_vs_2,sex_blind,TabPFN,break_even,sex,fpr_difference_minimum_delta,0.1969368374783313,0.112724013935957,-0.08421282354237429
+temporal_1_vs_2,sex_blind,TabPFN,break_even,sex,ppv_difference,-0.1311899759903961,-0.1268949710316141,0.004295004958782017
