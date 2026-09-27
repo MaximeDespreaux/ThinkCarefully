@@ -30,7 +30,7 @@ from compas_scoring.evaluate import (
     delong_test,
     statistical_metrics,
 )
-from compas_scoring.models import load
+from logreg.model import load
 
 warnings.filterwarnings("ignore", message="Unknown solver options: iprint")
 warnings.filterwarnings("ignore", category=FutureWarning)

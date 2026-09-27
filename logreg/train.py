@@ -13,9 +13,8 @@ from sklearn.metrics import roc_auc_score
 
 from compas_scoring.config import CONFIG, FEATURE_SET_LABELS
 from compas_scoring.data import train_test
-from compas_scoring.models import FittedModel, model_path, save
 from compas_scoring.stability import repeated_cv
-from logreg.model import build_logistic
+from logreg.model import build_logistic, FittedModel, model_path, save
 
 NAME = "logistic"
 FEATURE_SETS = tuple(CONFIG.feature_sets)
