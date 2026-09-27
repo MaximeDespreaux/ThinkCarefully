@@ -17,7 +17,6 @@ import pandas as pd
 import shap
 from lime.lime_tabular import LimeTabularExplainer
 from pathlib import Path
-from sklearn.inspection import partial_dependence
 
 from compas_scoring.data import Dataset
 from xgb_model import MODEL_DIR, load_data, load_model
@@ -65,6 +64,30 @@ def impurity_importance(model) -> pd.DataFrame:
     return table.sort_values("gain", ascending=False)
  
  
+def _grid(values: pd.Series, grid_resolution: int) -> np.ndarray:
+    """Every observed value if there are few (dummies, priors), else an even 5-95th pct grid."""
+    unique = np.unique(values)
+    if len(unique) <= grid_resolution:
+        return unique
+    low, high = np.percentile(values, [5, 95])
+    return np.linspace(low, high, grid_resolution)
+
+
+def _ice_matrix(model, X: pd.DataFrame, feature: str, grid: np.ndarray) -> np.ndarray:
+    """P(recidivism) for every row with ``feature`` forced to each grid value.
+
+    Computed directly rather than through ``sklearn.inspection.partial_dependence``: for a
+    binary classifier on a feature with exactly two grid values (every 0/1 dummy here),
+    sklearn mistakes the two grid points for the two class columns and fails to reshape.
+    """
+    X_eval = X.copy()
+    curves = np.empty((len(X), len(grid)))
+    for j, value in enumerate(grid):
+        X_eval[feature] = value
+        curves[:, j] = model.predict_proba(X_eval)[:, 1]
+    return curves
+
+
 def pdp_data(
     model, data: Dataset, features: list[str] | None = None, grid_resolution: int = 50
 ) -> dict[str, pd.DataFrame]:
@@ -72,25 +95,19 @@ def pdp_data(
     features = features or list(data.X.columns)
     result = {}
     for col in features:
-        pd_result = partial_dependence(
-            model, data.X, [col], kind="average", grid_resolution=grid_resolution
-        )
-        result[col] = pd.DataFrame(
-            {col: pd_result["grid_values"][0], "partial_dependence": pd_result["average"][0]}
-        )
+        grid = _grid(data.X[col], grid_resolution)
+        average = _ice_matrix(model, data.X, col, grid).mean(axis=0)
+        result[col] = pd.DataFrame({col: grid, "partial_dependence": average})
     return result
- 
- 
+
+
 def ice_data(model, data: Dataset, feature: str, grid_resolution: int = 50) -> pd.DataFrame:
     """ICE curves for one feature: one row per test individual, one column per grid point."""
-    ice_result = partial_dependence(
-        model, data.X, [feature], kind="individual", grid_resolution=grid_resolution
-    )
-    grid = ice_result["grid_values"][0]
-    curves = ice_result["individual"][0]  # shape: (n_samples, grid_resolution)
+    grid = _grid(data.X[feature], grid_resolution)
+    curves = _ice_matrix(model, data.X, feature, grid)
     return pd.DataFrame(curves, columns=grid, index=data.X.index)
- 
- 
+
+
 def lime_explanation(model, train: Dataset, instance: pd.Series, num_features: int = 10) -> pd.DataFrame:
     """LIME local explanation for one row (e.g. ``test.X.loc[some_index]``)."""
     explainer = LimeTabularExplainer(
