@@ -51,6 +51,20 @@ tabpfn-plots: ## TabPFN: performance figures -> reports/figures/tabpfn/ (seconds
 tabpfn-test: ## TabPFN: its code tests (tests/test_pfn_*.py)
 	$(RUN) pytest tests/test_pfn_*.py
 
+# TabPFN analysis, one numbered test per target (tabpfn/analysis/tNN_*.py). Outputs go to
+# tabpfn/artifacts/analysis/tNN_*/ and are cached: pass ARGS=--force to recompute.
+TABPFN_TESTS := $(sort $(basename $(notdir $(wildcard tabpfn/analysis/t[0-9][0-9]_*.py))))
+TABPFN_IDS   := $(foreach t,$(TABPFN_TESTS),$(firstword $(subst _, ,$(t))))
+.PHONY: tabpfn-analysis $(addprefix tabpfn-,$(TABPFN_IDS))
+
+$(addprefix tabpfn-,$(TABPFN_IDS)): tabpfn-%:
+	$(RUN) python $(wildcard tabpfn/analysis/$*_*.py) $(ARGS)
+
+tabpfn-analysis: ## TabPFN: every numbered analysis test, T01 -> last (~3-4 h from scratch)
+	@for t in $(TABPFN_TESTS); do \
+		echo "== $$t"; $(RUN) python tabpfn/analysis/$$t.py $(ARGS) || exit 1; \
+	done
+
 lint: ## Check formatting and lint rules
 	$(RUN) ruff check src scripts tests
 	$(RUN) ruff format --check src scripts tests

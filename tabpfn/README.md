@@ -183,67 +183,30 @@ is measured on what they output. Design 1 = `X1_to_X3` vs `X2_to_X3` (same X3), 
 
 ### Interpretability
 
-TODO(analysis):
+T10 and T12–T14 explain every design with all features, plus the race-blind holdout model.
 
-- [ ] **Marginal effects.** TabPFN has no coefficients. Use the average change in predicted
-      probability when a dummy flips 0→1 (or priors +1), holding the other features fixed.
-- [ ] **Impurity (Gini, Shannon entropy, misclassification error).** These are tree
-      criteria, and TabPFN has no splits. Fit a shallow **global surrogate** tree on
-      TabPFN's own predictions and report its impurity decreases *with its fidelity (R²)*.
-      A surrogate explains the model, not the data.
-- [ ] **PDP / ICE** with `sklearn.inspection.partial_dependence` (the adapter is a proper
-      classifier). Priors is the only non-binary feature, so its curves are the interesting
-      ones.
-- [ ] **SHAP.** Use KernelSHAP, since there is no TreeSHAP for TabPFN, on a small
-      background and explain set. Check efficiency: the SHAP values should add up to
-      prediction minus base value.
-- [ ] **LIME.** Run it several times with different seeds on the same defendant. The old
-      repo found LIME was **not reproducible** on TabPFN, naming 4 different top features
-      across 15 runs.
-- [ ] **Permutation importance.** Compute it on AUC and on cost, with ≥10 repeats so there
-      are intervals.
+| # | Test | Output |
+|---|---|---|
+| T10 | **Marginal effects** *(refit)*: average Δ risk when a dummy flips 0 → 1 (against the reference category) or priors +1 | `marginal_effects.csv` |
+| T11 | **Impurity (Gini, entropy, misclassification)** through depth-4 surrogate trees on TabPFN's own scores and decisions, with their fidelity | `surrogate.csv`, `impurity.csv`, `rules/` |
+| T12 | **PDP / ICE** on priors *(refit)* | `pdp.csv`, `ice.csv`, `ice_summary.csv` |
+| T13 | **Permutation importance** on AUC and on cost, 10 repeats, 95% intervals *(refit)* | `permutation.csv` |
+| T14 | **KernelSHAP** and the efficiency check *(refit)* | `shap_importance.csv`, `shap_values.csv`, `efficiency.csv` |
+| T15 | **LIME reproducibility**: 15 runs on one defendant *(refit)* | `lime.csv`, `lime_summary.json` |
+| T16 | **XPER on cost** at 0.252, exact over 1,024 coalitions *(refit, ~1 h)* | `xper_cost.csv` |
 
-### Stability
+### Radar
 
-Design 1 (`X1_to_X3` vs `X2_to_X3`, same X3) and design 2 (`temporal_1` vs `temporal_2`).
+T18 writes `artifacts/radar_extra.csv`: four more spokes (race FPR parity, sex FPR parity,
+certifiable fairness, decision stability X1 vs X2), each 0–1 with higher = better.
+`plot_tabpfn.py` adds them to both radar charts; `make tabpfn-plots` redraws them.
 
-TODO(analysis):
+### Imported from the earlier study
 
-- [ ] **Distance between estimated parameters: not defined for TabPFN.** Its weights are
-      pre-trained and frozen, and "fitting" only stores the rows. Measure the distance on
-      what the model *outputs* instead:
-  - [ ] predictions: L2 norm (and mean |Δ|) between the two score vectors on X3, plus the
-        share of defendants whose decision flips at each threshold;
-  - [ ] performance: Δ of every `performance.csv` metric between the two runs;
-  - [ ] interpretability: distance between the two runs' importance vectors (SHAP /
-        permutation), and rank agreement (Spearman) of the features;
-  - [ ] fairness: Δ of each fairness metric below.
-- [ ] Design 2: X3 is not shared, so compare the *story*, not the rows. Check whether the
-      importance ranking and the fairness gaps stay the same after the model sees newer
-      defendants.
-
-### Fairness
-
-`predictions/*.csv` already carries `race`, `sex`, `age_band` and `charge_degree` next to
-`y`, the TabPFN score and the COMPAS tool's score. Use either operating point to turn scores into
-decisions.
-
-TODO(analysis):
-
-- [ ] **Statistical parity:** P(Ŷ=1 | D=1) = P(Ŷ=1 | D=0). Use a χ² test of Ŷ ⟂ D
-      (D = African-American vs Caucasian, and Female vs Male).
-- [ ] **Conditional statistical parity:** Ŷ ⟂ D | X_c. Choose X_c, e.g. priors band ×
-      charge degree, and run a χ² test within strata or a Cochran–Mantel–Haenszel test.
-- [ ] **Equalized odds:** equal TPR and FPR across groups. The FPR gap is ProPublica's
-      finding.
-- [ ] **Fairness equivalence (TOST, Schuirmann 1987):** θ = |p₁ − p₀|. H0: θ ≥ δ (unfair)
-      vs H1: −δ < θ < δ. Report the tightest δ at which fairness can be certified.
-- [ ] **FPDP** (fairness partial dependence) to find *candidate variables*. Recompute the
-      test statistic with feature X_A set to each value, and flag X_A as a candidate if
-      some value brings χ² below the critical value. This is the 3-step approach:
-      test → identify → mitigate.
-- [ ] Compare `race_aware` with `race_blind`. Dropping race does not remove disparity if
-      priors acts as a proxy for it.
+`artifacts/legacy/` holds the earlier single-model study's results that do not depend on the
+threshold (SHAP on 100 rows, XPER on AUC, 100 bootstrap refits, row-order and seed
+sensitivity, learning curve), with a README giving their provenance and how that model
+differs from this one.
 
 ## Runtime and threads
 
