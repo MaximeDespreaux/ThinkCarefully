@@ -22,7 +22,7 @@ import compas_scoring  # noqa: F401  (imported for its thread-pool pinning)
 from compas_scoring import fairness as shared_fairness
 from compas_scoring import interpret, stability, xper
 from compas_scoring.config import CONFIG
-from compas_scoring.data import train_test
+from compas_scoring.data import load_raw, train_test
 from compas_scoring.evaluate import (
     CostModel,
     baseline_costs,
@@ -494,7 +494,9 @@ def fairness_strata(test) -> dict[str, pd.Series]:
     cell almost everyone gets the same decision and the test has nothing left to measure.
     """
     return {
-        "priors_band": fairness.priors_band(test.X["Number_of_Priors"]).astype(str),
+        "priors_band": fairness.priors_band(
+            load_raw().loc[test.X.index, "Number_of_Priors"]
+        ).reset_index(drop=True).astype(str),
         "age_band": test.groups["age_band"].reset_index(drop=True).astype(str),
         "sex": test.groups["sex"].reset_index(drop=True).astype(str),
         "charge_degree": test.groups["charge_degree"].reset_index(drop=True).astype(str),
