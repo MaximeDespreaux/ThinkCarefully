@@ -12,7 +12,7 @@ performance**. It also saves the per-defendant predictions that the **interpreta
 make tabpfn-smoke   # once: checks TabPFN installs, downloads its weights, predicts
 make tabpfn         # fits every design -> tabpfn/artifacts/ (committed; cached, --force refits)
 make tabpfn-plots   # performance figures -> reports/figures/tabpfn/ (seconds, no refit)
-make tabpfn-test    # unit tests for the metrics and the adapter
+make tabpfn-test    # its code tests, in tests/test_pfn_*.py (run with the rest by make test)
 uv run python tabpfn/run_tabpfn.py --help     # pick designs / feature sets
 ```
 
