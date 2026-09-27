@@ -224,29 +224,32 @@ def fairness(model: str, feature_set: str, threshold: float) -> pd.DataFrame:
 
 
 def threshold_control(key: str, default: float = 0.5, help_text: str | None = None) -> float:
-    """The decision threshold, with one-click presets for 0.5 and the cost break-even."""
+    """The decision threshold: presets for 0.5 and the cost break-even, or a custom slider."""
+    presets = {"0.5 (default)": 0.5, f"{BREAK_EVEN:.3f} (cost break-even)": BREAK_EVEN}
     col1, col2 = st.columns([3, 2])
     with col2:
         preset = st.radio(
-            "Preset",
-            ["0.5 (default)", f"{BREAK_EVEN:.3f} (cost break-even)", "Custom"],
+            "Threshold preset",
+            [*presets, "Custom"],
             key=f"{key}_preset",
-            horizontal=False,
             label_visibility="collapsed",
         )
     with col1:
-        if preset.startswith("0.5"):
-            value = 0.5
-        elif preset.startswith(f"{BREAK_EVEN:.3f}"):
-            value = BREAK_EVEN
+        if preset in presets:
+            threshold = presets[preset]
+            st.markdown(
+                f"**Decision threshold: {threshold:.3f}**<br>"
+                "<span class='small-note'>Flag a defendant if predicted risk ≥ threshold. "
+                "Choose Custom to set any value.</span>",
+                unsafe_allow_html=True,
+            )
         else:
-            value = default
-        threshold = st.slider(
-            "Decision threshold (flag if risk ≥ threshold)",
-            0.05, 0.95, float(value), 0.005,
-            key=f"{key}_slider", disabled=not preset.startswith("Custom"),
-            help=help_text or "Defendants whose predicted risk is at or above this are flagged.",
-        )  # fmt: skip
+            threshold = st.slider(
+                "Decision threshold (flag if risk ≥ threshold)",
+                0.05, 0.95, float(default), 0.005,
+                key=f"{key}_slider",
+                help=help_text or "Defendants at or above this predicted risk are flagged.",
+            )  # fmt: skip
     return float(threshold)
 
 
