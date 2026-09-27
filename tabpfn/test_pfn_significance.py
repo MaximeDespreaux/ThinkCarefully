@@ -10,7 +10,6 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 import pfn_significance as sig
-import pytest
 
 # ------------------------------------------------- the correction that makes the t-test valid
 
@@ -174,19 +173,3 @@ def test_assemble_puts_the_claim_first():
     frame = sig.holm_adjust(pd.DataFrame({"claim": ["x"], "test": ["t"], "p_value": [0.01]}), "f")
     out = sig.assemble(frame)
     assert list(out.columns)[:2] == ["family", "claim"]
-
-
-# ------------------------------------------------------------------------- proportions
-
-
-def test_selection_rate_test_detects_a_real_gap():
-    groups = np.array(["African-American"] * 500 + ["Caucasian"] * 500)
-    pred = np.r_[
-        np.ones(400, dtype=int),
-        np.zeros(100, dtype=int),
-        np.ones(200, dtype=int),
-        np.zeros(300, dtype=int),
-    ]
-    result = sig.selection_rate_test(pred, groups, "African-American", "Caucasian")
-    assert result["p_value"] < 1e-10
-    assert result["difference"] == pytest.approx(0.4)

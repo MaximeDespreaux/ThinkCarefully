@@ -27,8 +27,7 @@ from compas_scoring.config import CONFIG
 
 
 def break_even_threshold() -> float:
-    costs = CONFIG.costs
-    return float(costs.c_fp / (costs.c_fp + costs.c_fn))
+    return float(CONFIG.costs.break_even)
 
 
 def thresholds() -> dict[str, float]:

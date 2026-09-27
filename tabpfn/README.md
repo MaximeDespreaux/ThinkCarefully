@@ -198,28 +198,38 @@ TODO(analysis):
       importance ranking and the fairness gaps stay the same after the model sees newer
       defendants.
 
-### Fairness
+### Fairness: the shared protocol
 
-`predictions/*.csv` already carries `race`, `sex`, `age_band` and `charge_degree` next to
-`y`, the TabPFN score and the COMPAS tool's score. Use either operating point to turn scores into
-decisions.
+All three models are tested the same way, by `compas_scoring.fairness`, with the settings in
+`[tool.compas_scoring.fairness]`. For TabPFN, `pfn_fairness.protocol_table(run, feature_set)`
+runs it on the saved predictions, for TabPFN and for the COMPAS tool's score as a benchmark.
+No refit is needed.
+
+It covers both thresholds (0.5 and 0.252). There are four comparisons: African-American vs
+Caucasian (primary), Hispanic and Other vs Caucasian, and Female vs Male. Asian and Native
+American are excluded as too small. Gaps read protected minus reference.
+
+| Metric | Test |
+|---|---|
+| Statistical parity | two-proportion z-test on the flag-rate gap (= Pearson χ²), Hurlin LR test alongside, TOST |
+| Conditional statistical parity | Hurlin LR test over the **race proxies** held fixed (priors band × age band × charge degree), plus CMH, Mantel–Haenszel odds ratio and Breslow–Day |
+| Equalized odds | z-tests on the FPR gap and the FNR gap (with TOST), and the Hurlin test of Ŷ ⟂ D given Y |
+| Candidate variables | FPDP (`fpdp_candidates`), counted only when fairness is rejected on the real data |
+
+Conditioning on the proxies isolates race. A gap that survives among defendants with the same
+priors, age band and charge degree is not explained by those proxies.
+
+p-values are Holm-corrected across the four comparisons within each metric and threshold.
+TOST uses a fixed tolerance δ = 0.05, and every row also reports the tightest δ at which
+fairness could be certified.
 
 TODO(analysis):
 
-- [ ] **Statistical parity:** P(Ŷ=1 | D=1) = P(Ŷ=1 | D=0). Use a χ² test of Ŷ ⟂ D
-      (D = African-American vs Caucasian, and Female vs Male).
-- [ ] **Conditional statistical parity:** Ŷ ⟂ D | X_c. Choose X_c, e.g. priors band ×
-      charge degree, and run a χ² test within strata or a Cochran–Mantel–Haenszel test.
-- [ ] **Equalized odds:** equal TPR and FPR across groups. The FPR gap is ProPublica's
-      finding.
-- [ ] **Fairness equivalence (TOST, Schuirmann 1987):** θ = |p₁ − p₀|. H0: θ ≥ δ (unfair)
-      vs H1: −δ < θ < δ. Report the tightest δ at which fairness can be certified.
-- [ ] **FPDP** (fairness partial dependence) to find *candidate variables*. Recompute the
-      test statistic with feature X_A set to each value, and flag X_A as a candidate if
-      some value brings χ² below the critical value. This is the 3-step approach:
-      test → identify → mitigate.
-- [ ] Compare `race_aware` with `race_blind`. Dropping race does not remove disparity if
-      priors acts as a proxy for it.
+- [ ] Run `protocol_table` for every run and feature set, and save the results to
+      `tabpfn/artifacts/`.
+- [ ] Run FPDP on the holdout with a coarse priors grid (each grid value is one model call).
+- [ ] Compare `race_aware`, `race_blind` and `race_proxy_blind`. Dropping inputs does not
+      remove disparity if proxies remain.
 
 ## Runtime and threads
 
