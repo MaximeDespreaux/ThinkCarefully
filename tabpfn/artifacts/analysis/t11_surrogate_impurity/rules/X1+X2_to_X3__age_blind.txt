@@ -1,0 +1,42 @@
+Depth-4 regression tree on TabPFN's scores, X1+X2_to_X3 x age_blind, fidelity R^2 = 0.957
+
+|--- Number_of_Priors <= 2.500
+|   |--- Number_of_Priors <= 0.500
+|   |   |--- African_American <= 0.500
+|   |   |   |--- Misdemeanor <= 0.500
+|   |   |   |   |--- value: [0.268]
+|   |   |   |--- Misdemeanor >  0.500
+|   |   |   |   |--- value: [0.215]
+|   |   |--- African_American >  0.500
+|   |   |   |--- Misdemeanor <= 0.500
+|   |   |   |   |--- value: [0.338]
+|   |   |   |--- Misdemeanor >  0.500
+|   |   |   |   |--- value: [0.276]
+|   |--- Number_of_Priors >  0.500
+|   |   |--- African_American <= 0.500
+|   |   |   |--- Number_of_Priors <= 1.500
+|   |   |   |   |--- value: [0.330]
+|   |   |   |--- Number_of_Priors >  1.500
+|   |   |   |   |--- value: [0.415]
+|   |   |--- African_American >  0.500
+|   |   |   |--- Number_of_Priors <= 1.500
+|   |   |   |   |--- value: [0.412]
+|   |   |   |--- Number_of_Priors >  1.500
+|   |   |   |   |--- value: [0.500]
+|--- Number_of_Priors >  2.500
+|   |--- Number_of_Priors <= 6.500
+|   |   |--- Number_of_Priors <= 3.500
+|   |   |   |--- value: [0.524]
+|   |   |--- Number_of_Priors >  3.500
+|   |   |   |--- African_American <= 0.500
+|   |   |   |   |--- value: [0.573]
+|   |   |   |--- African_American >  0.500
+|   |   |   |   |--- value: [0.623]
+|   |--- Number_of_Priors >  6.500
+|   |   |--- Number_of_Priors <= 11.500
+|   |   |   |--- Number_of_Priors <= 8.500
+|   |   |   |   |--- value: [0.675]
+|   |   |   |--- Number_of_Priors >  8.500
+|   |   |   |   |--- value: [0.713]
+|   |   |--- Number_of_Priors >  11.500
+|   |   |   |--- value: [0.793]

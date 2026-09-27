@@ -1,0 +1,309 @@
+design,feature_set,threshold_name,kind,metric,a,b,delta
+X1 vs X2 (same test set X3),age_blind,0.5,performance,auc,0.6812515858919056,0.6786150405988329,-0.0026365452930726674
+X1 vs X2 (same test set X3),age_blind,0.5,performance,accuracy,0.631578947368421,0.6340080971659919,0.0024291497975709175
+X1 vs X2 (same test set X3),age_blind,0.5,performance,recall,0.522202486678508,0.4458259325044404,-0.07637655417406758
+X1 vs X2 (same test set X3),age_blind,0.5,performance,type_i_error,0.2767857142857143,0.2083333333333333,-0.06845238095238101
+X1 vs X2 (same test set X3),age_blind,0.5,performance,f1,0.5637583892617449,0.5262054507337525,-0.03755293852799246
+X1 vs X2 (same test set X3),age_blind,0.5,performance,ece,0.0381811568582995,0.0407601993117409,0.002579042453441399
+X1 vs X2 (same test set X3),age_blind,0.5,performance,cost_per_defendant,10745.748987854253,11635.627530364372,889.8785425101196
+X1 vs X2 (same test set X3),age_blind,0.5,fairness,statistical_parity (gap),0.22057502246181493,0.26792452830188684,0.047349505840071915
+X1 vs X2 (same test set X3),age_blind,0.5,fairness,fpr (gap),0.15236953382838286,0.20173267326732675,0.04936313943894388
+X1 vs X2 (same test set X3),age_blind,0.5,fairness,fnr (gap),-0.2466673991064235,-0.2901743206621255,-0.043506921555702016
+X1 vs X2 (same test set X3),age_blind,0.5,fairness,conditional_statistical_parity (mh_odds_ratio),2.77065384983465,54.96961541402248,52.198961564187826
+X1 vs X2 (same test set X3),age_blind,break_even,performance,auc,0.6812515858919056,0.6786150405988329,-0.0026365452930726674
+X1 vs X2 (same test set X3),age_blind,break_even,performance,accuracy,0.5489878542510122,0.4995951417004048,-0.04939271255060734
+X1 vs X2 (same test set X3),age_blind,break_even,performance,recall,0.8880994671403197,0.955595026642984,0.06749555950266428
+X1 vs X2 (same test set X3),age_blind,break_even,performance,type_i_error,0.7351190476190477,0.8824404761904762,0.1473214285714285
+X1 vs X2 (same test set X3),age_blind,break_even,performance,f1,0.6422607578676942,0.6351829988193625,-0.007077759048331744
+X1 vs X2 (same test set X3),age_blind,break_even,performance,ece,0.0381811568582995,0.0407601993117409,0.002579042453441399
+X1 vs X2 (same test set X3),age_blind,break_even,performance,cost_per_defendant,7440.485829959514,7291.902834008097,-148.58299595141762
+X1 vs X2 (same test set X3),age_blind,break_even,fairness,statistical_parity (gap),0.3550763701707097,0.06698113207547163,-0.28809523809523807
+X1 vs X2 (same test set X3),age_blind,break_even,fairness,fpr (gap),0.4186391295379538,0.07098287953795379,-0.34765625
+X1 vs X2 (same test set X3),age_blind,break_even,fairness,fnr (gap),-0.24727166190580827,-0.05214971068629605,0.1951219512195122
+X1 vs X2 (same test set X3),age_blind,break_even,fairness,conditional_statistical_parity (mh_odds_ratio),inf,2.568499124025749,-inf
+X1 vs X2 (same test set X3),protected_blind,0.5,performance,auc,0.6701635583185317,0.6703459358876767,0.00018237756914496472
+X1 vs X2 (same test set X3),protected_blind,0.5,performance,accuracy,0.6275303643724697,0.6348178137651822,0.0072874493927125306
+X1 vs X2 (same test set X3),protected_blind,0.5,performance,recall,0.5541740674955595,0.4635879218472469,-0.09058614564831263
+X1 vs X2 (same test set X3),protected_blind,0.5,performance,type_i_error,0.3110119047619047,0.2217261904761904,-0.0892857142857143
+X1 vs X2 (same test set X3),protected_blind,0.5,performance,f1,0.5756457564575646,0.5364850976361768,-0.03916065882138775
+X1 vs X2 (same test set X3),protected_blind,0.5,performance,ece,0.0468756672064777,0.0359102498542509,-0.010965417352226801
+X1 vs X2 (same test set X3),protected_blind,0.5,performance,cost_per_defendant,10414.17004048583,11410.12145748988,995.9514170040511
+X1 vs X2 (same test set X3),protected_blind,0.5,fairness,statistical_parity (gap),0.13890386343216532,0.15476190476190477,0.015858041329739447
+X1 vs X2 (same test set X3),protected_blind,0.5,fairness,fpr (gap),0.08266295379537952,0.08730404290429045,0.004641089108910923
+X1 vs X2 (same test set X3),protected_blind,0.5,fairness,fnr (gap),-0.14928953343587492,-0.1778729949461657,-0.028583461510290786
+X1 vs X2 (same test set X3),protected_blind,0.5,fairness,conditional_statistical_parity (mh_odds_ratio),0.9799377543430791,1.0567968405839665,0.07685908624088744
+X1 vs X2 (same test set X3),protected_blind,break_even,performance,auc,0.6701635583185317,0.6703459358876767,0.00018237756914496472
+X1 vs X2 (same test set X3),protected_blind,break_even,performance,accuracy,0.5344129554655871,0.5344129554655871,0.0
+X1 vs X2 (same test set X3),protected_blind,break_even,performance,recall,0.9094138543516874,0.9094138543516874,0.0
+X1 vs X2 (same test set X3),protected_blind,break_even,performance,type_i_error,0.7797619047619048,0.7797619047619048,0.0
+X1 vs X2 (same test set X3),protected_blind,break_even,performance,f1,0.6404002501563477,0.6404002501563477,0.0
+X1 vs X2 (same test set X3),protected_blind,break_even,performance,ece,0.0468756672064777,0.0359102498542509,-0.010965417352226801
+X1 vs X2 (same test set X3),protected_blind,break_even,performance,cost_per_defendant,7379.757085020243,7379.757085020243,0.0
+X1 vs X2 (same test set X3),protected_blind,break_even,fairness,statistical_parity (gap),0.08607367475292005,0.08607367475292005,0.0
+X1 vs X2 (same test set X3),protected_blind,break_even,fairness,fpr (gap),0.09730816831683164,0.09730816831683164,0.0
+X1 vs X2 (same test set X3),protected_blind,break_even,fairness,fnr (gap),-0.03777558045850729,-0.03777558045850729,0.0
+X1 vs X2 (same test set X3),protected_blind,break_even,fairness,conditional_statistical_parity (mh_odds_ratio),,,
+X1 vs X2 (same test set X3),race_aware,0.5,performance,auc,0.7118632643998986,0.7139196375708365,0.002056373170937986
+X1 vs X2 (same test set X3),race_aware,0.5,performance,accuracy,0.6647773279352227,0.665587044534413,0.0008097165991902688
+X1 vs X2 (same test set X3),race_aware,0.5,performance,recall,0.5754884547069272,0.5399644760213144,-0.035523978685612856
+X1 vs X2 (same test set X3),race_aware,0.5,performance,type_i_error,0.2604166666666667,0.2291666666666666,-0.03125000000000008
+X1 vs X2 (same test set X3),race_aware,0.5,performance,f1,0.6101694915254238,0.5954946131243878,-0.014674878401035985
+X1 vs X2 (same test set X3),race_aware,0.5,performance,ece,0.034657037757085,0.0297859553279352,-0.004871082429149801
+X1 vs X2 (same test set X3),race_aware,0.5,performance,cost_per_defendant,9653.846153846154,10072.064777327936,418.21862348178183
+X1 vs X2 (same test set X3),race_aware,0.5,fairness,statistical_parity (gap),0.22367475292003597,0.24847259658580415,0.024797843665768177
+X1 vs X2 (same test set X3),race_aware,0.5,fairness,fpr (gap),0.12448432343234322,0.1554635932343234,0.03097926980198018
+X1 vs X2 (same test set X3),race_aware,0.5,fairness,fnr (gap),-0.26723064527942575,-0.28279499011206327,-0.015564344832637522
+X1 vs X2 (same test set X3),race_aware,0.5,fairness,conditional_statistical_parity (mh_odds_ratio),1.3737251625185067,6.637649674586124,5.263924512067618
+X1 vs X2 (same test set X3),race_aware,break_even,performance,auc,0.7118632643998986,0.7139196375708365,0.002056373170937986
+X1 vs X2 (same test set X3),race_aware,break_even,performance,accuracy,0.5935222672064777,0.5684210526315789,-0.025101214574898778
+X1 vs X2 (same test set X3),race_aware,break_even,performance,recall,0.8703374777975134,0.9005328596802842,0.030195381882770822
+X1 vs X2 (same test set X3),race_aware,break_even,performance,type_i_error,0.6383928571428571,0.7098214285714286,0.07142857142857151
+X1 vs X2 (same test set X3),race_aware,break_even,performance,f1,0.6612685560053981,0.6554621848739496,-0.005806371131448551
+X1 vs X2 (same test set X3),race_aware,break_even,performance,ece,0.034657037757085,0.0297859553279352,-0.004871082429149801
+X1 vs X2 (same test set X3),race_aware,break_even,performance,cost_per_defendant,7053.846153846154,7027.935222672065,-25.910931174089455
+X1 vs X2 (same test set X3),race_aware,break_even,fairness,statistical_parity (gap),0.2449685534591195,0.12353998203054806,-0.12142857142857144
+X1 vs X2 (same test set X3),race_aware,break_even,fairness,fpr (gap),0.2764542079207921,0.12411045792079212,-0.15234375
+X1 vs X2 (same test set X3),race_aware,break_even,fairness,fnr (gap),-0.1505346810224859,-0.07736394931516882,0.07317073170731708
+X1 vs X2 (same test set X3),race_aware,break_even,fairness,conditional_statistical_parity (mh_odds_ratio),9.951076758109197,0.5527597879550056,-9.398316970154191
+X1 vs X2 (same test set X3),race_blind,0.5,performance,auc,0.7103764907383913,0.713408187431278,0.0030316966928867206
+X1 vs X2 (same test set X3),race_blind,0.5,performance,accuracy,0.6631578947368421,0.671255060728745,0.00809716599190291
+X1 vs X2 (same test set X3),race_blind,0.5,performance,recall,0.5754884547069272,0.5488454706927176,-0.026642984014209614
+X1 vs X2 (same test set X3),race_blind,0.5,performance,type_i_error,0.2633928571428571,0.2261904761904762,-0.037202380952380903
+X1 vs X2 (same test set X3),race_blind,0.5,performance,f1,0.6090225563909775,0.603515625,-0.005506931390977465
+X1 vs X2 (same test set X3),race_blind,0.5,performance,ece,0.0300985978218623,0.0357553518704453,0.005656754048582995
+X1 vs X2 (same test set X3),race_blind,0.5,performance,cost_per_defendant,9675.708502024292,9888.25910931174,212.55060728744866
+X1 vs X2 (same test set X3),race_blind,0.5,fairness,statistical_parity (gap),0.22053009883198565,0.22003593890386342,-0.0004941599281222397
+X1 vs X2 (same test set X3),race_blind,0.5,fairness,fpr (gap),0.11397741336633666,0.12724319306930693,0.01326577970297027
+X1 vs X2 (same test set X3),race_blind,0.5,fairness,fnr (gap),-0.2733282062550355,-0.25249029517322197,0.020837911081813543
+X1 vs X2 (same test set X3),race_blind,0.5,fairness,conditional_statistical_parity (mh_odds_ratio),1.3258838495157248,1.5234422527649512,0.19755840324922636
+X1 vs X2 (same test set X3),race_blind,break_even,performance,auc,0.7103764907383913,0.713408187431278,0.0030316966928867206
+X1 vs X2 (same test set X3),race_blind,break_even,performance,accuracy,0.6032388663967612,0.5489878542510122,-0.05425101214574901
+X1 vs X2 (same test set X3),race_blind,break_even,performance,recall,0.8525754884547069,0.9182948490230906,0.06571936056838368
+X1 vs X2 (same test set X3),race_blind,break_even,performance,type_i_error,0.6056547619047619,0.7604166666666666,0.15476190476190477
+X1 vs X2 (same test set X3),race_blind,break_even,performance,f1,0.6620689655172414,0.6499057196731616,-0.012163245844079795
+X1 vs X2 (same test set X3),race_blind,break_even,performance,ece,0.0300985978218623,0.0357553518704453,0.005656754048582995
+X1 vs X2 (same test set X3),race_blind,break_even,performance,cost_per_defendant,7137.246963562753,7075.708502024291,-61.53846153846189
+X1 vs X2 (same test set X3),race_blind,break_even,fairness,statistical_parity (gap),0.18122192273135673,0.16913746630727755,-0.012084456424079182
+X1 vs X2 (same test set X3),race_blind,break_even,fairness,fpr (gap),0.1861334570957096,0.19011705858085803,0.003983601485148425
+X1 vs X2 (same test set X3),race_blind,break_even,fairness,fnr (gap),-0.1114040870138431,-0.10439097634219585,0.007013110671647255
+X1 vs X2 (same test set X3),race_blind,break_even,fairness,conditional_statistical_parity (mh_odds_ratio),1.938280166435506,1.8652428417011022,-0.07303732473440383
+X1 vs X2 (same test set X3),race_priors_blind,0.5,performance,auc,0.620482851222194,0.6188784572443542,-0.0016043939778398464
+X1 vs X2 (same test set X3),race_priors_blind,0.5,performance,accuracy,0.5975708502024292,0.5975708502024292,0.0
+X1 vs X2 (same test set X3),race_priors_blind,0.5,performance,recall,0.566607460035524,0.566607460035524,0.0
+X1 vs X2 (same test set X3),race_priors_blind,0.5,performance,type_i_error,0.3764880952380952,0.3764880952380952,0.0
+X1 vs X2 (same test set X3),race_priors_blind,0.5,performance,f1,0.562114537444934,0.562114537444934,0.0
+X1 vs X2 (same test set X3),race_priors_blind,0.5,performance,ece,0.0182373349878542,0.0234791026801619,0.005241767692307702
+X1 vs X2 (same test set X3),race_priors_blind,0.5,performance,cost_per_defendant,10668.421052631578,10668.421052631578,0.0
+X1 vs X2 (same test set X3),race_priors_blind,0.5,fairness,statistical_parity (gap),0.13867924528301884,0.13867924528301884,0.0
+X1 vs X2 (same test set X3),race_priors_blind,0.5,fairness,fpr (gap),0.11923731435643564,0.11923731435643564,0.0
+X1 vs X2 (same test set X3),race_priors_blind,0.5,fairness,fnr (gap),-0.11279572255182013,-0.11279572255182013,0.0
+X1 vs X2 (same test set X3),race_priors_blind,0.5,fairness,conditional_statistical_parity (mh_odds_ratio),1.0574387201719972,1.0574387201719972,0.0
+X1 vs X2 (same test set X3),race_priors_blind,break_even,performance,auc,0.620482851222194,0.6188784572443542,-0.0016043939778398464
+X1 vs X2 (same test set X3),race_priors_blind,break_even,performance,accuracy,0.4655870445344129,0.4655870445344129,0.0
+X1 vs X2 (same test set X3),race_priors_blind,break_even,performance,recall,0.9893428063943162,0.9893428063943162,0.0
+X1 vs X2 (same test set X3),race_priors_blind,break_even,performance,type_i_error,0.9732142857142856,0.9732142857142856,0.0
+X1 vs X2 (same test set X3),race_priors_blind,break_even,performance,f1,0.6279594137542277,0.6279594137542277,0.0
+X1 vs X2 (same test set X3),race_priors_blind,break_even,performance,ece,0.0182373349878542,0.0234791026801619,0.005241767692307702
+X1 vs X2 (same test set X3),race_priors_blind,break_even,performance,cost_per_defendant,7343.31983805668,7343.31983805668,0.0
+X1 vs X2 (same test set X3),race_priors_blind,break_even,fairness,statistical_parity (gap),0.03656783468104219,0.03656783468104219,0.0
+X1 vs X2 (same test set X3),race_priors_blind,break_even,fairness,fpr (gap),0.04088025990099009,0.04088025990099009,0.0
+X1 vs X2 (same test set X3),race_priors_blind,break_even,fairness,fnr (gap),-0.027484801875045775,-0.027484801875045775,0.0
+X1 vs X2 (same test set X3),race_priors_blind,break_even,fairness,conditional_statistical_parity (mh_odds_ratio),2.8309090909090906,2.8309090909090906,0.0
+X1 vs X2 (same test set X3),race_proxy_blind,0.5,performance,auc,0.5746730419521273,0.5749558593419606,0.00028281738983326754
+X1 vs X2 (same test set X3),race_proxy_blind,0.5,performance,accuracy,0.5805668016194332,0.5805668016194332,0.0
+X1 vs X2 (same test set X3),race_proxy_blind,0.5,performance,recall,0.236234458259325,0.236234458259325,0.0
+X1 vs X2 (same test set X3),race_proxy_blind,0.5,performance,type_i_error,0.1309523809523809,0.1309523809523809,0.0
+X1 vs X2 (same test set X3),race_proxy_blind,0.5,performance,f1,0.3392857142857143,0.3392857142857143,0.0
+X1 vs X2 (same test set X3),race_proxy_blind,0.5,performance,ece,0.0057220907346439,0.0069725018522517,0.0012504111176077993
+X1 vs X2 (same test set X3),race_proxy_blind,0.5,performance,cost_per_defendant,14889.068825910932,14889.068825910932,0.0
+X1 vs X2 (same test set X3),race_proxy_blind,0.5,fairness,statistical_parity (gap),0.07816711590296496,0.07816711590296496,0.0
+X1 vs X2 (same test set X3),race_proxy_blind,0.5,fairness,fpr (gap),0.053553011551155105,0.053553011551155105,0.0
+X1 vs X2 (same test set X3),race_proxy_blind,0.5,fairness,fnr (gap),-0.08142898996557524,-0.08142898996557524,0.0
+X1 vs X2 (same test set X3),race_proxy_blind,0.5,fairness,conditional_statistical_parity (mh_odds_ratio),1.207622157436018,1.207622157436018,0.0
+X1 vs X2 (same test set X3),race_proxy_blind,break_even,performance,auc,0.5746730419521273,0.5749558593419606,0.00028281738983326754
+X1 vs X2 (same test set X3),race_proxy_blind,break_even,performance,accuracy,0.4558704453441295,0.4558704453441295,0.0
+X1 vs X2 (same test set X3),race_proxy_blind,break_even,performance,recall,1.0,1.0,0.0
+X1 vs X2 (same test set X3),race_proxy_blind,break_even,performance,type_i_error,1.0,1.0,0.0
+X1 vs X2 (same test set X3),race_proxy_blind,break_even,performance,f1,0.6262513904338154,0.6262513904338154,0.0
+X1 vs X2 (same test set X3),race_proxy_blind,break_even,performance,ece,0.0057220907346439,0.0069725018522517,0.0012504111176077993
+X1 vs X2 (same test set X3),race_proxy_blind,break_even,performance,cost_per_defendant,7345.748987854251,7345.748987854251,0.0
+X1 vs X2 (same test set X3),race_proxy_blind,break_even,fairness,statistical_parity (gap),0.0,0.0,0.0
+X1 vs X2 (same test set X3),race_proxy_blind,break_even,fairness,fpr (gap),0.0,0.0,0.0
+X1 vs X2 (same test set X3),race_proxy_blind,break_even,fairness,fnr (gap),0.0,0.0,0.0
+X1 vs X2 (same test set X3),race_proxy_blind,break_even,fairness,conditional_statistical_parity (mh_odds_ratio),,,
+X1 vs X2 (same test set X3),sex_blind,0.5,performance,auc,0.7092002875750657,0.7114800071893767,0.002279719614310949
+X1 vs X2 (same test set X3),sex_blind,0.5,performance,accuracy,0.659919028340081,0.665587044534413,0.005668016194331993
+X1 vs X2 (same test set X3),sex_blind,0.5,performance,recall,0.5719360568383659,0.5470692717584369,-0.02486678507992901
+X1 vs X2 (same test set X3),sex_blind,0.5,performance,type_i_error,0.2663690476190476,0.2351190476190476,-0.03125000000000003
+X1 vs X2 (same test set X3),sex_blind,0.5,performance,f1,0.6052631578947368,0.5986394557823129,-0.006623702112423913
+X1 vs X2 (same test set X3),sex_blind,0.5,performance,ece,0.0343802871659918,0.0349716253441295,0.0005913381781377028
+X1 vs X2 (same test set X3),sex_blind,0.5,performance,cost_per_defendant,9762.348178137652,9986.234817813764,223.88663967611137
+X1 vs X2 (same test set X3),sex_blind,0.5,fairness,statistical_parity (gap),0.226010781671159,0.2539532794249776,0.027942497753818574
+X1 vs X2 (same test set X3),sex_blind,0.5,fairness,fpr (gap),0.11215965346534651,0.15815800330033003,0.04599834983498352
+X1 vs X2 (same test set X3),sex_blind,0.5,fairness,fnr (gap),-0.291529334212261,-0.2918039991210723,-0.000274664908811284
+X1 vs X2 (same test set X3),sex_blind,0.5,fairness,conditional_statistical_parity (mh_odds_ratio),1.4264538347715636,7.380516503667483,5.9540626688959195
+X1 vs X2 (same test set X3),sex_blind,break_even,performance,auc,0.7092002875750657,0.7114800071893767,0.002279719614310949
+X1 vs X2 (same test set X3),sex_blind,break_even,performance,accuracy,0.6032388663967612,0.5951417004048583,-0.00809716599190291
+X1 vs X2 (same test set X3),sex_blind,break_even,performance,recall,0.8525754884547069,0.8685612788632326,0.01598579040852577
+X1 vs X2 (same test set X3),sex_blind,break_even,performance,type_i_error,0.6056547619047619,0.6339285714285714,0.028273809523809534
+X1 vs X2 (same test set X3),sex_blind,break_even,performance,f1,0.6620689655172414,0.6617050067658998,-0.0003639587513415421
+X1 vs X2 (same test set X3),sex_blind,break_even,performance,ece,0.0343802871659918,0.0349716253441295,0.0005913381781377028
+X1 vs X2 (same test set X3),sex_blind,break_even,performance,cost_per_defendant,7137.246963562753,7053.441295546559,-83.80566801619443
+X1 vs X2 (same test set X3),sex_blind,break_even,fairness,statistical_parity (gap),0.18122192273135673,0.11698113207547167,-0.06424079065588506
+X1 vs X2 (same test set X3),sex_blind,break_even,fairness,fpr (gap),0.1861334570957096,0.11312654702970293,-0.07300691006600668
+X1 vs X2 (same test set X3),sex_blind,break_even,fairness,fnr (gap),-0.1114040870138431,-0.05962059620596208,0.05178349080788103
+X1 vs X2 (same test set X3),sex_blind,break_even,fairness,conditional_statistical_parity (mh_odds_ratio),1.938280166435506,0.2424799834591719,-1.695800182976334
+time: early vs later window,age_blind,0.5,performance,auc,0.6674042477561539,0.6675258054426025,0.00012155768644861453
+time: early vs later window,age_blind,0.5,performance,accuracy,0.6968365553602812,0.6887456037514654,-0.008090951608815788
+time: early vs later window,age_blind,0.5,performance,recall,0.2754820936639118,0.2194244604316546,-0.05605763323225721
+time: early vs later window,age_blind,0.5,performance,type_i_error,0.1058064516129032,0.0843478260869565,-0.021458625525946698
+time: early vs later window,age_blind,0.5,performance,f1,0.3669724770642202,0.3148387096774193,-0.05213376738680092
+time: early vs later window,age_blind,0.5,performance,ece,0.0359066336379613,0.0289084972743259,-0.006998136363635402
+time: early vs later window,age_blind,0.5,performance,cost_per_defendant,10217.047451669596,10943.434935521687,726.3874838520915
+time: early vs later window,age_blind,0.5,fairness,statistical_parity (gap),0.20907660991857882,0.1647898865909078,-0.04428672332767103
+time: early vs later window,age_blind,0.5,fairness,fpr (gap),0.1222222222222222,0.1250959128344161,0.002873690612193891
+time: early vs later window,age_blind,0.5,fairness,fnr (gap),-0.34426378417658277,-0.2080502593323107,0.13621352484427207
+time: early vs later window,age_blind,0.5,fairness,conditional_statistical_parity (mh_odds_ratio),6.56355828075422,5.607819731825282,-0.9557385489289381
+time: early vs later window,age_blind,break_even,performance,auc,0.6674042477561539,0.6675258054426025,0.00012155768644861453
+time: early vs later window,age_blind,break_even,performance,accuracy,0.5500878734622144,0.6143024618991794,0.06421458843696493
+time: early vs later window,age_blind,break_even,performance,recall,0.7768595041322314,0.6690647482014388,-0.10779475593079257
+time: early vs later window,age_blind,break_even,performance,type_i_error,0.5561290322580645,0.4121739130434783,-0.14395511921458626
+time: early vs later window,age_blind,break_even,performance,f1,0.5241635687732342,0.5306704707560627,0.006506901982828439
+time: early vs later window,age_blind,break_even,performance,ece,0.0359066336379613,0.0289084972743259,-0.006998136363635402
+time: early vs later window,age_blind,break_even,performance,cost_per_defendant,7960.017574692443,8065.06447831184,105.04690361939629
+time: early vs later window,age_blind,break_even,fairness,statistical_parity (gap),0.26089008142116954,0.28375768620237135,0.02286760478120181
+time: early vs later window,age_blind,break_even,fairness,fpr (gap),0.25614035087719295,0.2523146964039082,-0.0038256544732847564
+time: early vs later window,age_blind,break_even,fairness,fnr (gap),-0.19370515033154692,-0.2807363576594346,-0.08703120732788769
+time: early vs later window,age_blind,break_even,fairness,conditional_statistical_parity (mh_odds_ratio),19.472769494664433,12.390376667311996,-7.082392827352438
+time: early vs later window,protected_blind,0.5,performance,auc,0.6654172220741136,0.6492352205192368,-0.016182001554876813
+time: early vs later window,protected_blind,0.5,performance,accuracy,0.6942003514938488,0.6858147713950762,-0.00838558009877266
+time: early vs later window,protected_blind,0.5,performance,recall,0.2920110192837465,0.2284172661870503,-0.06359375309669621
+time: early vs later window,protected_blind,0.5,performance,type_i_error,0.1174193548387096,0.0930434782608695,-0.0243758765778401
+time: early vs later window,protected_blind,0.5,performance,f1,0.3785714285714286,0.3215189873417721,-0.057052441229656525
+time: early vs later window,protected_blind,0.5,performance,ece,0.0348407281107205,0.0254548945545134,-0.009385833556207097
+time: early vs later window,protected_blind,0.5,performance,cost_per_defendant,10112.917398945518,10905.334114888628,792.4167159431108
+time: early vs later window,protected_blind,0.5,fairness,statistical_parity (gap),0.17896928201332346,0.12241763657514856,-0.0565516454381749
+time: early vs later window,protected_blind,0.5,fairness,fpr (gap),0.09064327485380116,0.08284737497229183,-0.007795899881509333
+time: early vs later window,protected_blind,0.5,fairness,fnr (gap),-0.3138341357071487,-0.16869384177076485,0.14514029393638384
+time: early vs later window,protected_blind,0.5,fairness,conditional_statistical_parity (mh_odds_ratio),2.748942727017995,2.2982460607328896,-0.4506966662851055
+time: early vs later window,protected_blind,break_even,performance,auc,0.6654172220741136,0.6492352205192368,-0.016182001554876813
+time: early vs later window,protected_blind,break_even,performance,accuracy,0.5140597539543058,0.5797186400937866,0.06565888613948079
+time: early vs later window,protected_blind,break_even,performance,recall,0.8099173553719008,0.6960431654676259,-0.11387418990427489
+time: early vs later window,protected_blind,break_even,performance,type_i_error,0.6245161290322581,0.4765217391304348,-0.1479943899018233
+time: early vs later window,protected_blind,break_even,performance,f1,0.5153374233128833,0.5191146881287726,0.0037772648158892475
+time: early vs later window,protected_blind,break_even,performance,ece,0.0348407281107205,0.0254548945545134,-0.009385833556207097
+time: early vs later window,protected_blind,break_even,performance,cost_per_defendant,8166.959578207381,8298.9449003517,131.98532214431907
+time: early vs later window,protected_blind,break_even,fairness,statistical_parity (gap),0.14805699481865287,0.11917410215414237,-0.028882892664510496
+time: early vs later window,protected_blind,break_even,fairness,fpr (gap),0.12748538011695898,0.09116834620696712,-0.03631703390999186
+time: early vs later window,protected_blind,break_even,fairness,fnr (gap),-0.12898537560178036,-0.11635254583972532,0.012632829762055042
+time: early vs later window,protected_blind,break_even,fairness,conditional_statistical_parity (mh_odds_ratio),,1.2250837928424694,
+time: early vs later window,race_aware,0.5,performance,auc,0.702751266328979,0.7016054113231154,-0.0011458550058636163
+time: early vs later window,race_aware,0.5,performance,accuracy,0.6906854130052724,0.7022274325908558,0.01154201958558343
+time: early vs later window,race_aware,0.5,performance,recall,0.2975206611570248,0.2931654676258993,-0.004355193531125512
+time: early vs later window,race_aware,0.5,performance,type_i_error,0.1251612903225806,0.1,-0.025161290322580604
+time: early vs later window,race_aware,0.5,performance,f1,0.3802816901408451,0.3908872901678656,0.01060560002702049
+time: early vs later window,race_aware,0.5,performance,ece,0.0282663828418277,0.0333878529736225,0.005121470131794797
+time: early vs later window,race_aware,0.5,performance,cost_per_defendant,10113.796133567665,10124.560375146542,10.764241578877773
+time: early vs later window,race_aware,0.5,fairness,statistical_parity (gap),0.2177276091783864,0.15622260044355046,-0.06150500873483594
+time: early vs later window,race_aware,0.5,fairness,fpr (gap),0.14444444444444443,0.08584411819871433,-0.0586003262457301
+time: early vs later window,race_aware,0.5,fairness,fnr (gap),-0.31769461349804706,-0.24687705456936226,0.0708175589286848
+time: early vs later window,race_aware,0.5,fairness,conditional_statistical_parity (mh_odds_ratio),4.344775619838344,2.480299447915901,-1.8644761719224427
+time: early vs later window,race_aware,break_even,performance,auc,0.702751266328979,0.7016054113231154,-0.0011458550058636163
+time: early vs later window,race_aware,break_even,performance,accuracy,0.6045694200351494,0.6131301289566237,0.008560708921474314
+time: early vs later window,race_aware,break_even,performance,recall,0.8016528925619835,0.7464028776978417,-0.05525001486414172
+time: early vs later window,race_aware,break_even,performance,type_i_error,0.4877419354838709,0.4513043478260869,-0.03643758765778399
+time: early vs later window,race_aware,break_even,performance,f1,0.563953488372093,0.5570469798657718,-0.006906508506321241
+time: early vs later window,race_aware,break_even,performance,ece,0.0282663828418277,0.0333878529736225,0.005121470131794797
+time: early vs later window,race_aware,break_even,performance,cost_per_defendant,7014.93848857645,7412.95427901524,398.01579043878974
+time: early vs later window,race_aware,break_even,fairness,statistical_parity (gap),0.32789600296076976,0.2573910751227787,-0.07050492783799106
+time: early vs later window,race_aware,break_even,fairness,fpr (gap),0.3140350877192983,0.2455325933125309,-0.06850249440676737
+time: early vs later window,race_aware,break_even,fairness,fnr (gap),-0.2448905441002816,-0.19943019943019946,0.04546034467008214
+time: early vs later window,race_aware,break_even,fairness,conditional_statistical_parity (mh_odds_ratio),3.5175602799512644,2.0615537297250492,-1.4560065502262152
+time: early vs later window,race_blind,0.5,performance,auc,0.7037447791699992,0.6999194557397561,-0.0038253234302431105
+time: early vs later window,race_blind,0.5,performance,accuracy,0.7003514938488576,0.7004689331770223,0.00011743932816465907
+time: early vs later window,race_blind,0.5,performance,recall,0.3278236914600551,0.2931654676258993,-0.03465822383415579
+time: early vs later window,race_blind,0.5,performance,type_i_error,0.1251612903225806,0.1026086956521739,-0.02255259467040671
+time: early vs later window,race_blind,0.5,performance,f1,0.4110535405872193,0.3894862604540024,-0.021567280133216904
+time: early vs later window,race_blind,0.5,performance,ece,0.0334645974692443,0.0282412373856975,-0.005223360083546801
+time: early vs later window,race_blind,0.5,performance,cost_per_defendant,9727.152899824254,10148.300117233292,421.1472174090377
+time: early vs later window,race_blind,0.5,fairness,statistical_parity (gap),0.22504626202812733,0.14147769926819903,-0.0835685627599283
+time: early vs later window,race_blind,0.5,fairness,fpr (gap),0.1286549707602339,0.07342660323631217,-0.05522836752392174
+time: early vs later window,race_blind,0.5,fairness,fnr (gap),-0.36356617313107464,-0.228614215793703,0.13495195733737164
+time: early vs later window,race_blind,0.5,fairness,conditional_statistical_parity (mh_odds_ratio),3.6448665857078097,2.042740003290489,-1.6021265824173208
+time: early vs later window,race_blind,break_even,performance,auc,0.7037447791699992,0.6999194557397561,-0.0038253234302431105
+time: early vs later window,race_blind,break_even,performance,accuracy,0.6107205623901582,0.6207502930832356,0.010029730693077443
+time: early vs later window,race_blind,break_even,performance,recall,0.7823691460055097,0.7338129496402878,-0.048556196365221904
+time: early vs later window,race_blind,break_even,performance,type_i_error,0.4696774193548387,0.4339130434782609,-0.035764375876577825
+time: early vs later window,race_blind,break_even,performance,f1,0.5618199802176063,0.557758031442242,-0.004061948775364255
+time: early vs later window,race_blind,break_even,performance,ece,0.0334645974692443,0.0282412373856975,-0.005223360083546801
+time: early vs later window,race_blind,break_even,performance,cost_per_defendant,7094.903339191565,7418.815943728019,323.91260453645464
+time: early vs later window,race_blind,break_even,fairness,statistical_parity (gap),0.24502220577350114,0.21976951421481827,-0.02525269155868287
+time: early vs later window,race_blind,break_even,fairness,fpr (gap),0.22280701754385962,0.19871860453220108,-0.024088413011658538
+time: early vs later window,race_blind,break_even,fairness,fnr (gap),-0.18453083840494142,-0.1778252611585945,0.0067055772463469054
+time: early vs later window,race_blind,break_even,fairness,conditional_statistical_parity (mh_odds_ratio),1.0082471588666262,1.115399328453406,0.10715216958677987
+time: early vs later window,race_priors_blind,0.5,performance,auc,0.6235883764329512,0.6209321238661245,-0.0026562525668266668
+time: early vs later window,race_priors_blind,0.5,performance,accuracy,0.6810193321616872,0.6740914419695193,-0.006927890192167885
+time: early vs later window,race_priors_blind,0.5,performance,recall,0.0,0.0,0.0
+time: early vs later window,race_priors_blind,0.5,performance,type_i_error,0.0,0.0,0.0
+time: early vs later window,race_priors_blind,0.5,performance,f1,,,
+time: early vs later window,race_priors_blind,0.5,performance,ece,0.0271486667343308,0.0143802385834009,-0.012768428150929899
+time: early vs later window,race_priors_blind,0.5,performance,cost_per_defendant,12759.226713532513,13036.342321219228,277.1156076867155
+time: early vs later window,race_priors_blind,0.5,fairness,statistical_parity (gap),0.0,0.0,0.0
+time: early vs later window,race_priors_blind,0.5,fairness,fpr (gap),0.0,0.0,0.0
+time: early vs later window,race_priors_blind,0.5,fairness,fnr (gap),0.0,0.0,0.0
+time: early vs later window,race_priors_blind,0.5,fairness,conditional_statistical_parity (mh_odds_ratio),,,
+time: early vs later window,race_priors_blind,break_even,performance,auc,0.6235883764329512,0.6209321238661245,-0.0026562525668266668
+time: early vs later window,race_priors_blind,break_even,performance,accuracy,0.4024604569420035,0.4912075029308324,0.08874704598882888
+time: early vs later window,race_priors_blind,break_even,performance,recall,0.9228650137741048,0.8201438848920863,-0.10272112888201845
+time: early vs later window,race_priors_blind,break_even,performance,type_i_error,0.8412903225806452,0.6678260869565218,-0.1734642356241234
+time: early vs later window,race_priors_blind,break_even,performance,f1,0.4962962962962962,0.5123595505617978,0.016063254265501647
+time: early vs later window,race_priors_blind,break_even,performance,ece,0.0271486667343308,0.0143802385834009,-0.012768428150929899
+time: early vs later window,race_priors_blind,break_even,performance,cost_per_defendant,8718.804920913884,8422.039859320046,-296.76506159383825
+time: early vs later window,race_priors_blind,break_even,fairness,statistical_parity (gap),0.14020170244263508,0.15083008120297303,0.010628378760337953
+time: early vs later window,race_priors_blind,break_even,fairness,fpr (gap),0.14736842105263148,0.14118369226047367,-0.006184728792157812
+time: early vs later window,race_priors_blind,break_even,fairness,fnr (gap),-0.09732945771641385,-0.12172182043976917,-0.02439236272335532
+time: early vs later window,race_priors_blind,break_even,fairness,conditional_statistical_parity (mh_odds_ratio),0.9174582121151308,0.8966047913261243,-0.020853420789006538
+time: early vs later window,race_proxy_blind,0.5,performance,auc,0.5820492313160935,0.5868376603065374,0.004788428990443849
+time: early vs later window,race_proxy_blind,0.5,performance,accuracy,0.6810193321616872,0.6740914419695193,-0.006927890192167885
+time: early vs later window,race_proxy_blind,0.5,performance,recall,0.0,0.0,0.0
+time: early vs later window,race_proxy_blind,0.5,performance,type_i_error,0.0,0.0,0.0
+time: early vs later window,race_proxy_blind,0.5,performance,f1,,,
+time: early vs later window,race_proxy_blind,0.5,performance,ece,0.0297741378757363,0.0070202714934997,-0.022753866382236598
+time: early vs later window,race_proxy_blind,0.5,performance,cost_per_defendant,12759.226713532513,13036.342321219228,277.1156076867155
+time: early vs later window,race_proxy_blind,0.5,fairness,statistical_parity (gap),0.0,0.0,0.0
+time: early vs later window,race_proxy_blind,0.5,fairness,fpr (gap),0.0,0.0,0.0
+time: early vs later window,race_proxy_blind,0.5,fairness,fnr (gap),0.0,0.0,0.0
+time: early vs later window,race_proxy_blind,0.5,fairness,conditional_statistical_parity (mh_odds_ratio),,,
+time: early vs later window,race_proxy_blind,break_even,performance,auc,0.5820492313160935,0.5868376603065374,0.004788428990443849
+time: early vs later window,race_proxy_blind,break_even,performance,accuracy,0.3189806678383128,0.4431418522860492,0.12416118444773638
+time: early vs later window,race_proxy_blind,break_even,performance,recall,1.0,0.8525179856115108,-0.14748201438848918
+time: early vs later window,race_proxy_blind,break_even,performance,type_i_error,1.0,0.7547826086956522,-0.24521739130434783
+time: early vs later window,race_proxy_blind,break_even,performance,f1,0.4836775483011325,0.499473129610116,0.015795581308983453
+time: early vs later window,race_proxy_blind,break_even,performance,ece,0.0297741378757363,0.0070202714934997,-0.022753866382236598
+time: early vs later window,race_proxy_blind,break_even,performance,cost_per_defendant,9193.760984182776,8791.324736225088,-402.43624795768847
+time: early vs later window,race_proxy_blind,break_even,fairness,statistical_parity (gap),0.0,0.027002710586185752,0.027002710586185752
+time: early vs later window,race_proxy_blind,break_even,fairness,fpr (gap),0.0,0.0011594795982744488,0.0011594795982744488
+time: early vs later window,race_proxy_blind,break_even,fairness,fnr (gap),0.0,-0.04788516326977865,-0.04788516326977865
+time: early vs later window,race_proxy_blind,break_even,fairness,conditional_statistical_parity (mh_odds_ratio),,0.9821027697992304,
+time: early vs later window,sex_blind,0.5,performance,auc,0.6993814982671289,0.6965287769784172,-0.0028527212887117237
+time: early vs later window,sex_blind,0.5,performance,accuracy,0.6985940246045694,0.7080890973036342,0.0094950726990648
+time: early vs later window,sex_blind,0.5,performance,recall,0.2947658402203856,0.3075539568345323,0.012788116614146694
+time: early vs later window,sex_blind,0.5,performance,type_i_error,0.112258064516129,0.0982608695652173,-0.013997194950911701
+time: early vs later window,sex_blind,0.5,performance,f1,0.3842010771992818,0.4071428571428571,0.02294177994357527
+time: early vs later window,sex_blind,0.5,performance,ece,0.0283444776528998,0.0344810473686987,0.006136569715798897
+time: early vs later window,sex_blind,0.5,performance,cost_per_defendant,10030.316344463972,9921.16060961313,-109.15573485084133
+time: early vs later window,sex_blind,0.5,fairness,statistical_parity (gap),0.2024611398963731,0.16774688970263785,-0.03471425019373525
+time: early vs later window,sex_blind,0.5,fairness,fpr (gap),0.1216374269005848,0.09633485088751342,-0.02530257601307137
+time: early vs later window,sex_blind,0.5,fairness,fnr (gap),-0.31310745753474434,-0.2563919935714808,0.056715463963263546
+time: early vs later window,sex_blind,0.5,fairness,conditional_statistical_parity (mh_odds_ratio),3.6474395334086775,3.0470524638129826,-0.600387069595695
+time: early vs later window,sex_blind,break_even,performance,auc,0.6993814982671289,0.6965287769784172,-0.0028527212887117237
+time: early vs later window,sex_blind,break_even,performance,accuracy,0.6107205623901582,0.6002344665885111,-0.010486095801647055
+time: early vs later window,sex_blind,break_even,performance,recall,0.7741046831955923,0.7517985611510791,-0.02230612204451321
+time: early vs later window,sex_blind,break_even,performance,type_i_error,0.4658064516129032,0.4730434782608695,0.007237026647966327
+time: early vs later window,sex_blind,break_even,performance,f1,0.5592039800995025,0.5507246376811594,-0.008479342418343028
+time: early vs later window,sex_blind,break_even,performance,ece,0.0283444776528998,0.0344810473686987,0.006136569715798897
+time: early vs later window,sex_blind,break_even,performance,cost_per_defendant,7164.762741652021,7540.4454865181715,375.68274486615064
+time: early vs later window,sex_blind,break_even,fairness,statistical_parity (gap),0.25002775721687637,0.23518489865387593,-0.014842858563000438
+time: early vs later window,sex_blind,break_even,fairness,fpr (gap),0.2187134502923977,0.22447866046004056,0.005765210167642865
+time: early vs later window,sex_blind,break_even,fairness,fnr (gap),-0.20360614043055683,-0.17859230038717216,0.025013840043384666
+time: early vs later window,sex_blind,break_even,fairness,conditional_statistical_parity (mh_odds_ratio),1.014366077414924,1.269724770642202,0.255358693227278
