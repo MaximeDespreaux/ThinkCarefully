@@ -1,0 +1,26 @@
+{
+  "race_aware__aa_vs_others": {
+    "African-American": 0.5800000000000001,
+    "all other groups": 0.455
+  },
+  "race_aware__aa_vs_caucasian": {
+    "African-American": 0.5800000000000001,
+    "Asian": 0.5,
+    "Caucasian": 0.46,
+    "Hispanic": 0.395,
+    "Native American": 0.5,
+    "Other": 0.435
+  },
+  "race_blind__aa_vs_others": {
+    "African-American": 0.5850000000000001,
+    "all other groups": 0.46
+  },
+  "race_blind__aa_vs_caucasian": {
+    "African-American": 0.5850000000000001,
+    "Asian": 0.5,
+    "Caucasian": 0.46,
+    "Hispanic": 0.41500000000000004,
+    "Native American": 0.5,
+    "Other": 0.44
+  }
+}

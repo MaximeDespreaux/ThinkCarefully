@@ -1,0 +1,8 @@
+{
+  "n_curves": 100,
+  "mean_total_effect": 0.6039531966557474,
+  "sd_total_effect": 0.04605650386516322,
+  "min_total_effect": 0.5017857105294361,
+  "max_total_effect": 0.644513549817635,
+  "sign_disagreement": false
+}

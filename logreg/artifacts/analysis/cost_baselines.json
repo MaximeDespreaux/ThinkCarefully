@@ -1,0 +1,7 @@
+{
+  "release_all": 18207.343412527,
+  "detain_all": 7355.021598272138,
+  "best_trivial": 7355.021598272138,
+  "best_trivial_policy": "detain_all",
+  "n_test": 1852
+}

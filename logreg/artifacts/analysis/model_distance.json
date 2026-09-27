@@ -1,0 +1,11 @@
+{
+  "mean_importance_distance": 0.05611515193221694,
+  "sd_importance_distance": 0.02243733813719085,
+  "max_importance_distance": 0.08977267930500571,
+  "n_pairs": 25,
+  "mean_distance": 0.6586771977504985,
+  "sd_distance": 0.25382023766823697,
+  "max_distance": 1.4702878399881079,
+  "relative_distance": 0.7817683658912922,
+  "term_overlap": 1.0
+}
