@@ -455,7 +455,151 @@ def same_defendant_shap() -> dict[str, pd.DataFrame]:
     return {m: out[m] for m in lib.MODELS if m in out}
 
 
+# -------------------------------------------------------------------------------- TL;DRs
+
+
+def pts(x: float) -> str:
+    """A probability change in percentage points, e.g. +17.7 pts."""
+    return f"{100 * x:+.1f} pts"
+
+
+def me_holdout() -> pd.DataFrame:
+    """Holdout marginal effects, feature x model."""
+    me = lib.comparison("marginal_effects.csv")
+    me = me[(me.run == "holdout") & (me.feature_set == "race_aware")]
+    return me.pivot(index="feature", columns="model", values="marginal_effect")
+
+
+def per_model(me: pd.DataFrame, feature: str) -> str:
+    return " / ".join(pts(me.at[feature, m]) for m in lib.MODELS)
+
+
+def importance_first() -> tuple[int, int]:
+    """(measures where priors ranks first, number of measures)."""
+    table = importance_table()
+    share = table.value.abs() / table.groupby(["model", "method"]).value.transform(
+        lambda v: v.abs().sum()
+    )
+    first = table.loc[share.groupby([table.model, table.method]).idxmax()]
+    return int((first.feature == PRIORS).sum()), len(first)
+
+
+def tldr_page() -> None:
+    me = me_holdout()
+    aa = me.loc["African_American", list(lib.MODELS)]
+    n_prior, n_all = importance_first()
+    lib.tldr(
+        [
+            f"Under 25: {per_model(me, 'Age_Below_TwentyFive')} (LogReg / XGBoost / TabPFN)",
+            f"Each extra prior: {per_model(me, PRIORS)}",
+            f"African-American column: {pts(aa.min())} to {pts(aa.max())}",
+            f"Priors ranks first in {n_prior} of {n_all} importance measures",
+        ],
+        "All three models tell the same story: age and priors drive risk; race enters "
+        "through priors, not the race column.",
+    )
+
+
+def tldr_cross() -> None:
+    me = me_holdout()
+    top = lib.comparison("pdp_priors.csv").groupby("model").predicted_risk.max()
+    lib.tldr(
+        [
+            f"Under 25 {per_model(me, 'Age_Below_TwentyFive')}; "
+            f"over 45 {per_model(me, 'Age_Above_FourtyFive')}",
+            f"+1 prior {per_model(me, PRIORS)}; African-American ≤ "
+            f"{pts(me.loc['African_American'].abs().max())}",
+            f"Priors curve: LogReg and TabPFN overlap; XGBoost plateaus at {top['XGBoost']:.2f}",
+        ],
+        "Same directions and ranking in all three; XGBoost's effects are about half as large.",
+    )
+
+
+def tldr_importance() -> None:
+    n_prior, n_all = importance_first()
+    lib.tldr(
+        [
+            f"{n_all} measures: permutation, SHAP, LIME, impurity, XPER",
+            f"Priors ranks first in {n_prior} of {n_all}; age bands next",
+        ],
+        "Whatever the method, priors dominates and the race columns barely register.",
+    )
+
+
+def tldr_ice() -> None:
+    rng = lib.comparison("pdp_priors.csv").groupby("model").predicted_risk.agg(["min", "max"])
+    points = [
+        "0 → 15 priors: "
+        + ", ".join(f"{m} {rng.at[m, 'min']:.2f}→{rng.at[m, 'max']:.2f}" for m in lib.MODELS)
+    ]
+    summ = load(TAB / "t12_pdp_ice" / "ice_summary.csv")
+    if summ is not None:
+        h = summ[(summ.run == "holdout") & (summ.feature_set == "race_aware")]
+        if len(h):
+            h = h.iloc[0]
+            points.append(
+                f"TabPFN, {int(h.n_curves)} defendants: all rise, "
+                f"{pts(h.mean_total_effect)} (sd {100 * h.sd_total_effect:.1f})"
+            )
+    points.append("One line per defendant; thick line = their average")
+    lib.tldr(points, "More priors raises everyone's risk by a similar amount, in every model.")
+
+
+def tldr_local() -> None:
+    summary = load_json(TAB / "t15_lime_reproducibility" / "lime_summary.json") or {}
+    points = ["SHAP splits one defendant's score into per-feature pieces, all 3 models"]
+    if summary:
+        points.append(
+            f"TabPFN LIME, {summary.get('n_runs', 15)} runs, one defendant: "
+            f"{summary.get('n_distinct_top_features', 4)} different top features"
+        )
+        points.append(
+            f"{summary.get('runs_naming_an_absent_feature', 9)} of those runs name a feature "
+            "the defendant lacks"
+        )
+    lib.tldr(points, "Use SHAP for individual explanations; LIME is not reproducible here.")
+
+
+def tldr_tree() -> None:
+    sur = load(TAB / "t11_surrogate_impurity" / "surrogate.csv")
+    s = None if sur is None else sur[(sur.run == "holdout") & (sur.feature_set == "race_aware")]
+    if s is None or not len(s):
+        return
+    s = s.iloc[0]
+    lib.tldr(
+        [
+            f"Depth-{int(s.max_depth)} tree, {int(s.n_leaves)} leaves, fitted to TabPFN's scores",
+            f"Reproduces {s.fidelity_r2:.0%} of their variance (R² {s.fidelity_r2:.2f})",
+            "Splits on priors, the two age bands, misdemeanour",
+        ],
+        "TabPFN's black box is close to a small readable rule set.",
+    )
+
+
+def tldr_extras() -> None:
+    points = []
+    eff = load(TAB / "t14_kernel_shap" / "efficiency.csv")
+    if eff is not None:
+        e = eff[(eff.run == "holdout") & (eff.feature_set == "race_aware")]
+        if len(e):
+            points.append(
+                f"Explaining TabPFN: {e.seconds_per_explained_row.iloc[0]:.1f} s per "
+                "defendant (Kernel SHAP)"
+            )
+    points.append("LogReg lasso: priors enters first, race columns last")
+    data = live_or_none()
+    if data is not None and "XGBoost" in data["models"]:
+        imp = xgb_impurity()
+        unused = [nice(f) for f in imp.index if imp.loc[f].sum() == 0]
+        if unused:
+            points.append(f"XGBoost never splits on {', '.join(unused)}")
+    lib.tldr(points, "Each group's own tools agree with the cross-model picture.")
+
+
 # =============================================================================== the page
+
+guarded(tldr_page, "The page summary")
+
 
 (tab_cross, tab_imp, tab_ice, tab_local, tab_tree, tab_extra) = st.tabs(
     [
@@ -528,12 +672,8 @@ def render_marginal_effects() -> None:
         "cleared, e.g. Under 25 clears Over 45), or when priors go up by one." + note
     )
     lib.takeaway(
-        "<b>Age and priors drive all three models.</b> On the holdout, being under 25 adds "
-        "about 17 points of "
-        "risk for LogReg and TabPFN, each extra prior about 7 points; the African-American "
-        "dummy moves risk by about 1 point. XGBoost's effects point the same way but are "
-        "roughly half the size, because its scores are compressed (sd 0.12 vs 0.20: 100 trees "
-        "at learning rate 0.01)."
+        "XGBoost's effects are smaller because its scores are compressed (sd 0.12 vs 0.20: "
+        "100 trees at learning rate 0.01), not because it ranks features differently."
     )
 
 
@@ -575,9 +715,7 @@ def render_pdp() -> None:
     )
     lib.show(lib.style(fig, "Partial dependence on priors (holdout)", 420))
     lib.takeaway(
-        "LogReg and TabPFN rise from about 28% at 0 priors to about 79% at 15, steepest over "
-        "the first few priors. XGBoost has the same shape but only climbs from 35% to 62%: "
-        "same ranking of defendants, much narrower range of scores."
+        "Steepest over the first few priors. XGBoost: same shape, narrower range of scores."
     )
 
 
@@ -617,6 +755,7 @@ def render_effect_stability() -> None:
 
 
 with tab_cross:
+    guarded(tldr_cross, "The summary")
     guarded(render_marginal_effects, "The cross-model marginal effects")
     left, right = st.columns(2, gap="large")
     with left:
@@ -795,6 +934,7 @@ def render_importance() -> None:
 
 
 with tab_imp:
+    guarded(tldr_importance, "The summary")
     guarded(render_importance, "The feature importance")
 
 
@@ -956,6 +1096,7 @@ def render_ice() -> None:
 
 
 with tab_ice:
+    guarded(tldr_ice, "The summary")
     guarded(render_ice, "The ICE curves")
 
 
@@ -1184,14 +1325,15 @@ def render_lime() -> None:
         f"Same defendant (#{row}: {int(person.get(PRIORS, 0))} priors, female, misdemeanour), "
         f"same model, {len(lime)} LIME runs that differ only in seed and sample size: "
         f"<b>{lime.top_feature.nunique()} different 'most important' features</b>, and "
-        f"{n_absent} of {len(lime)} runs name a feature she does not have "
-        f"({', '.join(absent)}: all 0 for her). LIME's local "
+        f"{n_absent} of {len(lime)} runs name a feature the defendant lacks "
+        f"({', '.join(absent)}: all 0 for this defendant). LIME's local "
         "linear fit on a model with only yes/no features and one count is unstable: we rely "
         "on SHAP instead."
     )
 
 
 with tab_local:
+    guarded(tldr_local, "The summary")
     guarded(render_local_shap, "The local SHAP explanations")
     st.divider()
     guarded(render_lime, "The LIME reproducibility study")
@@ -1304,6 +1446,7 @@ def render_surrogate() -> None:
 
 
 with tab_tree:
+    guarded(tldr_tree, "The summary")
     guarded(render_surrogate, "The surrogate tree")
 
 
@@ -1504,6 +1647,7 @@ def render_xgb_extras() -> None:
 
 
 with tab_extra:
+    guarded(tldr_extras, "The summary")
     guarded(render_logreg_extras, "The LogReg group's results")
     st.divider()
     guarded(render_tabpfn_extras, "The TabPFN group's results")

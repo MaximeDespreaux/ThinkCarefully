@@ -145,6 +145,44 @@ def psi_label(v: float) -> str:
     return "stable" if v < 0.1 else "moderate shift" if v < 0.25 else "major shift"
 
 
+# ------------------------------------------------------------------------------ TL;DR data
+
+
+def short(model: str) -> str:
+    return {"LogReg": "LR", "XGBoost": "XGB", "TabPFN": "TabPFN"}.get(model, model)
+
+
+def per_model(frame: pd.DataFrame, pair: str, col: str, fmt: str) -> str:
+    """'LR 5.2% · XGB 2.3% · TabPFN 3.8%' for one column of one design."""
+    q = frame[frame.pair == pair].set_index("model")
+    return " · ".join(f"{short(m)} {format(q.loc[m, col], fmt)}" for m in lib.MODELS)
+
+
+@st.cache_data
+def me_moves() -> pd.DataFrame:
+    """|change| of every marginal effect between the two fits, every model and design."""
+    me, rows = me_table(), []
+    for model in lib.MODELS:
+        for pair, (a, b) in PAIRS.items():
+            ea = me[(me.model == model) & (me.run == a)].set_index("feature").marginal_effect
+            eb = me[(me.model == model) & (me.run == b)].set_index("feature").marginal_effect
+            gap = (ea - eb.loc[ea.index]).abs()
+            rows += [
+                {"model": model, "pair": pair, "feature": f, "move": v,
+                 "same_top": ea.abs().idxmax() == eb.abs().idxmax()}
+                for f, v in gap.items()
+            ]  # fmt: skip
+    return pd.DataFrame(rows)
+
+
+def near_share(model: str, threshold: float, band: float = 0.05) -> float:
+    """Share of X1-vs-X2 flips whose average score is within ±band of the threshold."""
+    p = paired(model)
+    flip = (p.a >= threshold) != (p.b >= threshold)
+    near = ((p.a + p.b) / 2 - threshold).abs() <= band
+    return float((flip & near).sum() / flip.sum()) if flip.any() else float("nan")
+
+
 # -------------------------------------------------------------------------------- controls
 
 with st.expander("How the two stability designs work", expanded=False):
@@ -186,6 +224,25 @@ models = [m for m in lib.ALL_MODELS if m in models]  # keep the canonical order
 fitted = [m for m in models if m in lib.MODELS]
 live = live_stability(tuple(models), threshold)
 
+# The summaries always cover all three models, whatever the picker shows.
+full = live_stability(tuple(lib.MODELS), threshold)
+T = f"{threshold:.2f}"
+xgb_t = full[(full.model == "XGBoost") & (full.pair == "time 1 vs 2")].iloc[0]
+xgb_05 = live_stability(tuple(lib.MODELS), 0.5)
+xgb_05 = xgb_05[(xgb_05.model == "XGBoost") & (xgb_05.pair == "time 1 vs 2")].iloc[0]
+lib.tldr(
+    [
+        f"Ranking barely moves: |ΔAUC| ≤ {full.AUC.max():.3f}, all models, both designs.",
+        f"Same defendants, new 40% sample, at {T}: "
+        f"{per_model(full, 'X1 vs X2', 'Flip rate', '.1%')} decisions flip.",
+        f"XGBoost over time: AUC Δ {xgb_t['AUC']:.3f}, recall Δ {xgb_t['Recall']:.3f}"
+        + ("." if threshold == 0.5 else f" ({xgb_05['Recall']:.3f} at 0.50)."),
+        f"Explanations: distance between fits {full['ME L2'].min():.3f}–{full['ME L2'].max():.3f}.",
+    ],
+    "Rankings are stable; decisions near the threshold are not. XGBoost's time "
+    "'instability' is a calibration artefact.",
+)
+
 tab_sum, tab_same, tab_time, tab_expl, tab_extra = st.tabs(
     ["Summary", "Same defendants (X1 vs X2)", "Over time", "Explanations", "Group extras"]
 )
@@ -193,6 +250,18 @@ tab_sum, tab_same, tab_time, tab_expl, tab_extra = st.tabs(
 # ------------------------------------------------------------------------------- summary
 
 with tab_sum:
+    big = full.melt(["model", "pair"], ["Accuracy", "Precision", "Recall", "F1", "FPR"])
+    big = big.loc[big.value.idxmax()]
+    lib.tldr(
+        [
+            f"Bars: |change| between two fits of the same model, at {T}.",
+            f"|ΔAUC| ≤ {full.AUC.max():.3f}; largest threshold metric: {big.model} "
+            f"{big.variable} {big.value:.3f} ({PAIR_SHORT[big.pair].split(' (')[0].lower()}).",
+            f"Fewest flips on the same defendants: "
+            f"{full[full.pair == 'X1 vs X2'].set_index('model')['Flip rate'].idxmin()}.",
+        ],
+        "Refits change decisions far more than they change rankings.",
+    )
     st.subheader(f"Decision flips between the X1 and X2 fits at threshold {threshold:.3f}")
     cols = st.columns(len(models))
     for col, model in zip(cols, models):
@@ -257,12 +326,8 @@ with tab_sum:
         d1 = fits[fits.pair == "X1 vs X2"].set_index("model")
         flip_txt = ", ".join(f"{m} {pct(d1.loc[m, 'Flip rate'])}" for m in d1.index)
         lib.takeaway(
-            f"Refitting on different data barely moves the <b>ranking</b>: AUC changes by at "
-            f"most {worst_auc:.3f} across models and both designs. What moves is the "
-            f"<b>decision</b> of defendants who sit close to the line — at threshold "
-            f"{threshold:.3f}, a different random 40% sample flips {flip_txt} of the same "
-            f"defendants. Explanations (marginal effects) move by an L2 distance of "
-            f"{fits['ME L2'].min():.3f}–{fits['ME L2'].max():.3f}."
+            f"AUC moves ≤ {worst_auc:.3f}; decisions flip for {flip_txt} of the same "
+            "defendants — the ones sitting close to the threshold."
         )
     if "XGBoost" in models:
         x = live[(live.model == "XGBoost") & (live.pair == "time 1 vs 2")].iloc[0]
@@ -299,6 +364,27 @@ with tab_sum:
 # ----------------------------------------------------------------------- same defendants
 
 with tab_same:
+    curve_all = flip_curve(tuple(lib.MODELS))
+    pk = curve_all.loc[curve_all.groupby("model")["flip rate"].idxmax()]
+    x1 = full[full.pair == "X1 vs X2"]
+    near_all = [near_share(m, threshold) for m in lib.MODELS]
+    lib.tldr(
+        [
+            "Each dot: one of 1,235 defendants, scored by the X1 fit and the X2 fit.",
+            f"Scores agree: typical gap (RMSE) {x1['Score RMSE'].min():.3f}–"
+            f"{x1['Score RMSE'].max():.3f}.",
+            f"At {T}, "
+            + (
+                "all flips sit"
+                if np.nanmin(near_all) > 0.995
+                else f"{pct(np.nanmin(near_all), 0)}–{pct(np.nanmax(near_all), 0)} of flips sit"
+            )
+            + " within ±0.05 of the threshold.",
+            f"Flips peak at {pk.threshold.min():.2f}–{pk.threshold.max():.2f}, where scores "
+            f"are densest (up to {pk['flip rate'].max():.1%}).",
+        ],
+        "Only borderline defendants flip; a threshold in dense scores flips more.",
+    )
     if not fitted:
         st.info("Pick at least one of LogReg, XGBoost or TabPFN to compare the two fits.")
     else:
@@ -443,6 +529,18 @@ with tab_same:
 # ------------------------------------------------------------------------------ over time
 
 with tab_time:
+    tt = full[full.pair == "time 1 vs 2"].set_index("model")
+    lib.tldr(
+        [
+            "Train on earlier cases, test on later ones: different defendants, same model.",
+            f"AUC Δ ≤ {tt.AUC.max():.3f} for every model between the two windows.",
+            f"XGBoost at {T}: flags {pct(tt.loc['XGBoost', 'Flag rate a'], 0)} → "
+            f"{pct(tt.loc['XGBoost', 'Flag rate b'], 0)}, recall Δ "
+            f"{tt.loc['XGBoost', 'Recall']:.3f}, F1 Δ {tt.loc['XGBoost', 'F1']:.3f}.",
+            f"Score shift (PSI): {per_model(full, 'time 1 vs 2', 'PSI', '.2f')}.",
+        ],
+        "Ranking holds over time; XGBoost's swings come from compressed scores, not ranking.",
+    )
     st.subheader("AUC with 95% confidence interval, every design")
     perf = lib.comparison("performance.csv")
     perf = perf[(perf.feature_set == "race_aware")].drop_duplicates(["model", "run"])
@@ -621,16 +719,30 @@ with tab_time:
                 f"threshold and its recall comes back."
             )
         lib.takeaway(
-            "Over time the <b>ranking</b> (AUC) holds for every model; the <b>score "
-            "distribution</b> is what moves. PSI measures that shift without needing the same "
-            "defendants; it matters because a fixed threshold turns a shifted distribution "
-            "into a different flag rate. (Both windows come from the dated cohort, base rate "
-            "~33%, lower than the 45.5% the holdout models were built on.)"
+            "PSI measures the score shift without needing the same defendants; a fixed "
+            "threshold turns that shift into a different flag rate. Both windows use the "
+            "dated cohort (base rate ~33% vs 45.5% on the holdout)."
         )
 
 # --------------------------------------------------------------------------- explanations
 
 with tab_expl:
+    mv = me_moves()
+    top_mv = mv.loc[mv.move.idxmax()]
+    same_top = mv.drop_duplicates(["model", "pair"]).same_top
+    lib.tldr(
+        [
+            "Dots: each fit's effect of a feature on predicted risk (0→1; priors +1).",
+            f"Distance, random samples: {per_model(full, 'X1 vs X2', 'ME L2', '.3f')}.",
+            f"Distance, over time: {per_model(full, 'time 1 vs 2', 'ME L2', '.3f')}.",
+            f"Top feature unchanged in {int(same_top.sum())}/{len(same_top)} refits; biggest "
+            f"move {top_mv.move:.3f} ({short(top_mv.model)}, "
+            f"{lib.FEATURES.get(top_mv.feature, top_mv.feature)}).",
+        ],
+        "Explanations keep their shape; the big moves are tiny groups of 11–31 people."
+        if top_mv.feature in TINY
+        else "Explanations keep their shape across refits.",
+    )
     if not fitted:
         st.info("Marginal effects exist for LogReg, XGBoost and TabPFN; pick at least one.")
     else:
@@ -755,6 +867,34 @@ with tab_expl:
 # --------------------------------------------------------------------------- group extras
 
 with tab_extra:
+    pts = []
+    f_pp = TABPFN_DIR / "t07_prediction_stability" / "pairs_predictions.csv"
+    f_ps = TABPFN_DIR / "t09_fairness_stability" / "psi.csv"
+    if f_pp.exists():
+        q = lib.read_csv(str(f_pp))
+        q = q[(q.model == "TabPFN") & (q.operating_point.astype(str) == "0.5")]
+        pts.append(
+            f"TabPFN, 7 feature sets: flips at 0.5 range {q.flip_rate.min():.1%}–"
+            f"{q.flip_rate.max():.1%}."
+        )
+    if f_ps.exists():
+        q = lib.read_csv(str(f_ps))
+        pts.append(
+            f"TabPFN score shift over time (PSI) {q.psi_tabpfn_scores.min():.2f}–"
+            f"{q.psi_tabpfn_scores.max():.2f}; highest with few distinct scores."
+        )
+    f_ls = lib.LOGREG_ART / "stability_summary.json"
+    if f_ls.exists():
+        q = json.loads(f_ls.read_text())
+        pts.append(
+            f"LogReg, {q['cv_folds']} CV folds: AUC {q['cv_auc_mean']:.3f} ± "
+            f"{q['cv_auc_sd']:.3f}; {pct(q['unstable_share'])} of decisions unstable."
+        )
+    if pts:
+        lib.tldr(
+            ["Each group's own stability method, not the shared design.", *pts],
+            "Same picture: stable rankings, fragile borderline decisions.",
+        )
     st.markdown(
         "<p class='small-note'>Each group also ran its own stability analysis. These are "
         "<b>that group's methods and numbers</b>, shown for completeness; they are not the "

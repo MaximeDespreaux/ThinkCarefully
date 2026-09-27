@@ -127,6 +127,21 @@ def calibration(run: str, feature_set: str, bins: int = 10) -> pd.DataFrame:
     return pd.concat(frames, ignore_index=True)
 
 
+def min_costs(sw: pd.DataFrame) -> dict:
+    """Each model's cheapest threshold on the grid: {model: (threshold, cost)}."""
+    out = {}
+    for m in lib.MODELS:
+        d = sw[sw.model == m]
+        i = d["Cost per defendant"].idxmin()
+        out[m] = (float(d.at[i, "threshold"]), float(d.at[i, "Cost per defendant"]))
+    return out
+
+
+def trio(values, fmt: str = "{:.1%}") -> str:
+    """LogReg/XGBoost/TabPFN values joined with slashes."""
+    return "/".join(fmt.format(v) for v in values)
+
+
 @st.cache_data
 def design_table(threshold: float, dimension: str) -> pd.DataFrame:
     """Live metrics for every design (race_aware) or every holdout feature set."""
@@ -276,10 +291,24 @@ for col, m in zip(kpi_cols, models, strict=True):
         )
 
 aucs = table.loc[lib.MODELS, "AUC"]
-lib.takeaway(
-    f"The three models rank defendants almost identically (AUC {aucs.min():.3f}–{aucs.max():.3f}, "
-    f"a spread of {aucs.max() - aucs.min():.3f}); all clearly beat the COMPAS tool "
-    f"({tool['AUC']:.3f}). Deltas are measured against the tool."
+sw_all = sweep(run, feature_set)
+mins_all = min_costs(sw_all)
+base_all = lib.baselines(y_ref)
+cheapest = min(mins_all, key=lambda m: mins_all[m][1])
+lib.tldr(
+    [
+        f"AUC: LogReg {aucs['LogReg']:.3f}, XGBoost {aucs['XGBoost']:.3f}, "
+        f"TabPFN {aucs['TabPFN']:.3f} vs COMPAS tool {tool['AUC']:.3f}",
+        f"Accuracy at {threshold:.3f} (LogReg/XGB/TabPFN): "
+        f"{trio(table.loc[lib.MODELS, 'Accuracy'])} vs tool {tool['Accuracy']:.1%}",
+        f"Recall at {threshold:.3f}: {trio(table.loc[lib.MODELS, 'Recall'])} "
+        f"vs tool {tool['Recall']:.1%}",
+        f"Cheapest: {cheapest} {lib.fmt_money(mins_all[cheapest][1])} @ "
+        f"{mins_all[cheapest][0]:.3f}; detain all {lib.fmt_money(base_all['Detain everyone'])}; "
+        f"tool {lib.fmt_money(tool['Cost per defendant'])}",
+    ],
+    f"All three beat the COMPAS tool by {aucs.min() - tool['AUC']:+.3f} AUC or more, "
+    f"and are tied with each other (spread {aucs.max() - aucs.min():.3f}).",
 )
 if "XGBoost" in score_models:
     xs = lib.scores("XGBoost", run, feature_set).score
@@ -298,6 +327,28 @@ tab_over, tab_curves, tab_conf, tab_designs, tab_xper = st.tabs(
 
 # ---------------------------------------------------------------------------- Overview
 with tab_over:
+    perf_all = lib.comparison("performance.csv")
+    ci_half = (
+        perf_all[
+            (perf_all.run == run)
+            & (perf_all.feature_set == feature_set)
+            & (perf_all.threshold == 0.5)
+            & perf_all.model.isin(lib.MODELS)
+        ]
+        .eval("(auc_high - auc_low) / 2")
+        .mean()
+    )
+    f1s = table.loc[lib.MODELS, "F1"].astype(float)
+    accs = table.loc[lib.MODELS, "Accuracy"].astype(float)
+    lib.tldr(
+        [
+            f"Radar and table: every metric at threshold {threshold:.3f}, plus AUC 95% CIs",
+            f"Spread across the three models: AUC {aucs.max() - aucs.min():.3f}, "
+            f"F1 {f1s.max() - f1s.min():.3f}, accuracy {(accs.max() - accs.min()) * 100:.1f} pts",
+            f"Best F1: {f1s.idxmax()} {f1s.max():.3f}; COMPAS tool {tool['F1']:.3f}",
+        ],
+        f"Model differences are far inside the AUC confidence interval (±{ci_half:.3f}).",
+    )
     left, right = st.columns([1.1, 1])
     with left:
         lo, hi = st.slider(
@@ -376,6 +427,26 @@ with tab_over:
 with tab_curves:
     sw = sweep(run, feature_set)
     rocs = roc_curves(run, feature_set)
+    at_tool = {m: float(np.interp(tool["FPR"], rocs[m].FPR, rocs[m].TPR)) for m in lib.MODELS}
+    at_half = metric_table(run, feature_set, 0.5)
+    saving = np.mean([at_half.loc[m, "Cost per defendant"] - mins_all[m][1] for m in lib.MODELS])
+    t_opt = np.mean([mins_all[m][0] for m in lib.MODELS])
+    lib.tldr(
+        [
+            f"At the tool's false-positive rate ({tool['FPR']:.0%}), models catch "
+            f"{min(at_tool.values()):.0%}–{max(at_tool.values()):.0%} vs tool {tool['Recall']:.0%}",
+            "Min cost: "
+            + ", ".join(
+                f"{m} {lib.fmt_money(c)} @{t:.3f}"
+                for m, (t, c) in sorted(mins_all.items(), key=lambda kv: kv[1][1])
+            ),
+            f"Detain everyone {lib.fmt_money(base_all['Detain everyone'])}, release everyone "
+            f"{lib.fmt_money(base_all['Release everyone'])}, tool "
+            f"{lib.fmt_money(tool['Cost per defendant'])}",
+        ],
+        f"Threshold beats model choice: 0.5 → ~{t_opt:.2f} saves "
+        f"{lib.fmt_money(saving)} per defendant on average.",
+    )
 
     # ROC
     fig = go.Figure()
@@ -532,12 +603,31 @@ with tab_curves:
         lib.takeaway(
             f"Cheapest thresholds: {parts}. A missed reoffender costs about three times a "
             f"needless detention, so the optimum sits near the break-even "
-            f"{lib.BREAK_EVEN:.3f}, far below 0.5; the cheaper trivial policy "
-            f"({min(base, key=base.get).lower()}) costs {lib.fmt_money(min(base.values()))}."
+            f"{lib.BREAK_EVEN:.3f}, far below 0.5."
         )
 
 # ------------------------------------------------------------------ Confusion & calibration
 with tab_conf:
+    cal_all = calibration(run, feature_set)
+    gap = {
+        m: float(np.average((d.predicted - d.observed).abs(), weights=d.n))
+        for m, d in cal_all.groupby("model")
+    }
+    qs = {m: lib.scores(m, run, feature_set).score.quantile([0.01, 0.99]) for m in lib.MODELS}
+    lib.tldr(
+        [
+            f"At {threshold:.3f} (LogReg/XGB/TabPFN): recall "
+            f"{trio(table.loc[lib.MODELS, 'Recall'], '{:.0%}')}, false-positive rate "
+            f"{trio(table.loc[lib.MODELS, 'FPR'], '{:.0%}')}",
+            f"Tool: recall {tool['Recall']:.0%}, false-positive rate {tool['FPR']:.0%}",
+            f"Calibration gap: {trio([gap[m] * 100 for m in lib.MODELS], '{:.1f}')} pts "
+            "(predicted vs observed)",
+            f"Middle-98% scores: XGBoost {qs['XGBoost'].iloc[0]:.2f}–{qs['XGBoost'].iloc[1]:.2f}, "
+            f"LogReg {qs['LogReg'].iloc[0]:.2f}–{qs['LogReg'].iloc[1]:.2f}",
+        ],
+        "LogReg and TabPFN probabilities are reliable; XGBoost's are squeezed "
+        f"(off by {gap['XGBoost'] * 100:.1f} pts).",
+    )
     st.subheader(f"Confusion matrices at threshold {threshold:.3f}")
     fig = make_subplots(rows=1, cols=len(models), subplot_titles=models, horizontal_spacing=0.06)
     for j, m in enumerate(models, start=1):
@@ -641,6 +731,25 @@ with tab_conf:
 
 # ----------------------------------------------------------------------------- Across designs
 with tab_designs:
+    pa = lib.comparison("performance.csv").query("threshold == 0.5")
+    by_run = pa[pa.feature_set == "race_aware"].pivot(index="run", columns="model", values="auc")
+    edge = by_run[lib.MODELS].min(axis=1) - by_run["COMPAS tool"]
+    hold = pa[pa.run == "holdout"].pivot(index="feature_set", columns="model", values="auc")
+
+    def span(fs: str) -> str:
+        return f"{hold.loc[fs, lib.MODELS].min():.3f}–{hold.loc[fs, lib.MODELS].max():.3f}"
+
+    lib.tldr(
+        [
+            f"AUC over 5 designs: models {by_run[lib.MODELS].min().min():.3f}–"
+            f"{by_run[lib.MODELS].max().max():.3f}, tool {by_run['COMPAS tool'].min():.3f}–"
+            f"{by_run['COMPAS tool'].max():.3f}",
+            f"Weakest model beats the tool by {edge.min():+.3f} to {edge.max():+.3f} AUC",
+            f"Holdout AUC: all features {span('race_aware')}, no race {span('race_blind')}, "
+            f"no priors {span('priors_blind')}",
+        ],
+        "The ranking holds in every design; priors, not race, carries the prediction.",
+    )
     dim = st.radio(
         "Compare across",
         ["run", "feature_set"],
@@ -736,6 +845,19 @@ with tab_designs:
 
 # -------------------------------------------------------------------------------------- XPER
 with tab_xper:
+    xg0 = xper_global().pivot_table(index="model", columns="feature", values="contribution")
+    explained = xg0.drop(columns="benchmark").sum(axis=1)
+    share = xg0["Number_of_Priors"] / explained
+    lib.tldr(
+        [
+            "Each feature's contribution to AUC, globally and for one defendant",
+            f"Priors: {share.min():.0%}–{share.max():.0%} of explained AUC in all three models",
+            "African-American dummy: "
+            + ", ".join(f"{m} {xg0.at[m, 'African_American']:+.3f}" for m in XPER_FILES)
+            + " AUC",
+        ],
+        "All three lean on priors, then age; only LogReg visibly uses race.",
+    )
     st.markdown(
         "<p class='small-note'>XPER splits each model's AUC into a benchmark (the AUC of a "
         "model that knows nothing, about 0.5) plus one contribution per feature. Holdout, all "
@@ -780,9 +902,9 @@ with tab_xper:
         st.dataframe(summary.style.format("{:.3f}"), width="stretch")
         pri = summary["Priors"] / summary["All features"]
         lib.takeaway(
-            "Number of priors does most of the work in every model ("
+            "Priors share of explained AUC: "
             + ", ".join(f"{m} {v:.0%}" for m, v in pri.items())
-            + " of the explained AUC); age comes next."
+            + "."
         )
         if "LogReg" in summary.index:
             lib.caveat(

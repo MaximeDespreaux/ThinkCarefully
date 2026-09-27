@@ -95,6 +95,12 @@ div[data-testid="stMetricLabel"] p {font-size: 0.85rem; color: #52514e;}
 .caveat {border-left: 4px solid #eda100; background: #fdf8ee; padding: 0.6rem 1rem;
     border-radius: 0 8px 8px 0; margin: 0.4rem 0 1rem 0; font-size: 0.92rem;}
 .small-note {color: #52514e; font-size: 0.85rem;}
+.tldr {background: #0b2545; color: #ffffff; border-radius: 10px; padding: 0.75rem 1.1rem;
+    margin: 0.2rem 0 1.1rem 0; font-size: 0.93rem; line-height: 1.45;}
+.tldr .tag {font-weight: 700; letter-spacing: 0.06em; font-size: 0.75rem; color: #9ec5f4;}
+.tldr ul {margin: 0.3rem 0 0.35rem 1.1rem; padding: 0;}
+.tldr li {margin: 0.1rem 0;}
+.tldr .so {font-weight: 650; border-top: 1px solid #2c4a70; padding-top: 0.35rem;}
 </style>
 """
 
@@ -109,6 +115,16 @@ def setup_page(title: str, subtitle: str | None = None) -> None:
 
 def takeaway(text: str) -> None:
     st.markdown(f"<div class='takeaway'>{text}</div>", unsafe_allow_html=True)
+
+
+def tldr(points: list[str], conclusion: str) -> None:
+    """A dense summary box: 2-4 short points and the one-line conclusion they lead to."""
+    items = "".join(f"<li>{p}</li>" for p in points)
+    st.markdown(
+        f"<div class='tldr'><div class='tag'>TL;DR</div><ul>{items}</ul>"
+        f"<div class='so'>→ {conclusion}</div></div>",
+        unsafe_allow_html=True,
+    )
 
 
 def caveat(text: str) -> None:

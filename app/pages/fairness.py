@@ -77,7 +77,8 @@ def span(values, digits: int = 2, signed: bool = True) -> str:
     if v.empty:
         return "n/a"
     f = (lambda x: f"{x:+.{digits}f}") if signed else (lambda x: f"{x:.{digits}f}")
-    return f(v.min()) if np.isclose(v.min(), v.max()) else f"{f(v.min())} – {f(v.max())}"
+    low, high = f(v.min()), f(v.max())
+    return low if low == high else f"{low} – {high}"
 
 
 # ------------------------------------------------------------------------------ data
@@ -281,7 +282,8 @@ def values(metric: str, column: str, feature_set: str = "race_aware", models=lib
     out = []
     for m in models:
         row = pick(metric, m, feature_set)
-        out.append(np.nan if row is None else row[column])
+        # A variant flagging (or releasing) everyone has a trivial zero gap: leave it out.
+        out.append(np.nan if row is None or bool(row.degenerate) else row[column])
     return np.array(out, dtype=float)
 
 
@@ -294,6 +296,63 @@ if len(degenerate):
         + ", ".join(sorted(degenerate.label.unique()))
         + ". Their gaps are close to zero for a trivial reason."
     )
+
+# ------------------------------------------------------------------ page-level summary (live)
+
+S_SP = values("statistical_parity", "gap")
+S_SP_P = values("statistical_parity", "p_value")
+S_SHIFT = np.abs(values("statistical_parity", "gap", "race_blind") - S_SP)
+S_SHIFT = float(np.nanmax(S_SHIFT)) if np.isfinite(S_SHIFT).any() else np.nan
+S_CSP_P = values("conditional_statistical_parity", "p_value")
+S_ORS = values("conditional_statistical_parity", "mh_odds_ratio")
+S_GAP_BLIND = values("statistical_parity", "gap", "priors_blind")
+S_GAP_ONE = values("statistical_parity", "gap", "priors_set_1")
+S_AUC_BASE = np.array([auc_of(m, "race_aware") for m in lib.MODELS])
+S_AUC_ONE = np.array([auc_of(m, "priors_set_1") for m in lib.MODELS])
+S_AUC_TOOL = auc_of("COMPAS tool", "race_aware")
+S_TOOL_SP = pick("statistical_parity", "COMPAS tool")
+S_TOOL_CSP = pick("conditional_statistical_parity", "COMPAS tool")
+S_TOOL_GAP = np.nan if S_TOOL_SP is None else float(S_TOOL_SP.gap)
+S_TOOL_OR = np.nan if S_TOOL_CSP is None else float(S_TOOL_CSP.mh_odds_ratio)
+S_TOOL_CSP_P = np.nan if S_TOOL_CSP is None else float(S_TOOL_CSP.p_value)
+S_N_SIG_SP = int(np.nansum(S_SP_P < ALPHA))
+S_N_SIG_CSP = int(np.nansum(S_CSP_P < ALPHA))
+S_TOOL_SIG = bool(S_TOOL_CSP_P < ALPHA)
+S_COSTLY = bool(np.nanmax(S_AUC_ONE) < min(np.nanmin(S_AUC_BASE), S_AUC_TOOL))
+with np.errstate(all="ignore"), warnings.catch_warnings():
+    warnings.simplefilter("ignore", RuntimeWarning)  # all-NaN when every variant is degenerate
+    S_NARROWS = bool(np.nanmax(np.abs(S_GAP_ONE)) < np.nanmin(np.abs(S_SP)))
+
+
+def fmt_x(x) -> str:
+    return "–" if x is None or pd.isna(x) else f"{x:.2f}"
+
+
+if IS_PRIMARY and S_SHIFT < 0.03 and S_COSTLY:
+    page_conclusion = (
+        "The bias comes from priors, not the race column; removing it costs the accuracy "
+        "that justified the model."
+    )
+elif S_COSTLY:
+    page_conclusion = (
+        "Neutralising priors narrows the gap but costs more accuracy than it is worth."
+        if S_NARROWS
+        else "Neutralising priors costs accuracy without closing this gap."
+    )
+else:
+    page_conclusion = f"{PROT} vs {REF}: gap {span(S_SP)} at this threshold; see each step."
+lib.tldr(
+    [
+        f"Flag-rate gap, {PROT} − {REF}: models {span(S_SP)}, COMPAS tool "
+        f"{fmt_signed(S_TOOL_GAP)}.",
+        f"Removing race moves it by ≤ {fmt_x(S_SHIFT)}.",
+        f"Same priors, age, charge: {S_N_SIG_CSP}/3 models significant; tool odds "
+        f"×{fmt_x(S_TOOL_OR)} (p {fmt_p(S_TOOL_CSP_P)}).",
+        f"Drop priors: gap {span(S_GAP_BLIND)}. Priors = 1: gap {span(S_GAP_ONE)}, AUC "
+        f"{span(S_AUC_ONE, 2, False)} vs tool {S_AUC_TOOL:.3f}.",
+    ],
+    page_conclusion,
+)
 
 tabs = st.tabs(
     [
@@ -315,6 +374,18 @@ with tabs[0]:
     )
     aa, ca = by_group.loc["African-American"], by_group.loc["Caucasian"]
     many = data.assign(many=data.priors >= 4).groupby("group")["many"].mean()
+    leak = leakage()
+    points = [
+        f"Mean priors: African-American {aa.priors:.1f} vs Caucasian {ca.priors:.1f}.",
+        f"4+ priors: {many['African-American']:.0%} vs {many['Caucasian']:.0%} of each group.",
+        f"Re-offence rate: {aa.base:.0%} vs {ca.base:.0%}.",
+    ]
+    if len(leak) == len(BASE_SETS):
+        points.append(
+            f"Race guessable without the race column: AUC {leak.auc.iloc[1]:.2f}; "
+            f"without priors too: {leak.auc.iloc[2]:.2f}."
+        )
+    lib.tldr(points, "Priors carries race: a race-blind model still sees it.")
 
     m1, m2, m3, m4 = st.columns(4)
     m1.metric("Mean priors, African-American", f"{aa.priors:.1f}")
@@ -371,7 +442,6 @@ with tabs[0]:
         fig.update_yaxes(title="Two-year re-offence rate", tickformat=".0%", rangemode="tozero")
         lib.show(lib.style(fig, "Re-offence rate by priors, per race"))
 
-    leak = leakage()
     if len(leak):
         l1, l2 = st.columns([3, 2])
         with l1:
@@ -401,25 +471,16 @@ with tabs[0]:
                 "0.5 means race can still be read off the other features.</p>",
                 unsafe_allow_html=True,
             )
-        leak_txt = (
-            f" Even with race removed, race can be predicted from the remaining features with "
-            f"AUC {leak.auc.iloc[1]:.2f}; removing priors too lowers it to {leak.auc.iloc[2]:.2f}."
-        )
-    else:
-        leak_txt = ""
 
     lib.takeaway(
-        f"African-American defendants have on average <b>{aa.priors:.1f}</b> prior offences "
-        f"against <b>{ca.priors:.1f}</b> for Caucasian defendants ({many['African-American']:.0%} "
-        f"vs {many['Caucasian']:.0%} have 4 or more), and priors is the strongest predictor of "
-        f"re-offending. Their observed re-offence rate is also higher ({aa.base:.0%} vs "
-        f"{ca.base:.0%}). So a model that never sees race still learns race through priors."
-        + leak_txt
+        "Priors differs by race and is the strongest predictor of re-offending, so a model "
+        "that never sees race still learns it through priors."
     )
 
 # ============================================================================ Step 1
 
 with tabs[1]:
+    box1 = st.container()
     sets = st.multiselect(
         "Feature sets",
         BASE_SETS,
@@ -521,59 +582,43 @@ with tabs[1]:
             unsafe_allow_html=True,
         )
 
-    # ---- takeaway (all three models, whatever is picked)
-    sp = values("statistical_parity", "gap")
-    sp_blind = values("statistical_parity", "gap", "race_blind")
+    # ---- TL;DR and takeaway (all three models, whatever is picked)
     fpr = values("fpr", "gap")
-    ors = values("conditional_statistical_parity", "mh_odds_ratio")
-    csp_p = values("conditional_statistical_parity", "p_value")
-    sp_p = values("statistical_parity", "p_value")
-    tool_sp, tool_fpr = pick("statistical_parity", "COMPAS tool"), pick("fpr", "COMPAS tool")
-    tool_csp = pick("conditional_statistical_parity", "COMPAS tool")
-    n_sig_sp, n_sig_csp = int(np.nansum(sp_p < ALPHA)), int(np.nansum(csp_p < ALPHA))
-    blind_shift = np.nanmax(np.abs(sp_blind - sp)) if np.isfinite(sp_blind - sp).any() else np.nan
-
-    def direction(gaps) -> str | None:
-        g = pd.Series(gaps, dtype=float).dropna()
-        if g.empty:
-            return None
-        return "more" if (g > 0).all() else "less" if (g < 0).all() else None
-
-    sp_dir, fpr_dir = direction(sp), direction(fpr)
-    txt = (
-        f"At threshold {threshold:.3f}, the three models' flag-rate gap ({PROT} minus {REF}) "
-        f"is <b>{span(sp)}</b>"
-        + (f": {PROT} defendants are flagged {sp_dir} often" if sp_dir else "")
-        + f" ({n_sig_sp} of 3 significant; COMPAS tool "
-        f"{fmt_signed(None if tool_sp is None else tool_sp.gap)}). "
-        f"The false-positive-rate gap is {span(fpr)} (COMPAS tool "
-        f"{fmt_signed(None if tool_fpr is None else tool_fpr.gap)})"
-        + (
-            f": people who never re-offended are flagged {fpr_dir} often if they are {PROT}. "
-            if fpr_dir
-            else ". "
+    tool_fpr = pick("fpr", "COMPAS tool")
+    if IS_PRIMARY and S_N_SIG_CSP == 0 and S_TOOL_SIG:
+        step1_conclusion = (
+            "Models: gap explained by priors, age, charge. COMPAS tool: not entirely."
         )
-    )
-    if np.isfinite(blind_shift):
-        txt += f"Removing race changes the flag-rate gap by at most {blind_shift:.2f}" + (
-            ": race is carried by the other features (mainly priors). "
-            if IS_PRIMARY and blind_shift < 0.03
-            else ". "
+    elif S_N_SIG_SP == 0:
+        step1_conclusion = "No significant flag-rate gap at this threshold."
+    else:
+        step1_conclusion = (
+            f"{S_N_SIG_CSP}/3 models keep a gap among defendants with the same profile."
         )
-    tool_or = "–" if tool_csp is None else f"{tool_csp.mh_odds_ratio:.2f}"
-    tool_p = None if tool_csp is None else tool_csp.p_value
-    tool_sig = tool_p is not None and tool_p < ALPHA
-    txt += (
-        f"<br>Among defendants with the <b>same priors, age and charge</b>, {n_sig_csp} of 3 "
-        f"models keep a significant gap (odds ratios {span(ors, signed=False)}); the COMPAS "
-        f"tool {'does' if tool_sig else 'does not'} (odds ratio {tool_or}, p = {fmt_p(tool_p)})."
-    )
-    if IS_PRIMARY and n_sig_csp == 0 and tool_sig:
-        txt += (
-            " The models' gap is explained by priors, age and charge; the COMPAS tool's is not "
-            "entirely."
+    with box1:
+        lib.tldr(
+            [
+                f"Flag-rate gap: models {span(S_SP)} ({S_N_SIG_SP}/3 significant), tool "
+                f"{fmt_signed(S_TOOL_GAP)}.",
+                f"False-positive-rate gap: models {span(fpr)}, tool "
+                f"{fmt_signed(None if tool_fpr is None else tool_fpr.gap)}.",
+                f"Same priors, age, charge: {S_N_SIG_CSP}/3 models significant (odds "
+                f"×{span(S_ORS, signed=False)}).",
+                f"COMPAS tool, same profile: odds ×{fmt_x(S_TOOL_OR)}, p {fmt_p(S_TOOL_CSP_P)}.",
+            ],
+            step1_conclusion,
         )
-    lib.takeaway(txt)
+    if np.isfinite(S_SHIFT):
+        lib.takeaway(
+            f"Removing race changes the flag-rate gap by at most {S_SHIFT:.2f}"
+            + (
+                ": race is carried by the other features, mainly priors."
+                if IS_PRIMARY and S_SHIFT < 0.03
+                else "."
+            )
+            + " A positive false-positive-rate gap means people who never re-offended are "
+            f"flagged more often if they are {PROT}."
+        )
 
     # ---- verdict matrix
     st.subheader("Verdicts of the protocol")
@@ -715,6 +760,8 @@ with tabs[1]:
 # ============================================================================ Step 2
 
 with tabs[2]:
+    box2 = st.container()
+    stat_pairs, any_candidate = [], None
     st.markdown(
         "**Fairness partial dependence (FPDP) on priors.** Every defendant's number of priors "
         "is set to the same value, the model re-predicts, and the statistical-parity test is "
@@ -804,30 +851,19 @@ with tabs[2]:
             base = pd.DataFrame()
         usable = fp[~fp.degenerate]
         best = usable.loc[usable.groupby("model").p_value.idxmax()].set_index("model")
-        lines = []
         for model in best.index:
             b = best.loc[model]
             stat0 = base.hurlin_statistic.get(model, np.nan) if len(base) else np.nan
-            lines.append(
-                f"{model}: test statistic {stat0:.0f} with actual priors, "
-                f"{b.statistic:.0f} when everyone has {b.value:.0f} prior(s) "
-                f"(p {fmt_p(b.p_value)})"
-            )
+            stat_pairs.append((model, stat0, b.statistic, b.p_value))
         any_candidate = bool((usable.p_value > ALPHA).any())
         lib.takeaway(
-            "At threshold 0.5, African-American vs Caucasian: equalising priors removes most "
-            "of the disparity. "
-            + "; ".join(lines)
-            + ". "
-            + (
-                "At some value the test is no longer rejected, so priors is a candidate "
-                "variable in the course's sense."
-                if any_candidate
-                else "The p-value never climbs above 5% at a non-degenerate value, so by the "
-                "strict rule priors alone is not a 'candidate variable': a small residual gap "
-                "remains (age and charge also differ by race). But it is by far the variable "
-                "that carries the race gap."
-            )
+            "At some value the test is no longer rejected, so priors is a candidate "
+            "variable in the course's sense."
+            if any_candidate
+            else "The p-value never climbs above 5% at a non-degenerate value, so by the "
+            "strict rule priors alone is not a 'candidate variable': a small residual gap "
+            "remains (age and charge also differ by race). But it is by far the variable "
+            "that carries the race gap."
         )
 
     # Live counterpart: the priors-set-to-1 model is FPDP at value 1, at the chosen threshold.
@@ -848,6 +884,28 @@ with tabs[2]:
                 delta_color="inverse" if row.race_aware > 0 else "normal",
             )
 
+    points = []
+    if stat_pairs:
+        points.append(
+            "Parity test statistic, actual → equal priors (0.5): "
+            + ", ".join(f"{m} {a:.0f}→{b:.0f}" for m, a, b, _ in stat_pairs)
+            + "."
+        )
+        max_p = max(p for *_, p in stat_pairs)
+        points.append(
+            f"Best p with equal priors: {fmt_p(max_p)} "
+            + ("(> 5%): priors is a candidate variable." if any_candidate else "(< 5%).")
+        )
+    points.append(
+        f"Live at {threshold:.3f}: priors = 1 moves the gap {span(S_SP)} → {span(S_GAP_ONE)}."
+    )
+    with box2:
+        lib.tldr(
+            points,
+            "Priors drives the race gap"
+            + ("." if any_candidate or any_candidate is None else "; a small residual remains."),
+        )
+
     t06 = optional_csv(lib.TABPFN_ART / "analysis" / "t06_fpdp" / "fpdp_candidates.csv")
     if t06 is not None:
         with st.expander("TabPFN group: FPDP on every feature (candidate variables)"):
@@ -860,6 +918,7 @@ with tabs[2]:
 # ============================================================================ Step 3
 
 with tabs[3]:
+    box3 = st.container()
     variants = ["race_aware", *FIX_SETS]
     show_others = st.toggle("Also show the race-blind variants", value=False, key="fair_others")
     if show_others:
@@ -1028,11 +1087,6 @@ with tabs[3]:
         )
 
     # ---- takeaway (all three models)
-    gap_blind = values("statistical_parity", "gap", "priors_blind")
-    gap_one = values("statistical_parity", "gap", "priors_set_1")
-    auc_one = np.array([auc_of(m, "priors_set_1") for m in lib.MODELS])
-    auc_base = np.array([auc_of(m, "race_aware") for m in lib.MODELS])
-    auc_tool = auc_of("COMPAS tool", "race_aware")
     agree_one = agreement("priors_set_1", float(threshold))
     agree_base = agreement("race_aware", float(threshold))
     if agree_one and agree_base:
@@ -1051,39 +1105,40 @@ with tabs[3]:
                 f"Share of the {len(lib.scores('LogReg'))} holdout defendants on whom the models "
                 f"agree (flag or release) at threshold {threshold:.3f}."
             )
-    txt = (
-        f"<b>Dropping priors</b> and retraining moves the flag-rate gap from {span(sp)} to "
-        f"<b>{span(gap_blind)}</b>"
-        + (
-            ": without priors the models lean on race itself. "
-            if IS_PRIMARY and np.nanmin(gap_blind - sp) > 0
-            else ". "
-        )
-        + f"<b>Setting everyone's priors to 1</b> brings it to <b>{span(gap_one)}</b>, but AUC "
-        f"falls from {span(auc_base, 3, False)} to <b>{span(auc_one, 3, False)}</b>, "
-        f"{'below' if np.nanmax(auc_one) < auc_tool else 'around'} the COMPAS tool "
-        f"({auc_tool:.3f}). "
-    )
+    points = [
+        f"Drop priors, retrain: gap {span(S_SP)} → {span(S_GAP_BLIND)}.",
+        f"Priors = 1: gap → {span(S_GAP_ONE)}; AUC {span(S_AUC_BASE, 2, False)} → "
+        f"{span(S_AUC_ONE, 2, False)}.",
+        f"COMPAS tool AUC {S_AUC_TOOL:.3f}: "
+        + ("above" if S_AUC_TOOL > np.nanmax(S_AUC_ONE) else "not above")
+        + " every priors = 1 model.",
+    ]
     if agree_one and agree_base:
-        pairs_one = {k: v for k, v in agree_one.items() if k != "All three"}
-        top = max(pairs_one, key=pairs_one.get)
-        txt += (
-            f"With priors neutralised the three models agree on {agree_one['All three']:.1%} of "
-            f"defendants ({top}: {pairs_one[top]:.1%}), against "
-            f"{agree_base['All three']:.1%} with the full models"
-            + (
-                ": the choice of model matters little, with or without the fix. "
-                if agree_one["All three"] >= 0.95
-                else ". "
-            )
+        points.append(
+            f"Models agree on {agree_base['All three']:.0%} of decisions; "
+            f"{agree_one['All three']:.0%} with priors = 1."
         )
-    if np.nanmax(auc_one) < np.nanmin(auc_base):
-        txt += "Fairness here is bought with accuracy: there is no free fix."
-    lib.takeaway(txt)
+    with box3:
+        lib.tldr(
+            points,
+            "No free fix: closing the gap gives up the accuracy that beat the COMPAS tool."
+            if S_COSTLY and S_NARROWS
+            else "Neutralising priors costs accuracy without closing this gap."
+            if S_COSTLY
+            else "Priors = 1 narrows the gap at a modest accuracy cost.",
+        )
+    diff = S_GAP_BLIND - S_SP
+    if IS_PRIMARY and np.isfinite(diff).any() and np.nanmin(diff) > 0:
+        lib.takeaway(
+            "Without priors the retrained models lean on the race column itself, so the gap "
+            "grows. Keeping the model but giving everyone the same priors removes the race "
+            "signal instead, and with it most of the predictive power."
+        )
 
 # ======================================================================== Impossibility
 
 with tabs[4]:
+    box4 = st.container()
     i1, i2 = st.columns(2)
     with i1:
         imp_model = st.selectbox(
@@ -1214,26 +1269,27 @@ with tabs[4]:
 
         fpr_at = wide.loc[best_t, "False-positive rate"] if np.isfinite(best_t) else np.nan
         ppv_at = wide.loc[best_t, "Precision (PPV)"] if np.isfinite(best_t) else np.nan
+        both_closed = np.isfinite(best_t) and worst.min() < 0.02
+        points = [
+            f"Re-offence rate: {PROT} {base_p:.0%} vs {REF} {base_r:.0%}.",
+            f"Best threshold {best_t:.2f}: FPR gap {fmt_signed(fpr_at)}, precision gap "
+            f"{fmt_signed(ppv_at)}.",
+        ]
+        if not np.isnan(cal_gap):
+            points.insert(
+                1, f"Same score band: observed re-offence {cal_gap * 100:.0f} points apart."
+            )
+        with box4:
+            lib.tldr(
+                points,
+                "Both gaps can nearly close here."
+                if both_closed
+                else "Unequal base rates: equal error rates and equal precision can't coexist.",
+            )
         lib.takeaway(
-            f"The two groups re-offend at different rates ({base_p:.0%} vs {base_r:.0%}). "
-            "Chouldechova's result: when base rates differ, a score cannot be calibrated "
-            "(same score, same risk) <i>and</i> have equal false-positive and false-negative "
-            "rates. "
-            + (
-                ""
-                if np.isnan(cal_gap)
-                else f"Here the score is {'close to' if cal_gap < 0.1 else 'not well'} "
-                f"calibrated (about {cal_gap * 100:.0f} points apart within a score band). "
-            )
-            + (
-                f"Across thresholds, the best compromise ({best_t:.2f}) still leaves an FPR "
-                f"gap of {fmt_signed(fpr_at)} and a precision gap of {fmt_signed(ppv_at)}: no "
-                "threshold closes both. "
-                if np.isfinite(best_t) and worst.min() >= 0.02
-                else f"At threshold {best_t:.2f} both the FPR and precision gaps are small "
-                f"({fmt_signed(fpr_at)}, {fmt_signed(ppv_at)}). "
-            )
-            + "Which fairness to require is a policy choice, not a modelling one."
+            "Chouldechova's result: when base rates differ, a score cannot be calibrated (same "
+            "score, same risk) <i>and</i> have equal false-positive and false-negative rates. "
+            "Which fairness to require is a policy choice, not a modelling one."
         )
 
 # ------------------------------------------------------------------ TabPFN group extras
