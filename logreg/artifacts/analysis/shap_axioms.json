@@ -1,0 +1,11 @@
+{
+  "kernelshap": {
+    "max_abs_residual": 1.1102230246251565e-16,
+    "mean_abs_residual": 2.7755575615628914e-17,
+    "n_rows": 25,
+    "exact": true,
+    "space": "probability"
+  },
+  "kernelshap_seconds": 0.10122266691178083,
+  "kernelshap_rows": 25
+}

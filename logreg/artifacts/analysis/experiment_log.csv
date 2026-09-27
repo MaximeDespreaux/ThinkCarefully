@@ -1,0 +1,15 @@
+step,direction,candidate,action,n_features,cv_auc,cv_sd,delta_auc,accepted,features
+0,forward,(start),start,0,0.5,0.0,0.0,True,
+1,forward,Number_of_Priors,add,1,0.6805912271538643,0.02141187192425709,0.18059122715386433,True,Number_of_Priors
+2,forward,Age_Below_TwentyFive,add,2,0.7055905622341916,0.02388162474673938,0.024999335080327256,True,"Number_of_Priors, Age_Below_TwentyFive"
+3,forward,Age_Above_FourtyFive,add,3,0.710812573398236,0.025350553053323302,0.0052220111640444156,True,"Number_of_Priors, Age_Above_FourtyFive, Age_Below_TwentyFive"
+4,forward,Misdemeanor,add,4,0.7132998242023418,0.028285005150622083,0.002487250804105834,True,"Number_of_Priors, Age_Above_FourtyFive, Age_Below_TwentyFive, Misdemeanor"
+5,forward,Female,add,5,0.7161439659358453,0.029723111064587658,0.002844141733503447,True,"Number_of_Priors, Age_Above_FourtyFive, Age_Below_TwentyFive, Female, Misdemeanor"
+6,forward,Asian,add,6,0.7164572279448923,0.0304056611943222,0.00031326200904702173,True,"Number_of_Priors, Age_Above_FourtyFive, Age_Below_TwentyFive, Asian, Female, Misdemeanor"
+7,forward,Hispanic,add,7,0.7168056574296093,0.031391642432737635,0.0003484294847170277,True,"Number_of_Priors, Age_Above_FourtyFive, Age_Below_TwentyFive, Asian, Hispanic, Female, Misdemeanor"
+8,forward,Native_American,add,8,0.7167629798365233,0.031464007695860496,-4.267759308607122e-05,False,"Number_of_Priors, Age_Above_FourtyFive, Age_Below_TwentyFive, Asian, Hispanic, Native_American, Female, Misdemeanor"
+0,backward,(start),start,10,0.7159156062573866,0.030698732668039394,0.0,True,"Number_of_Priors, Age_Above_FourtyFive, Age_Below_TwentyFive, African_American, Asian, Hispanic, Native_American, Other, Female, Misdemeanor"
+1,backward,Other,remove,9,0.7164914324267098,0.03084310319648963,0.0005758261693231681,True,"Number_of_Priors, Age_Above_FourtyFive, Age_Below_TwentyFive, African_American, Asian, Hispanic, Native_American, Female, Misdemeanor"
+2,backward,African_American,remove,8,0.7167629798365233,0.031464007695860496,0.00027154740981349956,True,"Number_of_Priors, Age_Above_FourtyFive, Age_Below_TwentyFive, Asian, Hispanic, Native_American, Female, Misdemeanor"
+3,backward,Native_American,remove,7,0.7168056574296093,0.031391642432737635,4.267759308607122e-05,True,"Number_of_Priors, Age_Above_FourtyFive, Age_Below_TwentyFive, Asian, Hispanic, Female, Misdemeanor"
+4,backward,Hispanic,remove,6,0.7164572279448923,0.0304056611943222,-0.0003484294847170277,False,"Number_of_Priors, Age_Above_FourtyFive, Age_Below_TwentyFive, Asian, Female, Misdemeanor"

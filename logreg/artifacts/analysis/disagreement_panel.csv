@@ -1,0 +1,4 @@
+method_a,method_b,feature_agreement,rank_agreement,sign_agreement,signed_rank_agreement,pairwise_rank_agreement,rank_correlation,top_feature_match
+lime,permutation,0.8,0.4,0.8,0.4,0.8888888888888888,0.8787878787878788,True
+lime,kernelshap,0.8,0.6,0.8,0.6,0.8,0.6747751534848716,True
+permutation,kernelshap,0.8,0.4,0.7,0.4,0.8222222222222222,0.8267515394048879,True
