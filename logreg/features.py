@@ -14,11 +14,18 @@ def engineered(X: pd.DataFrame) -> pd.DataFrame:
     The log term and the age interaction give logistic regression a fair shot at the
     non-linearity the tree model gets for free.
     """
+
     out = X.copy()
-    priors = out["Number_of_Priors"]
-    out["log_priors"] = np.log1p(priors)
-    out["priors_capped"] = priors.clip(upper=10)
-    out["no_priors"] = (priors == 0).astype(float)
-    if "Age_Below_TwentyFive" in out:
-        out["young_x_log_priors"] = out["Age_Below_TwentyFive"] * out["log_priors"]
+
+    if "Number_of_Priors" in out.columns:
+        priors = out["Number_of_Priors"]
+        out["log_priors"] = np.log1p(priors)
+        out["priors_capped"] = priors.clip(upper=10)
+        out["no_priors"] = (priors == 0).astype(float)
+
+        if "Age_Below_TwentyFive" in out.columns:
+            out["young_x_log_priors"] = (
+                out["Age_Below_TwentyFive"] * out["log_priors"]
+            )
+
     return out

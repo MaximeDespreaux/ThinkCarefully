@@ -40,7 +40,7 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 
 NAME = "logistic"
 PRIMARY = "race_aware"
-FEATURE_SETS = tuple(CONFIG.feature_sets)
+FEATURE_SETS = ("race_aware", "race_priors_blind")
 ART = CONFIG.path("artifacts", "logreg")
 
 # The tolerance a disparity must sit inside for TOST to certify it fair. One value for every
