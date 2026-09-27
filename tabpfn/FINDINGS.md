@@ -248,6 +248,16 @@ next 20% vs first 70% → last 30% by date.
     and misdemeanour (+$266): the ones that make the model release people. African-American
     lowers it (−$50).
 
+- **XPER on AUC, per defendant** (T20, the `XPER` package with the XGBoost group's settings:
+  400 defendants, Kernel XPER, 300 coalitions, seed 42). Benchmark 0.511 + contributions =
+  0.700 (the sample's AUC is 0.706; the kernel approximation leaves a 0.006 gap):
+  - priors +0.141 (**71%**), over 45 +0.024 (12%), under 25 +0.013 (7%), misdemeanour +0.009
+    (5%), African-American +0.003 (1.4%), Female −0.003;
+  - race matters much less here than in the earlier study's exact XPER (+0.030, 12%, on 100
+    defendants with a different background). The two differ in sample, background and
+    approximation; T20's is the one comparable with XGBoost;
+  - force plots per defendant: `reports/figures/tabpfn/xper/` (`make tabpfn-t20` redraws them).
+
 ## 8. What the earlier study adds (`artifacts/legacy/`)
 
 Threshold-free results from the earlier single-model study (a slightly different fit, AUC

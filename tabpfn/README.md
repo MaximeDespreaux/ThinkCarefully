@@ -28,7 +28,7 @@ uv run python tabpfn/run_tabpfn.py --help     # pick designs / feature sets
 | `artifacts/legacy/` | threshold-free results imported from the earlier study, with their provenance |
 
 ```bash
-make tabpfn-analysis        # every numbered test, T01 -> T18 (~3-4 h from scratch, cached after)
+make tabpfn-analysis        # every numbered test, T01 -> T20 (~3-4 h from scratch, cached after)
 make tabpfn-t04             # one test; ARGS=--force recomputes it
 ```
 
@@ -207,6 +207,7 @@ T10 and T12–T14 explain every design with all features, plus the race-blind ho
 | T14 | **KernelSHAP** and the efficiency check *(refit)* | `shap_importance.csv`, `shap_values.csv`, `efficiency.csv` |
 | T15 | **LIME reproducibility**: 15 runs on one defendant *(refit)* | `lime.csv`, `lime_summary.json` |
 | T16 | **XPER on cost** at 0.252, exact over 1,024 coalitions *(refit, ~1 h)* | `xper_cost.csv` |
+| T20 | **XPER on AUC with the `XPER` package**, as the XGBoost group: global and per-defendant values, force plot and bar chart *(refit, ~7 min)*. TabPFN is answered from a table of its scores on every possible feature row (18,432 rows), since it scores each row independently | `xper_auc.csv`, `xper_auc_individual.csv`, figures in `reports/figures/tabpfn/xper/` |
 
 ### Radar
 

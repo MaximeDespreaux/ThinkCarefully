@@ -27,6 +27,7 @@ dependencies = [
     "plotly>=5.24",
     "streamlit>=1.45",
     "lime>=0.2",
+    "xper>=0.0.92",
 ]
 
 [dependency-groups]
