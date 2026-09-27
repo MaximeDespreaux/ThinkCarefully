@@ -9,10 +9,11 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
+import compas_scoring.config as config_module
 from compas_scoring.config import CONFIG
 from compas_scoring.data import train_test
 from logreg.features import engineered
-from logreg.model import build_logistic
+from logreg.model import FittedModel, build_logistic, load, model_path, save
 
 FEATURE_SETS = sorted(CONFIG.feature_sets)
 
@@ -92,3 +93,64 @@ class TestBuildLogistic:
             row["Number_of_Priors"] = priors
             risks.append(pipeline.predict_proba(row)[0, 1])
         assert risks == sorted(risks)
+
+
+@pytest.fixture
+def fitted(splits):
+    train = splits["race_aware"]
+    return FittedModel(
+        name="logistic",
+        feature_set="race_aware",
+        estimator=build_logistic().fit(train.X, train.y),
+        features=list(train.X.columns),
+        fit_seconds=0.1,
+        cv_auc=0.72,
+    )
+
+
+@pytest.fixture
+def root(tmp_path, monkeypatch):
+    monkeypatch.setattr(config_module, "project_root", lambda: tmp_path)
+    return tmp_path
+
+
+class TestFittedModel:
+    def test_key_joins_name_and_feature_set(self, fitted):
+        assert fitted.key == "logistic__race_aware"
+
+    def test_predict_proba_returns_the_positive_class(self, fitted, splits):
+        X = splits["race_aware"].X.head(10)
+        np.testing.assert_allclose(fitted.predict_proba(X), fitted.estimator.predict_proba(X)[:, 1])
+
+    def test_predict_proba_enforces_the_feature_contract(self, fitted, splits):
+        X = splits["race_aware"].X.head(10)
+        with pytest.raises(ValueError, match="expects"):
+            fitted.predict_proba(X[list(reversed(X.columns))])
+
+    def test_optional_fields_default_to_none(self, splits):
+        model = FittedModel("logistic", "race_aware", build_logistic(), [], 0.0)
+        assert model.best_params is None and model.cv_auc is None
+
+
+class TestModelPath:
+    def test_lives_in_models_with_a_joblib_suffix(self, root):
+        assert model_path("logistic__race_blind") == root / "models" / "logistic__race_blind.joblib"
+
+
+class TestSave:
+    def test_creates_the_directory_and_writes_the_file(self, root, fitted):
+        save(fitted)
+        assert (root / "models" / "logistic__race_aware.joblib").exists()
+
+
+class TestLoad:
+    def test_round_trips_a_saved_model(self, root, fitted, splits):
+        save(fitted)
+        loaded = load("logistic", "race_aware")
+        X = splits["race_aware"].X.head(10)
+        np.testing.assert_allclose(loaded.predict_proba(X), fitted.predict_proba(X))
+        assert loaded.cv_auc == fitted.cv_auc
+
+    def test_missing_model_says_how_to_build_it(self, root):
+        with pytest.raises(FileNotFoundError, match="not found"):
+            load("logistic", "race_blind")

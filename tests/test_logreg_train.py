@@ -12,10 +12,9 @@ import pytest
 import compas_scoring.config as config_module
 from compas_scoring.config import CONFIG
 from compas_scoring.data import train_test
-from compas_scoring.models import FittedModel, load, model_path
 from compas_scoring.stability import repeated_cv
 from logreg import train as train_module
-from logreg.model import build_logistic
+from logreg.model import FittedModel, build_logistic, load, model_path
 
 
 @pytest.fixture
