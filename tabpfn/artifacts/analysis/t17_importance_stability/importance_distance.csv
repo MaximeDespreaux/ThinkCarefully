@@ -1,0 +1,9 @@
+pair,measure,run_a,run_b,n_features,l2,spearman,top3_overlap,top_feature_a,top_feature_b,same_top_feature
+X1_vs_X2,permutation_auc,X1_to_X3,X2_to_X3,10,0.03764252632506547,0.9393939393939393,1.0,Number_of_Priors,Number_of_Priors,True
+temporal_1_vs_2,permutation_auc,temporal_1,temporal_2,10,0.045841114106359805,0.7575757575757575,1.0,Number_of_Priors,Number_of_Priors,True
+X1_vs_X2,permutation_cost,X1_to_X3,X2_to_X3,10,0.21032543266684928,0.7659609850368815,1.0,Number_of_Priors,Number_of_Priors,True
+temporal_1_vs_2,permutation_cost,temporal_1,temporal_2,10,0.05574360444905179,0.7212121212121211,1.0,Number_of_Priors,Number_of_Priors,True
+X1_vs_X2,mean_abs_shap,X1_to_X3,X2_to_X3,10,0.030552993544747067,0.9634146341463414,1.0,Number_of_Priors,Number_of_Priors,True
+temporal_1_vs_2,mean_abs_shap,temporal_1,temporal_2,10,0.07999055554116206,0.9298780487804879,1.0,Number_of_Priors,Number_of_Priors,True
+X1_vs_X2,marginal_effect,X1_to_X3,X2_to_X3,10,0.08789355605306023,0.8060606060606059,1.0,Age_Below_TwentyFive,Age_Below_TwentyFive,True
+temporal_1_vs_2,marginal_effect,temporal_1,temporal_2,10,0.1620466265376321,0.7818181818181817,0.6666666666666666,Native_American,Age_Below_TwentyFive,False
