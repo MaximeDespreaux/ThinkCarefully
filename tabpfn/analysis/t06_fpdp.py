@@ -1,14 +1,18 @@
 """T06. Fairness partial dependence (FPDP): which variable could make the model fair?
 
-The 3-step approach: test -> identify -> mitigate. T01 is the test. This is the identify step.
-For each feature X_A and each value v, everybody's X_A is set to v, the model rescores them,
-and the chi-squared parity test is recomputed. X_A is a *candidate variable* if some v brings
-the p-value above 0.05 -- without flagging (or releasing) nearly everyone, which would make
-the groups alike only because nobody is being distinguished.
+The course's 3-step approach: test -> identify -> mitigate. T01-T02 are the test; this is the
+identify step, with the shared protocol's FPDP (compas_scoring.fairness.fpdp through
+pfn_fairness.fpdp_candidates). For each feature X_A and each value v, every defendant's X_A is
+set to v, TabPFN rescores them, and the Hurlin test is rerun. X_A is a *candidate variable* if
+fairness is rejected on the real data and some v lifts the p-value above 0.05 without
+everyone getting the same decision.
 
-Setting one race (or age) dummy to 1 also clears its siblings, so no counterfactual person
-has two races. Refits TabPFN once on holdout x race_aware (~30 s), then one predict_proba call
-per feature. Outputs: fpdp_curves.csv, fpdp_candidates.csv.
+Run on holdout x race_aware, for the primary race comparison and for sex, at both thresholds,
+for statistical parity and for conditional parity (proxies held fixed). Binary features take
+their two values (as in the shared protocol, a race dummy set to 1 does not clear the others);
+priors uses a coarse grid. The counterfactual frames repeat across thresholds and tests, so
+their scores are cached: ~30 model calls in all. Refits TabPFN once.
+Outputs: fpdp_curves.csv, fpdp_candidates.csv.
 """
 
 from __future__ import annotations
@@ -17,29 +21,32 @@ from __future__ import annotations
 import _common as c
 
 # isort: split
+import hashlib
+
 import numpy as np
 import pandas as pd
-from pfn_fairness import candidate_variables, chi2_statistical_parity, disparity_summary
-from pfn_interpret import AGE_DUMMIES, PRIORS
+from pfn_fairness import fpdp_candidates
 
 from compas_scoring.config import CONFIG
 
 RUN, FEATURE_SET = "holdout", "race_aware"
 PRIORS_GRID = [0, 1, 2, 3, 4, 5, 7, 10, 15, 20]
+COMPARISONS = [CONFIG.fairness.comparisons[0], ("sex", "Female", "Male")]
 
 
-def counterfactuals(X: pd.DataFrame, feature: str) -> list[tuple[float, pd.DataFrame]]:
-    siblings = {c: CONFIG.race_dummies for c in CONFIG.race_dummies}
-    siblings.update({c: AGE_DUMMIES for c in AGE_DUMMIES})
-    levels = PRIORS_GRID if feature == PRIORS else [0.0, 1.0]
-    frames = []
-    for level in levels:
-        frame = X.copy()
-        if level == 1.0 and feature in siblings:
-            frame[[s for s in siblings[feature] if s in X.columns]] = 0.0
-        frame[feature] = float(level)
-        frames.append((float(level), frame))
-    return frames
+class Cached:
+    """Wraps the fitted model so an identical feature frame is scored only once."""
+
+    def __init__(self, model):
+        self.model, self.cache, self.calls = model, {}, 0
+
+    def predict_proba(self, X: pd.DataFrame) -> np.ndarray:
+        values = X.to_numpy(dtype=float)
+        key = hashlib.sha1(values.tobytes() + X.index.to_numpy().tobytes()).hexdigest()
+        if key not in self.cache:
+            self.calls += 1
+            self.cache[key] = self.model.predict_proba(X)
+        return self.cache[key]
 
 
 def main() -> None:
@@ -48,55 +55,40 @@ def main() -> None:
     if c.cached(out / "fpdp_candidates.csv", args.force):
         return
 
-    model, spec = c.fit(RUN, FEATURE_SET)
-    X, y = spec.test.X, spec.test.y.to_numpy()
-    groups = spec.test.groups
+    model, _ = c.fit(RUN, FEATURE_SET)
+    cached = Cached(model)
 
-    rows = []
-    for feature in X.columns:
-        cases = counterfactuals(X, feature)
-        scores = model.predict_proba(pd.concat([f for _, f in cases], ignore_index=True))[:, 1]
-        scores = scores.reshape(len(cases), len(X))
-        for (level, _), score in zip(cases, scores):
-            for point, threshold in c.operating_points().items():
-                flagged = (score >= threshold).astype(int)
-                for attribute, pair in c.ATTRIBUTES.items():
-                    sensitive = groups[attribute].to_numpy()
-                    test = chi2_statistical_parity(flagged, sensitive, pair)
-                    summary = disparity_summary(y, flagged, sensitive, pair)
-                    rows.append(
-                        {
-                            "operating_point": point,
-                            "threshold": threshold,
-                            "attribute": attribute,
-                            "feature": feature,
-                            "level": level,
-                            "p_value": test["p_value"],
-                            "statistic": test["statistic"],
-                            "fpr_difference": summary["fpr_difference"],
-                            "demographic_parity_difference": summary[
-                                "demographic_parity_difference"
-                            ],
-                            "selection_rate": float(np.mean(flagged)),
-                        }
-                    )
-        print(f"  {feature}: {len(cases)} levels", flush=True)
+    curves, candidates = [], []
+    for comparison in COMPARISONS:
+        for threshold_name, threshold in c.operating_points().items():
+            for conditional in (False, True):
+                curve, found = fpdp_candidates(
+                    cached, RUN, FEATURE_SET, threshold, conditional,
+                    {"Number_of_Priors": PRIORS_GRID}, comparison,
+                )  # fmt: skip
+                meta = {
+                    "comparison": f"{comparison[1]} vs {comparison[2]}",
+                    "threshold_name": threshold_name,
+                    "threshold": threshold,
+                    "test": "conditional parity" if conditional else "statistical parity",
+                }
+                curves.append(curve.assign(**meta))
+                candidates.append(found.assign(**meta))
+                print(f"  {meta['comparison']}, {threshold_name}, {meta['test']}: "
+                      f"{cached.calls} model calls so far", flush=True)  # fmt: skip
 
-    curves = pd.DataFrame(rows)
+    first = ["comparison", "threshold_name", "threshold", "test"]
+    curves = pd.concat(curves, ignore_index=True)
+    curves = curves[first + [col for col in curves.columns if col not in first]]
     curves.to_csv(out / "fpdp_curves.csv", index=False)
-
-    candidates = []
-    for (point, attribute), block in curves.groupby(["operating_point", "attribute"]):
-        found = candidate_variables(block)
-        found.insert(0, "attribute", attribute)
-        found.insert(0, "operating_point", point)
-        candidates.append(found)
     candidates = pd.concat(candidates, ignore_index=True)
+    candidates = candidates[first + [col for col in candidates.columns if col not in first]]
     candidates.to_csv(out / "fpdp_candidates.csv", index=False)
 
-    columns = ["operating_point", "attribute", "feature", "best_level", "best_p_value",
-               "selection_rate_at_best_level", "is_candidate"]  # fmt: skip
-    print(c.fmt(candidates[columns], 4))
+    found = candidates[candidates["is_candidate"]]
+    columns = ["comparison", "threshold_name", "test", "feature", "best_value", "best_p",
+               "baseline_p"]  # fmt: skip
+    print(c.fmt(found[columns], 4) if len(found) else "no candidate variable")
     print(f"\n-> {out / 'fpdp_curves.csv'}\n-> {out / 'fpdp_candidates.csv'}")
 
 

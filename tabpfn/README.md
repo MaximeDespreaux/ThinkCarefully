@@ -154,19 +154,32 @@ Every test is a script `analysis/tNN_<name>.py`, run with `make tabpfn-tNN`. It 
 [FINDINGS.md](FINDINGS.md). Tests marked *refit* fit TabPFN again (~20 s per fit on 12 cores);
 the others run in seconds from the saved predictions.
 
-Every threshold-dependent test is run at both operating points (0.5 and 0.252), and the
-fairness tests also for the COMPAS tool on the same defendants.
+Every threshold-dependent test is run at both operating points (0.5 and 0.252).
 
-### Fairness
+### Fairness: the shared protocol
+
+All three models are tested the same way, by `compas_scoring.fairness`, with the settings in
+`[tool.compas_scoring.fairness]`. For TabPFN, `pfn_fairness.protocol_table(run, feature_set)`
+runs it on the saved predictions, for TabPFN and for the COMPAS tool's score as a benchmark.
+
+It covers both thresholds (0.5 and 0.252). There are four comparisons: African-American vs
+Caucasian (primary), Hispanic and Other vs Caucasian, and Female vs Male. Asian and Native
+American are excluded as too small. Gaps read protected minus reference. p-values are
+Holm-corrected across the four comparisons within each metric and threshold. TOST uses a
+fixed tolerance δ = 0.05, and every row also reports the tightest δ at which fairness could be
+certified.
 
 | # | Test | Output |
 |---|---|---|
-| T01 | **Statistical parity**: χ² test of Ŷ ⟂ D, D = African-American vs Caucasian and Female vs Male, on every run × feature set | `tests.csv` |
-| T02 | **Conditional statistical parity**: Cochran–Mantel–Haenszel, X_c = priors band (0 / 1–3 / 4+) × charge degree | `cmh.csv` |
-| T03 | **Equalized odds**: TPR, FPR, FNR and PPV per group, and the gaps | `by_group.csv`, `gaps.csv` |
-| T04 | **Fairness equivalence (TOST)**: 1,000 bootstrap draws per case, tightest certifiable δ | `equivalence.csv` |
-| T05 | **race_aware vs race_blind** and the other ablations: performance against gaps, flagging the sets that close a gap by flagging nearly everyone | `ablation.csv` |
-| T06 | **FPDP** *(refit)*: candidate variables for race and sex, holdout | `fpdp_curves.csv`, `fpdp_candidates.csv` |
+| T01 | The **whole protocol** on every run × feature set (`protocol.csv`, read by T02–T05, T09, T18), and **statistical parity**: two-proportion z-test on the flag-rate gap (= Pearson χ²), Hurlin LR test alongside | `protocol.csv`, `statistical_parity.csv` |
+| T02 | **Conditional statistical parity**: Hurlin LR test over the race proxies held fixed (priors band × age band × charge degree), plus CMH, Mantel–Haenszel odds ratio and Breslow–Day | `conditional_parity.csv` |
+| T03 | **Equalized odds**: z-tests on the FPR and FNR gaps, and the Hurlin test of Ŷ ⟂ D given Y | `equalized_odds.csv`, `error_rate_gaps.csv` |
+| T04 | **Fairness equivalence (TOST)** on the flag-rate, FPR and FNR gaps, and the tightest certifiable δ | `equivalence.csv` |
+| T05 | **race_aware vs race_blind** and the other ablations: performance against the race and sex gaps, flagging the sets that close a gap by flagging nearly everyone | `ablation.csv` |
+| T06 | **FPDP** *(refit)*: candidate variables (`fpdp_candidates`), for race and sex, both thresholds, with and without the proxies held fixed; counted only when fairness is rejected on the real data | `fpdp_curves.csv`, `fpdp_candidates.csv` |
+
+Conditioning on the proxies isolates race. A gap that survives among defendants with the same
+priors, age band and charge degree is not explained by those proxies.
 
 ### Stability
 
@@ -178,7 +191,7 @@ is measured on what they output. Design 1 = `X1_to_X3` vs `X2_to_X3` (same X3), 
 |---|---|---|
 | T07 | **Predictions**, design 1: L2 norm, mean \|Δ\|, share of decisions that flip | `pairs_predictions.csv` |
 | T08 | **Performance**, both designs: Δ of every `performance.csv` metric | `pairs_performance.csv` |
-| T09 | **Fairness**, both designs: Δ of every gap and of the certifiable δ; PSI of the scores in design 2 | `pairs_fairness.csv`, `psi.csv` |
+| T09 | **Fairness**, both designs: Δ of every protocol gap, certifiable δ and Holm p-value; PSI of the scores in design 2 | `pairs_fairness.csv`, `psi.csv` |
 | T17 | **Interpretability**, both designs: L2 distance and Spearman between importance vectors (permutation, SHAP, marginal effects) | `importance_distance.csv` |
 
 ### Interpretability

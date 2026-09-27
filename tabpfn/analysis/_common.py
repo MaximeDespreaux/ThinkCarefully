@@ -22,7 +22,6 @@ from collections.abc import Iterator
 from functools import lru_cache
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
 
 TABPFN = Path(__file__).resolve().parents[1]
@@ -37,12 +36,6 @@ ART = TABPFN / "artifacts"
 PREDICTIONS = ART / "predictions"
 ANALYSIS = ART / "analysis"
 
-# The protected attributes the fairness tests compare, each as (unprivileged, privileged):
-# gaps read first group minus second.
-ATTRIBUTES = {
-    "race": ("African-American", "Caucasian"),
-    "sex": ("Female", "Male"),
-}
 # Stability design 1 (same test set X3) and design 2 (successive time windows).
 PAIRS = {
     "X1_vs_X2": ("X1_to_X3", "X2_to_X3"),
@@ -115,21 +108,6 @@ def predictions() -> Iterator[tuple[str, str, pd.DataFrame]]:
 def operating_points() -> dict[str, float]:
     """{"0.5": 0.5, "break_even": 0.252}, from pfn_metrics."""
     return thresholds()
-
-
-def decisions(frame: pd.DataFrame, model: str, threshold: float) -> np.ndarray:
-    """1 = flagged. The COMPAS tool's score is already a decision, whatever the threshold."""
-    if model == "compas_tool":
-        return frame["compas_tool"].to_numpy(dtype=int)
-    return (frame["tabpfn"].to_numpy(dtype=float) >= threshold).astype(int)
-
-
-def decision_cases(frame: pd.DataFrame) -> Iterator[tuple[str, str, float, np.ndarray]]:
-    """(model, operating_point, threshold, decisions) for TabPFN at both operating points,
-    and once for the COMPAS tool as the benchmark."""
-    for point, threshold in operating_points().items():
-        yield "TabPFN", point, threshold, decisions(frame, "tabpfn", threshold)
-    yield "COMPAS tool", "tool", float("nan"), decisions(frame, "compas_tool", 0.5)
 
 
 @lru_cache(maxsize=2)

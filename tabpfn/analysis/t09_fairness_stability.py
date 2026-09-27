@@ -1,7 +1,9 @@
 """T09. Stability of fairness: do the gaps move between paired runs?
 
 For each pair (X1 vs X2, temporal_1 vs temporal_2), feature set and operating point: the
-delta of each fairness gap (T03) and of the tightest certifiable tolerance (T04), b - a.
+delta, b - a, of each gap of the shared protocol (flag rate, FPR, FNR), of the tightest
+certifiable tolerance (TOST) and of the Holm p-value of every test, read from T01's
+protocol.csv.
 For the time-ordered pair it adds the population stability index (PSI) of TabPFN's scores,
 since those test sets differ: PSI < 0.10 stable, 0.10-0.25 watch, > 0.25 shifted. It is
 only meaningful when the scores take many values (not for the 2-feature sets).
@@ -18,12 +20,8 @@ import _common as c
 import pandas as pd
 from pfn_stability import population_stability_index
 
-GAPS = c.ANALYSIS / "t03_equalized_odds" / "gaps.csv"
-EQUIVALENCE = c.ANALYSIS / "t04_fairness_equivalence" / "equivalence.csv"
-GAP_COLUMNS = [
-    "fpr_difference", "fnr_difference", "equal_opportunity_difference",
-    "equalized_odds_difference", "demographic_parity_difference", "ppv_difference",
-]  # fmt: skip
+PROTOCOL = c.ANALYSIS / "t01_statistical_parity" / "protocol.csv"
+VALUES = ["gap", "minimum_delta", "p_holm"]  # the columns compared between runs
 
 
 def main() -> None:
@@ -32,16 +30,12 @@ def main() -> None:
     if c.cached(out / "pairs_fairness.csv", args.force):
         return
 
-    key = ["feature_set", "model", "operating_point", "attribute"]
-    gaps = pd.read_csv(GAPS)
-    long = gaps.melt(id_vars=["run", *key], value_vars=GAP_COLUMNS, var_name="metric")
-    equivalence = pd.read_csv(EQUIVALENCE)
-    min_delta = equivalence.assign(metric=equivalence["metric"] + "_minimum_delta").rename(
-        columns={"minimum_delta": "value"}
-    )[["run", *key, "metric", "value"]]
+    key = ["feature_set", "model", "threshold_name", "comparison", "metric"]
+    protocol = pd.read_csv(PROTOCOL)
     long = (
-        pd.concat([long, min_delta], ignore_index=True)
-        .set_index(["run", *key, "metric"])
+        protocol.melt(id_vars=["run", *key], value_vars=VALUES, var_name="value_of")
+        .dropna(subset="value")
+        .set_index(["run", *key, "value_of"])
         .sort_index()
     )
 
@@ -58,7 +52,7 @@ def main() -> None:
 
     psi = []
     run_a, run_b = c.PAIRS["temporal_1_vs_2"]
-    for feature_set in sorted(gaps["feature_set"].unique()):
+    for feature_set in sorted(protocol["feature_set"].unique()):
         a = c.read_predictions(run_a, feature_set)["tabpfn"]
         b = c.read_predictions(run_b, feature_set)["tabpfn"]
         psi.append(
@@ -77,11 +71,12 @@ def main() -> None:
     shown = table[
         (table["feature_set"] == "race_aware")
         & (table["model"] == "TabPFN")
-        & (table["operating_point"] == "break_even")
-        & table["metric"].isin(["fpr_difference", "fpr_difference_minimum_delta"])
+        & (table["threshold_name"] == "break_even")
+        & (table["metric"] == "fpr")
+        & table["comparison"].isin(["African-American vs Caucasian", "Female vs Male"])
     ]
-    print("race_aware, TabPFN, break-even threshold (0.252):")
-    print(c.fmt(shown[["pair", "attribute", "metric", "a", "b", "delta"]]))
+    print("race_aware, TabPFN, FPR at the break-even threshold (0.252):")
+    print(c.fmt(shown[["pair", "comparison", "value_of", "a", "b", "delta"]]))
     print("\n" + c.fmt(psi))
     print(f"\n-> {out / 'pairs_fairness.csv'}\n-> {out / 'psi.csv'}")
 

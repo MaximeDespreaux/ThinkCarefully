@@ -6,10 +6,12 @@ joins it onto the performance spokes as it is; `make tabpfn-plots` redraws the r
 
 All read at the break-even threshold (0.252), on holdout for fairness and on X1 vs X2 for
 stability, whichever panel of the radar they are drawn on:
-    Race FPR parity        1 - |FPR gap|, African-American vs Caucasian           (T03)
-    Sex FPR parity         1 - |FPR gap|, Female vs Male                          (T03)
-    Certifiable fairness   1 - tightest delta at which the race FPR gap is TOST-certified (T04)
+    Race FPR parity        1 - |FPR gap|, African-American vs Caucasian
+    Sex FPR parity         1 - |FPR gap|, Female vs Male
+    Certifiable fairness   1 - tightest delta at which the race FPR gap is TOST-certified
+                           (0 when no delta can be, i.e. the model flags everyone)
     Decision stability     1 - share of X3 decisions that flip between X1 and X2 fits (T07)
+The fairness spokes come from the shared protocol (T01's protocol.csv).
 
 A feature set that flags nearly everyone scores well on the fairness spokes by construction;
 its collapse shows on the specificity spoke (see T05, gap_closed_by_flagging_nearly_all).
@@ -24,8 +26,7 @@ import _common as c
 # isort: split
 import pandas as pd
 
-GAPS = c.ANALYSIS / "t03_equalized_odds" / "gaps.csv"
-EQUIVALENCE = c.ANALYSIS / "t04_fairness_equivalence" / "equivalence.csv"
+PROTOCOL = c.ANALYSIS / "t01_statistical_parity" / "protocol.csv"
 FLIPS = c.ANALYSIS / "t07_prediction_stability" / "pairs_predictions.csv"
 OUT = c.ART / "radar_extra.csv"
 TOOL = "COMPAS tool"
@@ -37,14 +38,12 @@ def main() -> None:
     if c.cached(OUT, args.force):
         return
 
-    gaps = pd.read_csv(GAPS)
-    gaps = gaps[(gaps["run"] == "holdout") & gaps["operating_point"].isin(["break_even", "tool"])]
-    equivalence = pd.read_csv(EQUIVALENCE)
-    equivalence = equivalence[
-        (equivalence["run"] == "holdout")
-        & equivalence["operating_point"].isin(["break_even", "tool"])
-        & (equivalence["attribute"] == "race")
-        & (equivalence["metric"] == "fpr_difference")
+    protocol = pd.read_csv(PROTOCOL)
+    fpr = protocol[
+        (protocol["run"] == "holdout")
+        & (protocol["threshold_name"] == "break_even")
+        & (protocol["metric"] == "fpr")
+        & ((protocol["model"] == "TabPFN") | (protocol["feature_set"] == "race_aware"))
     ]
     flips = pd.read_csv(FLIPS)
     flips = flips[flips["operating_point"] == "break_even"]
@@ -53,13 +52,15 @@ def main() -> None:
         return frame["feature_set"].where(frame["model"] == "TabPFN", TOOL)
 
     spokes = {}
-    for attribute, label in (("race", "Race FPR\nparity"), ("sex", "Sex FPR\nparity")):
-        block = gaps[gaps["attribute"] == attribute]
-        spokes[label] = pd.Series(
-            1 - block["fpr_difference"].abs().to_numpy(), index=row_label(block)
-        )
+    for comparison, label in (
+        ("African-American vs Caucasian", "Race FPR\nparity"),
+        ("Female vs Male", "Sex FPR\nparity"),
+    ):
+        block = fpr[fpr["comparison"] == comparison]
+        spokes[label] = pd.Series(1 - block["gap"].abs().to_numpy(), index=row_label(block))
+    race = fpr[fpr["comparison"] == "African-American vs Caucasian"]
     spokes["Certifiable\nfairness"] = pd.Series(
-        1 - equivalence["minimum_delta"].to_numpy(), index=row_label(equivalence)
+        1 - race["minimum_delta"].fillna(1.0).to_numpy(), index=row_label(race)
     )
     spokes["Decision stability\n(X1 vs X2)"] = pd.Series(
         1 - flips["flip_rate"].to_numpy(), index=row_label(flips)
