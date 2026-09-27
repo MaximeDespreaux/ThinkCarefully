@@ -1,0 +1,24 @@
+Depth-4 regression tree on TabPFN's scores, holdout x race_priors_blind, fidelity R^2 = 0.969
+
+|--- Misdemeanor <= 0.500
+|   |--- Age_Above_FourtyFive <= 0.500
+|   |   |--- Female <= 0.500
+|   |   |   |--- Age_Below_TwentyFive <= 0.500
+|   |   |   |   |--- value: [0.522]
+|   |   |   |--- Age_Below_TwentyFive >  0.500
+|   |   |   |   |--- value: [0.623]
+|   |   |--- Female >  0.500
+|   |   |   |--- value: [0.427]
+|   |--- Age_Above_FourtyFive >  0.500
+|   |   |--- value: [0.366]
+|--- Misdemeanor >  0.500
+|   |--- Age_Above_FourtyFive <= 0.500
+|   |   |--- Female <= 0.500
+|   |   |   |--- Age_Below_TwentyFive <= 0.500
+|   |   |   |   |--- value: [0.388]
+|   |   |   |--- Age_Below_TwentyFive >  0.500
+|   |   |   |   |--- value: [0.538]
+|   |   |--- Female >  0.500
+|   |   |   |--- value: [0.280]
+|   |--- Age_Above_FourtyFive >  0.500
+|   |   |--- value: [0.244]

@@ -1,0 +1,12 @@
+Depth-4 regression tree on TabPFN's scores, temporal_2 x race_proxy_blind, fidelity R^2 = 1.000
+
+|--- Female <= 0.500
+|   |--- Age_Below_TwentyFive <= 0.500
+|   |   |--- value: [0.314]
+|   |--- Age_Below_TwentyFive >  0.500
+|   |   |--- value: [0.438]
+|--- Female >  0.500
+|   |--- Age_Below_TwentyFive <= 0.500
+|   |   |--- value: [0.224]
+|   |--- Age_Below_TwentyFive >  0.500
+|   |   |--- value: [0.232]

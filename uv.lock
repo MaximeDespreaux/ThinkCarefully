@@ -454,6 +454,7 @@ dependencies = [
     { name = "tabicl" },
     { name = "tabpfn" },
     { name = "xgboost" },
+    { name = "xper" },
 ]
 
 [package.dev-dependencies]
@@ -482,6 +483,7 @@ requires-dist = [
     { name = "tabicl", specifier = ">=2.2" },
     { name = "tabpfn", specifier = "==2.2.1" },
     { name = "xgboost", specifier = ">=3.1" },
+    { name = "xper", specifier = ">=0.0.92" },
 ]
 
 [package.metadata.requires-dev]
@@ -3649,4 +3651,26 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/99/c7/bd05c5c430feb347aa040fcc8870135d70b256718deee9bc7d2ca74a77ff/xgboost-3.4.1-py3-none-manylinux_2_28_x86_64.whl", hash = "sha256:6adf2afa396da2ae8ed30295b50b99d4712eed9a6e0ce6cfe069290e4335e51f", size = 57615456, upload-time = "2026-08-15T08:39:09.983Z" },
     { url = "https://files.pythonhosted.org/packages/2f/3c/925394671f6a1668e2a71886de66e80be694eaf37f615cec74eefaf43107/xgboost-3.4.1-py3-none-win_amd64.whl", hash = "sha256:2d30fa513673101f542fdcbd18f30c8f96c064046f798635ac08663e9969f81b", size = 48942686, upload-time = "2026-08-15T08:39:16.182Z" },
     { url = "https://files.pythonhosted.org/packages/90/2f/f2fbe984ca095709fd246546125e78834740f347e3aa7561a22a1e928510/xgboost-3.4.1-py3-none-win_arm64.whl", hash = "sha256:e9312b30e5679d27c1d8b9ee97e092b964d960a672d5d406d9fb3cd0845c9797", size = 2094178, upload-time = "2026-08-15T08:39:19.308Z" },
+]
+
+[[package]]
+name = "xper"
+version = "0.0.92"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "matplotlib" },
+    { name = "numpy" },
+    { name = "pandas" },
+    { name = "plotly" },
+    { name = "scikit-learn" },
+    { name = "scipy" },
+    { name = "seaborn" },
+    { name = "shap" },
+    { name = "statsmodels" },
+    { name = "tqdm" },
+    { name = "xgboost" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/04/19/847350d622d1a5389a32afa2c4aebb06b06b2183fdebe64dcce2d83825e8/xper-0.0.92.tar.gz", hash = "sha256:cf2cf9ff9b6085afb23bc2e6aa67a4d7b2e1bc4d54746de1d331ec4ea34da97d", size = 30139, upload-time = "2026-06-02T15:28:26.594Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d5/df/f16ecd99ef55bcba814a409b4c8eb9b140f455f781f6a0dd27c713932496/xper-0.0.92-py3-none-any.whl", hash = "sha256:9ec876faf13f12241b295e47f97a58cb03275af35d1fcff139f9bd010b556518", size = 29205, upload-time = "2026-06-02T15:28:25.57Z" },
 ]

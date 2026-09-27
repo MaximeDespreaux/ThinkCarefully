@@ -1,0 +1,12 @@
+Depth-4 regression tree on TabPFN's scores, holdout x race_proxy_blind, fidelity R^2 = 1.000
+
+|--- Age_Below_TwentyFive <= 0.500
+|   |--- Female <= 0.500
+|   |   |--- value: [0.441]
+|   |--- Female >  0.500
+|   |   |--- value: [0.332]
+|--- Age_Below_TwentyFive >  0.500
+|   |--- Female <= 0.500
+|   |   |--- value: [0.605]
+|   |--- Female >  0.500
+|   |   |--- value: [0.350]

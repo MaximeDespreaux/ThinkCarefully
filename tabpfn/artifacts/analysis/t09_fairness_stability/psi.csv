@@ -1,0 +1,8 @@
+pair,feature_set,psi_tabpfn_scores,n_distinct_scores_a
+temporal_1_vs_2,age_blind,0.19692493417041204,148
+temporal_1_vs_2,protected_blind,0.40366644318495554,44
+temporal_1_vs_2,race_aware,0.15492612229207492,275
+temporal_1_vs_2,race_blind,0.17742730377268567,129
+temporal_1_vs_2,race_priors_blind,0.5286899863682069,12
+temporal_1_vs_2,race_proxy_blind,2.4033844959151907,4
+temporal_1_vs_2,sex_blind,0.2577202791638627,203
