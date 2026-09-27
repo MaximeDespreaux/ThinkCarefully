@@ -15,7 +15,7 @@ import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
 from matplotlib.ticker import FixedLocator, NullLocator, PercentFormatter  # noqa: E402
 
-from compas_scoring import fairness as shared_fairness  # noqa: E402
+from compas_scoring import fairness_legacy as shared_fairness  # noqa: E402
 from compas_scoring.config import CONFIG  # noqa: E402
 from logreg.analysis import FEATURE_SETS, PRIMARY, TOST_DELTA  # noqa: E402
 
@@ -527,7 +527,9 @@ def plot_fairness_frontier(comparison: str = "aa_vs_others") -> Path:
     frontier = read("fairness_frontier.csv").query("comparison == @comparison")
     # The operating point comes from the exact results, not the nearest threshold on the grid.
     chosen = read("fairness_disparities.csv").query("comparison == @comparison")
-    costs = read("performance.csv").set_index("feature_set")["cost_per_capita"]
+    # The cost at the model's own (cost-optimal) threshold, the operating point marked below.
+    performance = read("performance.csv").query("threshold_policy == 'optimal'")
+    costs = performance.set_index("feature_set")["cost_per_capita"]
     fig, ax = plt.subplots(figsize=(7.5, 4))
     for fs, block in frontier.groupby("feature_set", sort=False):
         ax.scatter(

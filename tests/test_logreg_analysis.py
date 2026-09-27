@@ -15,12 +15,12 @@ import compas_scoring.config as config_module
 from compas_scoring.config import CONFIG
 from compas_scoring.data import train_test
 from compas_scoring.evaluate import CostModel, baseline_costs
-from compas_scoring.models import load
 from logreg import analysis, fairness
 from logreg import train as train_module
 from logreg.features import engineered
+from logreg.model import load
 
-FEATURE_SETS = tuple(CONFIG.feature_sets)
+FEATURE_SETS = analysis.FEATURE_SETS  # the sets the analysis runs on, not every configured one
 STAGE_NAMES = [
     "performance",
     "interpretability",
@@ -174,8 +174,9 @@ class TestScored:
     def test_returns_the_splits_model_scores_and_own_threshold(self, workspace):
         from compas_scoring.evaluate import cost_curve
 
-        train, test, model, score, threshold = analysis.scored("race_blind")
-        assert model.feature_set == "race_blind"
+        feature_set = FEATURE_SETS[-1]
+        train, test, model, score, threshold = analysis.scored(feature_set)
+        assert model.feature_set == feature_set
         assert len(train) + len(test) == CONFIG.expected_rows
         np.testing.assert_allclose(score, model.predict_proba(test.X))
         assert threshold == cost_curve(test.y, score, CostModel()).optimal_threshold
@@ -270,12 +271,15 @@ class TestStagePerformance:
             assert (performance / name).exists(), name
 
     def test_one_row_per_feature_set_plus_the_incumbent(self, performance):
+        # Two rows per feature set: the cost-optimal threshold and the fixed 0.5 one.
         table = pd.read_csv(performance / "performance.csv")
-        assert table["model"].tolist() == ["logistic"] * len(FEATURE_SETS) + ["compas"]
-        assert table["feature_set"].tolist()[:-1] == list(FEATURE_SETS)
+        assert table["model"].tolist() == ["logistic"] * 2 * len(FEATURE_SETS) + ["compas"]
+        assert table["feature_set"].tolist()[:-1] == [fs for fs in FEATURE_SETS for _ in (0, 1)]
 
     def test_auc_sits_inside_its_bootstrap_interval(self, performance):
-        table = pd.read_csv(performance / "performance.csv").query("model == 'logistic'")
+        table = pd.read_csv(performance / "performance.csv").query(
+            "model == 'logistic' and threshold_policy == 'optimal'"
+        )
         assert (table["auc_lower"] <= table["auc"]).all()
         assert (table["auc"] <= table["auc_upper"]).all()
         assert (table["auc"] > 0.5).all()
@@ -301,7 +305,9 @@ class TestStagePerformance:
         assert floors["best_trivial"] == pytest.approx(expected["best_trivial"])
 
     def test_cost_optimum_is_the_minimum_of_the_curve(self, performance):
-        table = pd.read_csv(performance / "performance.csv").query("model == 'logistic'")
+        table = pd.read_csv(performance / "performance.csv").query(
+            "model == 'logistic' and threshold_policy == 'optimal'"
+        )
         curves = pd.read_csv(performance / "cost_curves.csv")
         for _, row in table.iterrows():
             curve = curves[curves["feature_set"] == row["feature_set"]]
@@ -758,7 +764,7 @@ class TestStageFpdp:
 
     def test_a_candidate_variable_is_neutralised(self, workspace, monkeypatch, tmp_path):
         """Force one candidate so the mitigation branch runs regardless of the data."""
-        from compas_scoring import fairness as shared
+        from compas_scoring import fairness_legacy as shared
 
         real = shared.candidate_variables
 
