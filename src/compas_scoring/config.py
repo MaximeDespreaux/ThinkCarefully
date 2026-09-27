@@ -30,6 +30,22 @@ class Costs:
         """Cost of a missed re-offence relative to an unnecessary detention."""
         return self.c_fn / self.c_fp
 
+    @property
+    def break_even(self) -> float:
+        """Score above which detaining is cheaper in expectation than releasing."""
+        return self.c_fp / (self.c_fp + self.c_fn)
+
+
+@dataclass(frozen=True)
+class Fairness:
+    """The shared fairness protocol. See [tool.compas_scoring.fairness]."""
+
+    alpha: float
+    tost_delta: float
+    comparisons: tuple[tuple[str, str, str], ...]
+    excluded_groups: tuple[str, ...]
+    priors_band_edges: tuple[int, ...]
+
 
 @dataclass(frozen=True)
 class Iterations:
@@ -71,6 +87,7 @@ class Config:
     expected_base_rate: float
     dated_data_path: Path
     splits: Splits
+    fairness: Fairness
     costs: Costs
     iterations: Iterations
     feature_sets: dict[str, list[str]] = field(default_factory=dict)
@@ -111,6 +128,13 @@ def load_config() -> Config:
         splits=Splits(
             partition=tuple(table["splits"]["partition"]),
             temporal_windows=tuple(tuple(w) for w in table["splits"]["temporal_windows"]),
+        ),
+        fairness=Fairness(
+            alpha=table["fairness"]["alpha"],
+            tost_delta=table["fairness"]["tost_delta"],
+            comparisons=tuple(tuple(c) for c in table["fairness"]["comparisons"]),
+            excluded_groups=tuple(table["fairness"]["excluded_groups"]),
+            priors_band_edges=tuple(table["fairness"]["priors_band_edges"]),
         ),
         costs=Costs(**table["costs"]),
         iterations=Iterations(**table["iterations"]),

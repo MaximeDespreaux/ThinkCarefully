@@ -166,6 +166,29 @@ race_dummies = [
     "Other",
 ]
 
+[tool.compas_scoring.fairness]
+# The shared fairness protocol (compas_scoring.fairness). Every model is tested with exactly
+# these settings, on its own predictions, so the three models are comparable.
+alpha = 0.05
+# TOST tolerance on a rate gap (|gap| < delta certifies fairness). Fixed before any result was
+# seen, so it cannot be chosen to fit the answer.
+tost_delta = 0.05
+# [attribute, protected group, reference group]. The first comparison is the primary one;
+# p-values are Holm-corrected across comparisons within each metric and threshold.
+comparisons = [
+    ["race", "African-American", "Caucasian"],
+    ["race", "Hispanic", "Caucasian"],
+    ["race", "Other", "Caucasian"],
+    ["sex", "Female", "Male"],
+]
+# Too few defendants for the chi-squared approximations (about 11 Asian and 2 Native American
+# in the test set): left out of every comparison.
+excluded_groups = ["Asian", "Native American"]
+# Conditional statistical parity conditions on the race proxies from the EDA association
+# matrix (Cramer's V >= 0.1): priors, age band and charge degree. Priors is banded at these
+# upper edges: 0 | 1-3 | 4+.
+priors_band_edges = [0, 3]
+
 [tool.compas_scoring.costs]
 # Pretrial decision costs, in USD. These are client-configurable assumptions,
 # not empirical constants -- the analysis reports sensitivity across the whole

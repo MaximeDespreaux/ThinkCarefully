@@ -48,8 +48,8 @@ tabpfn: ## TabPFN: fit every design -> predictions + performance in tabpfn/artif
 tabpfn-plots: ## TabPFN: performance figures -> reports/figures/tabpfn/ (seconds, no refit)
 	$(RUN) python tabpfn/plot_tabpfn.py
 
-tabpfn-test: ## TabPFN: unit tests for the metrics and the model adapter
-	$(RUN) pytest tabpfn
+tabpfn-test: ## TabPFN: its code tests (tests/test_pfn_*.py)
+	$(RUN) pytest tests/test_pfn_*.py
 
 lint: ## Check formatting and lint rules
 	$(RUN) ruff check src scripts tests

@@ -27,7 +27,6 @@ import pandas as pd
 from scipy import stats
 from statsmodels.stats.contingency_tables import mcnemar
 from statsmodels.stats.multitest import multipletests
-from statsmodels.stats.proportion import proportions_ztest
 
 ALPHA = 0.05
 
@@ -180,11 +179,11 @@ def matched_rate_decisions(score_a, score_b, selection_rate: float) -> tuple:
     """Threshold two score vectors so both detain the same share of defendants.
 
     Comparing decisions at each model's own cost-optimal threshold conflates two different
-    things. TabPFN's optimum detains 86.6% of defendants and XGBoost's detains 69.0%, so a
-    McNemar test between them is dominated by the fact that one policy is far more
-    aggressive -- the more aggressive one simply makes more false positives. That comparison
-    is worth reporting, but it answers "do these deployed configurations differ", not "is one
-    model better at ranking people".
+    things. Two models whose cost-optimal thresholds detain very different shares of
+    defendants differ mostly in how aggressive the policy is -- the more aggressive one simply
+    makes more false positives -- and a McNemar test between them is dominated by that. That
+    comparison is worth reporting, but it answers "do these deployed configurations differ",
+    not "is one model better at ranking people".
 
     Fixing the selection rate removes the policy difference and leaves the ranking, which is
     what a model-quality claim needs.
@@ -340,36 +339,6 @@ def spiegelhalter_z(y_true, y_score) -> dict:
         "statistic": z,
         "p_value": p_value,
         "verdict": "no evidence of miscalibration" if p_value > ALPHA else "miscalibrated",
-    }
-
-
-# --------------------------------------------------------------------------- proportions
-
-
-def selection_rate_test(y_pred, sensitive, group_a: str, group_b: str) -> dict:
-    """Two-proportion z-test on selection rates between two groups.
-
-    The third test named alongside chi-squared and Cochran-Mantel-Haenszel in the course
-    material. It answers the plainest version of the fairness question: are these two groups
-    detained at different rates?
-    """
-    y_pred = np.asarray(y_pred)
-    sensitive = np.asarray(sensitive)
-    mask_a, mask_b = sensitive == group_a, sensitive == group_b
-
-    counts = np.array([y_pred[mask_a].sum(), y_pred[mask_b].sum()])
-    nobs = np.array([mask_a.sum(), mask_b.sum()])
-    statistic, p_value = proportions_ztest(counts, nobs)
-
-    rate_a, rate_b = counts[0] / nobs[0], counts[1] / nobs[1]
-    return {
-        "comparison": f"{group_a} vs {group_b}",
-        "test": "two-proportion z-test",
-        "statistic": float(statistic),
-        "p_value": float(p_value),
-        "rate_a": float(rate_a),
-        "rate_b": float(rate_b),
-        "difference": float(rate_a - rate_b),
     }
 
 
