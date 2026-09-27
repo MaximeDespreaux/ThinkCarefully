@@ -1,4 +1,0 @@
-archetype,index,Number_of_Priors,Age_Above_FourtyFive,Age_Below_TwentyFive,African_American,Asian,Hispanic,Native_American,Other,Female,Misdemeanor,race,sex,age_band,charge_degree,predicted_risk
-Low risk profile,59,0.0,1.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,1.0,African-American,Female,Greater than 45,Misdemeanor,0.11935372292164667
-Borderline profile,31,4.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1.0,1.0,Caucasian,Female,25 - 45,Misdemeanor,0.4348099913219167
-High risk profile,88,8.0,0.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,Caucasian,Male,Less than 25,Felony,0.876429329879044

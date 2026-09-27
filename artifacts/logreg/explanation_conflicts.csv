@@ -1,4 +1,0 @@
-archetype,n_features_contested,n_opposite_sign,opposite_sign_share,conflicting_features,lime_top,shap_top,top_feature_agrees
-Low risk profile,5,0,0.0,,Number_of_Priors,Number_of_Priors,True
-Borderline profile,6,0,0.0,,Age_Below_TwentyFive,Number_of_Priors,False
-High risk profile,3,0,0.0,,Number_of_Priors,Number_of_Priors,True
