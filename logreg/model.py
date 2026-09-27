@@ -34,6 +34,7 @@ def build_logistic(random_state: int = CONFIG.random_state) -> Pipeline:
         ]
     )
 
+
 @dataclass
 class FittedModel:
     """A fitted estimator plus the provenance needed to reproduce it."""
@@ -62,13 +63,15 @@ class FittedModel:
 def model_path(key: str):
     return CONFIG.path("models", f"{key}.joblib")
 
+
 def save(fitted: FittedModel) -> None:
     path = model_path(fitted.key)
     path.parent.mkdir(parents=True, exist_ok=True)
     joblib.dump(fitted, path)
 
+
 def load(name: str, feature_set: str = "race_aware") -> FittedModel:
     path = model_path(f"{name}__{feature_set}")
     if not path.exists():
         raise FileNotFoundError(f"{path} not found -- run `make models` first")
-    return joblib.load(path)    
+    return joblib.load(path)

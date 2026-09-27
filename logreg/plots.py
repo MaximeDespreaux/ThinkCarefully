@@ -1029,6 +1029,29 @@ def plot_xper_cost() -> Path:
     return save(fig, "xper_cost.png")
 
 
+def plot_xper_force(position: int = 5) -> Path:
+    """The `XPER` package's force plot for one defendant: the other groups' figure.
+
+    Position 5 of the shared 400-defendant sample is the defendant the XGBoost and TabPFN
+    groups show, so the three force plots describe the same person.
+    """
+    from XPER.viz.Visualisation import visualizationClass as viz
+
+    from compas_scoring.data import train_test
+
+    phi = read("xper_package_auc.csv").set_index("feature")["contribution"]
+    phi_i = read("xper_auc_individual.csv").set_index("row")
+    X = train_test(PRIMARY)[1].X.loc[phi_i.index, phi_i.columns[1:]].astype(float)
+    viz.force_plot(
+        XPER_values=(phi.to_numpy(), phi_i.to_numpy()),
+        instance=position,
+        X_test=X,
+        variable_name=list(X.columns),
+        figsize=(16, 4),
+    )
+    return save(plt.gcf(), "xper_auc_force.png")
+
+
 FIGURES = {
     "auc_intervals": plot_auc_intervals,
     "cost_curves": plot_cost_curves,
@@ -1056,6 +1079,7 @@ FIGURES = {
     "mitigation": plot_mitigation,
     "stratum_flag_rates": plot_stratum_flag_rates,
     "xper_cost": plot_xper_cost,
+    "xper_force": plot_xper_force,
 }
 
 

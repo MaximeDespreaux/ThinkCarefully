@@ -1,0 +1,9 @@
+{
+  "auc_on_sample": 0.7062581913499346,
+  "benchmark_plus_contributions": 0.7020819858238744,
+  "lookup_max_abs_diff": 1.1102230246251565e-16,
+  "n_sample": 400,
+  "n_coalitions": 300,
+  "seed": 42,
+  "seconds": 424.7034675409086
+}

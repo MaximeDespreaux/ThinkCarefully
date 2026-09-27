@@ -1,0 +1,10 @@
+{
+  "logistic__race_aware": {
+    "cv_auc": 0.7223543476691942,
+    "fit_seconds": 0.04585429187864065
+  },
+  "logistic__race_blind": {
+    "cv_auc": 0.723489763836789,
+    "fit_seconds": 0.03455579234287143
+  }
+}

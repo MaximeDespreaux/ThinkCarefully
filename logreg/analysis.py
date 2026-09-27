@@ -9,6 +9,7 @@ into figures under reports/figures/logreg/.
 from __future__ import annotations
 
 import argparse
+import itertools
 import json
 import sys
 import time
@@ -32,8 +33,8 @@ from compas_scoring.evaluate import (
     delong_test,
     statistical_metrics,
 )
-from logreg.model import load
 from logreg import fairness
+from logreg.model import load
 
 warnings.filterwarnings("ignore", message="Unknown solver options: iprint")
 warnings.filterwarnings("ignore", category=FutureWarning)
@@ -66,7 +67,13 @@ BUDGET = {
     "shap_explain": CONFIG.iterations.shap_explain,
     "xper_explain": xper.N_EXPLAIN,
     "xper_background": xper.N_BACKGROUND,
+    # Per-defendant XPER with the `XPER` package, on the XGBoost/TabPFN groups' protocol
+    # (400-defendant stratified test sample, 300 Kernel XPER coalitions), so the force
+    # plots compare across models. About 7 minutes, hence its own stage.
+    "xper_force_sample": 400,
+    "xper_force_coalitions": 300,
 }
+XPER_FORCE_SEED = 42
 
 
 def write(obj, name: str) -> None:
@@ -215,6 +222,100 @@ def stage_interpretability() -> None:
         interpret.points_scorecard(coefficients, float(clf.intercept_[0]), len(coefficients)),
         "scorecard.csv",
     )
+
+
+class GridModel:
+    """The pipeline's scores on every possible feature row, answered by table lookup.
+
+    The `XPER` package queries the model hundreds of millions of times on bare arrays. The
+    ten features take few values (priors ~36, the rest binary), so every possible row is
+    scored once and each query becomes an index lookup -- the XGBoost/TabPFN groups' trick.
+    """
+
+    def __init__(self, estimator, X: pd.DataFrame):
+        self.levels = [np.sort(X[column].unique()).astype(float) for column in X.columns]
+        self.radix = np.array([len(levels) for levels in self.levels])
+        grid = np.array(list(itertools.product(*self.levels)), dtype=float)
+        self.scores = estimator.predict_proba(pd.DataFrame(grid, columns=X.columns))[:, 1]
+
+    def _keys(self, X: np.ndarray) -> np.ndarray:
+        keys = np.zeros(len(X), dtype=np.int64)
+        for j, levels in enumerate(self.levels):
+            position = np.clip(np.searchsorted(levels, X[:, j]), 0, len(levels) - 1)
+            if not np.array_equal(levels[position], X[:, j]):
+                raise ValueError(f"column {j}: value outside the lookup grid")
+            keys = keys * self.radix[j] + position
+        return keys
+
+    def predict_proba(self, X) -> np.ndarray:
+        score = self.scores[self._keys(np.asarray(X, dtype=float))]
+        return np.column_stack([1 - score, score])
+
+    def predict(self, X) -> np.ndarray:
+        return (self.predict_proba(X)[:, 1] >= 0.5).astype(int)
+
+
+def xper_force_sample(test):
+    """The stratified test-set sample the force plots are drawn on (the other groups' draw)."""
+    from sklearn.model_selection import train_test_split
+
+    index, _ = train_test_split(
+        test.X.index,
+        train_size=BUDGET["xper_force_sample"],
+        stratify=test.y,
+        random_state=XPER_FORCE_SEED,
+    )
+    return test.subset(index.sort_values())
+
+
+def stage_xper_force() -> None:
+    """Per-defendant XPER on AUC with the `XPER` package: the values behind a force plot."""
+    from XPER.compute.Performance import ModelPerformance
+
+    banner("XPER per defendant (XPER package, for force plots)")
+    train, test, model, _, _ = scored(PRIMARY)
+    sample = xper_force_sample(test)
+    lookup = GridModel(model.estimator, pd.concat([train.X, test.X]))
+    direct = model.predict_proba(sample.X)
+    mismatch = float(np.abs(lookup.predict_proba(sample.X)[:, 1] - direct).max())
+    if mismatch > 1e-9:
+        raise AssertionError(f"lookup table disagrees with the model by {mismatch:.1e}")
+
+    started = time.perf_counter()
+    phi, phi_i = ModelPerformance(
+        train.X.to_numpy(),
+        train.y.to_numpy(),
+        sample.X.to_numpy(),
+        sample.y.to_numpy(),
+        lookup,
+        sample_size=len(sample),
+    ).calculate_XPER_values(
+        ["AUC"],
+        kernel=True,
+        seed=XPER_FORCE_SEED,
+        N_coalition_sampled=BUDGET["xper_force_coalitions"],
+    )
+    columns = ["benchmark", *sample.X.columns]
+    phi = pd.Series(phi, index=columns).rename("contribution").rename_axis("feature")
+    write(phi.reset_index(), "xper_package_auc.csv")
+    write(
+        pd.DataFrame(phi_i, index=sample.X.index, columns=columns).reset_index(names="row"),
+        "xper_auc_individual.csv",
+    )
+    auc = statistical_metrics(sample.y, direct)["auc"]
+    write(
+        {
+            "auc_on_sample": auc,
+            "benchmark_plus_contributions": float(phi.sum()),
+            "lookup_max_abs_diff": mismatch,
+            "n_sample": int(len(sample)),
+            "n_coalitions": BUDGET["xper_force_coalitions"],
+            "seed": XPER_FORCE_SEED,
+            "seconds": time.perf_counter() - started,
+        },
+        "xper_package_check.json",
+    )
+    print(f"    AUC on the sample {auc:.4f}; benchmark + contributions {phi.sum():.4f}")
 
 
 # Explanations
@@ -785,6 +886,7 @@ STAGES = {
     "fairness_inference": stage_fairness_inference,
     "fpdp": stage_fpdp,
     "xper": stage_xper,
+    "xper_force": stage_xper_force,
 }
 
 
