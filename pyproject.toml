@@ -13,6 +13,8 @@ dependencies = [
     "xgboost>=3.1",
     "statsmodels>=0.14",
     "shap>=0.52",
+    # Floor needed: without it uv backtracks to numba 0.53.1, which only builds on Python <3.10.
+    "numba>=0.60",
     "fairlearn>=0.14",
     # Tabular foundation model. Pinned to the v2 line (Hollmann et al., Nature 2025)
     # deliberately: tabpfn >=9 gates weight downloads behind a Prior Labs account and
@@ -38,6 +40,7 @@ dev = [
     "ruff>=0.8",
     "pytest>=8.3",
     "watchdog>=6.0.0",
+    "pytest-cov>=7.1.0",
 ]
 
 [build-system]
@@ -61,6 +64,12 @@ markers = [
     "slow: re-derives an expensive result (deselect with '-m \"not slow\"')",
 ]
 
+[tool.coverage.report]
+# The script entry points only run from the command line; main() itself is tested.
+exclude_also = [
+    'if __name__ == .__main__.:',
+]
+
 # ---------------------------------------------------------------------------
 # Project constants. Single source of truth: read by compas_scoring.config, so
 # the notebook, the Streamlit app, the web app and the deck all quote the same
@@ -73,7 +82,7 @@ test_size = 0.3
 # Target and the incumbent-model column. score_factor is COMPAS's own
 # decile>4 output: it is the benchmark, never a predictor (using it would
 # leak the incumbent model into our features).
-data_path = "data/archive/propublicaCompassRecividism_data_fairml.csv/propublica_data_for_fairml.csv"
+data_path = "data/propublicaCompassRecividism_data_fairml.csv/propublica_data_for_fairml.csv"
 target = "Two_yr_Recidivism"
 incumbent = "score_factor"
 
