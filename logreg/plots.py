@@ -19,8 +19,8 @@ from compas_scoring import fairness as shared_fairness  # noqa: E402
 from compas_scoring.config import CONFIG  # noqa: E402
 from logreg.analysis import FEATURE_SETS, PRIMARY, TOST_DELTA  # noqa: E402
 
-ART = CONFIG.path("artifacts", "logreg")
-FIG = CONFIG.path("reports", "figures", "logreg")
+ART = CONFIG.path("logreg", "artifacts", "analysis")
+FIG = CONFIG.path("logreg", "artifacts", "figures")
 
 # --- design tokens (shared with scripts/plot_eda.py) ---------------------------------
 SURFACE = "#fcfcfb"
@@ -129,7 +129,7 @@ def save(fig, name: str) -> Path:
     path = FIG / name
     fig.savefig(path, bbox_inches="tight", dpi=150)
     plt.close(fig)
-    print(f"  -> reports/figures/logreg/{name}")
+    print(f"  -> {name}")
     return path
 
 

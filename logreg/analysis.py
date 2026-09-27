@@ -2,8 +2,8 @@
 You can run this file as follows:
     uv run python -m logreg.analysis                      # every stage
     uv run python -m logreg.analysis --stage whitebox     # one stage
-Note: the analysis can be found in artifacts/logreg/, and `python -m logreg.plots` turns it
-into figures under reports/figures/logreg/.
+Note: the tables are written to logreg/artifacts/analysis/, and `python -m logreg.plots` turns
+them into figures under logreg/artifacts/figures/.
 """
 
 from __future__ import annotations
@@ -42,7 +42,7 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 NAME = "logistic"
 PRIMARY = "race_aware"
 FEATURE_SETS = ("race_aware", "race_priors_blind")
-ART = CONFIG.path("artifacts", "logreg")
+ART = CONFIG.path("logreg", "artifacts", "analysis")
 
 # The tolerance a disparity must sit inside for TOST to certify it fair. One value for every
 # metric, and the same one the shared analysis uses, so the two can never disagree.
@@ -83,7 +83,7 @@ def write(obj, name: str) -> None:
         obj.to_csv(path, index=False)
     else:
         path.write_text(json.dumps(obj, indent=2, default=float))
-    print(f"    -> logreg/{name}")
+    print(f"    -> {name}")
 
 
 def banner(title: str) -> None:
