@@ -162,7 +162,19 @@ Holdout, all features. Gaps read protected minus reference; p-values Holm-correc
   - Conditional parity is rejected for race_aware at 0.252 (p = 0.001) but not for race_blind
     (p = 0.066): removing the race columns does remove the *direct* effect that survives
     conditioning, while the overall gap, carried by the proxies, stays.
-- **FPDP** (T06): FPDP_PLACEHOLDER
+- **FPDP** (T06, holdout): which single variable, set to one value for everybody, removes the
+  disparity?
+  - **Race, statistical parity: none**, at either threshold. No one variable carries the
+    race gap. It comes from several proxies at once.
+  - **Race, conditional parity at 0.252** (the residual direct effect): priors (everyone at
+    1 prior), misdemeanour, and `African_American` itself (everyone treated as Black) are
+    candidates. The residual gap passes through the race column and its interaction with
+    priors.
+  - **Sex**: `Female` is the candidate (everyone treated as male) for conditional parity at
+    both thresholds, and priors for statistical parity at 0.252. The sex gap is the model's
+    own use of the `Female` column.
+  - Mitigation (step 3) is not done here: fixing `Female` or the race column is removing the
+    attribute, which T05 shows costs little AUC for sex (0.736 → 0.734).
 
 ## 6. Stability (T07–T09, T17)
 
