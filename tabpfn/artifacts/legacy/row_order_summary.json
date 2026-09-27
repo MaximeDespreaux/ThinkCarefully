@@ -1,0 +1,12 @@
+{
+  "n_permutations": 20,
+  "auc_min": 0.7349971255144976,
+  "auc_max": 0.7363773488191097,
+  "auc_sd": 0.0003386703913569758,
+  "auc_range": 0.0013802233046120715,
+  "mean_per_defendant_sd": 0.0019979458302259445,
+  "max_per_defendant_sd": 0.004832620266824961,
+  "share_decisions_flipped_by_row_order": 0.0010799136069114472,
+  "n_decisions_flipped": 2,
+  "threshold": 0.21
+}

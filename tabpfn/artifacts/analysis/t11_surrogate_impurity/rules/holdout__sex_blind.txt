@@ -1,0 +1,39 @@
+Depth-4 regression tree on TabPFN's scores, holdout x sex_blind, fidelity R^2 = 0.929
+
+|--- Number_of_Priors <= 2.500
+|   |--- Age_Below_TwentyFive <= 0.500
+|   |   |--- Number_of_Priors <= 0.500
+|   |   |   |--- Age_Above_FourtyFive <= 0.500
+|   |   |   |   |--- value: [0.242]
+|   |   |   |--- Age_Above_FourtyFive >  0.500
+|   |   |   |   |--- value: [0.151]
+|   |   |--- Number_of_Priors >  0.500
+|   |   |   |--- Age_Above_FourtyFive <= 0.500
+|   |   |   |   |--- value: [0.374]
+|   |   |   |--- Age_Above_FourtyFive >  0.500
+|   |   |   |   |--- value: [0.233]
+|   |--- Age_Below_TwentyFive >  0.500
+|   |   |--- Number_of_Priors <= 0.500
+|   |   |   |--- African_American <= 0.500
+|   |   |   |   |--- value: [0.376]
+|   |   |   |--- African_American >  0.500
+|   |   |   |   |--- value: [0.438]
+|   |   |--- Number_of_Priors >  0.500
+|   |   |   |--- value: [0.607]
+|--- Number_of_Priors >  2.500
+|   |--- Number_of_Priors <= 8.500
+|   |   |--- Age_Above_FourtyFive <= 0.500
+|   |   |   |--- Age_Below_TwentyFive <= 0.500
+|   |   |   |   |--- value: [0.608]
+|   |   |   |--- Age_Below_TwentyFive >  0.500
+|   |   |   |   |--- value: [0.755]
+|   |   |--- Age_Above_FourtyFive >  0.500
+|   |   |   |--- value: [0.434]
+|   |--- Number_of_Priors >  8.500
+|   |   |--- Number_of_Priors <= 13.500
+|   |   |   |--- Number_of_Priors <= 10.500
+|   |   |   |   |--- value: [0.710]
+|   |   |   |--- Number_of_Priors >  10.500
+|   |   |   |   |--- value: [0.749]
+|   |   |--- Number_of_Priors >  13.500
+|   |   |   |--- value: [0.828]

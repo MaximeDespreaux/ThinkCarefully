@@ -1,0 +1,22 @@
+{
+  "n_runs": 15,
+  "n_distinct_top_features": 4,
+  "top_features_named": {
+    "Native_American": 7,
+    "Number_of_Priors": 5,
+    "Other": 2,
+    "Asian": 1
+  },
+  "modal_feature": "Native_American",
+  "modal_share": 0.4666666666666667,
+  "distinct_by_sample_size": {
+    "1000": 3,
+    "2000": 3,
+    "5000": 3
+  },
+  "converges_with_budget": false,
+  "runs_naming_an_absent_feature": 10,
+  "share_naming_an_absent_feature": 0.6666666666666666,
+  "mean_margin": 0.01007095664732978,
+  "defendant": "Borderline profile"
+}

@@ -1,0 +1,37 @@
+|--- Number_of_Priors <= 2.500
+|   |--- Age_Below_TwentyFive <= 0.500
+|   |   |--- Number_of_Priors <= 0.500
+|   |   |   |--- Age_Above_FourtyFive <= 0.500
+|   |   |   |   |--- value: [0.237]
+|   |   |   |--- Age_Above_FourtyFive >  0.500
+|   |   |   |   |--- value: [0.147]
+|   |   |--- Number_of_Priors >  0.500
+|   |   |   |--- Age_Above_FourtyFive <= 0.500
+|   |   |   |   |--- value: [0.366]
+|   |   |   |--- Age_Above_FourtyFive >  0.500
+|   |   |   |   |--- value: [0.227]
+|   |--- Age_Below_TwentyFive >  0.500
+|   |   |--- Number_of_Priors <= 0.500
+|   |   |   |--- Misdemeanor <= 0.500
+|   |   |   |   |--- value: [0.444]
+|   |   |   |--- Misdemeanor >  0.500
+|   |   |   |   |--- value: [0.366]
+|   |   |--- Number_of_Priors >  0.500
+|   |   |   |--- value: [0.610]
+|--- Number_of_Priors >  2.500
+|   |--- Number_of_Priors <= 8.500
+|   |   |--- Age_Above_FourtyFive <= 0.500
+|   |   |   |--- Age_Below_TwentyFive <= 0.500
+|   |   |   |   |--- value: [0.607]
+|   |   |   |--- Age_Below_TwentyFive >  0.500
+|   |   |   |   |--- value: [0.751]
+|   |   |--- Age_Above_FourtyFive >  0.500
+|   |   |   |--- value: [0.426]
+|   |--- Number_of_Priors >  8.500
+|   |   |--- Age_Above_FourtyFive <= 0.500
+|   |   |   |--- Number_of_Priors <= 13.500
+|   |   |   |   |--- value: [0.767]
+|   |   |   |--- Number_of_Priors >  13.500
+|   |   |   |   |--- value: [0.851]
+|   |   |--- Age_Above_FourtyFive >  0.500
+|   |   |   |--- value: [0.684]
