@@ -15,10 +15,10 @@ import json
 from pathlib import Path
 
 from sklearn.model_selection import RandomizedSearchCV, StratifiedKFold
-from xgboost import XGBClassifier
 
 from compas_scoring.config import CONFIG
 from compas_scoring.data import Dataset, train_test
+from xgboost import XGBClassifier
 
 MODEL_DIR = Path(__file__).resolve().parent / "models"
 
@@ -90,7 +90,7 @@ def save_model(search: RandomizedSearchCV, feature_set: str = "race_aware") -> P
 
 
 def load_model(feature_set: str = "race_aware") -> XGBClassifier:
-    """The saved, fitted model for one feature set. """
+    """The saved, fitted model for one feature set."""
     model_path, _ = model_paths(feature_set)
     if not model_path.is_file():
         raise FileNotFoundError(f"{model_path} not found - run `python xgboost/xgb_model.py` first")

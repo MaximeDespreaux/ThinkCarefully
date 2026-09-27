@@ -1,7 +1,10 @@
-"""Shared fixtures for the XGBoost scripts.
+"""Import paths for every model folder, and shared fixtures for the XGBoost scripts.
 
-``xgboost/`` is a folder of scripts, not a package, so it is put on ``sys.path`` here to make
-``import xgb_model`` / ``import performance`` work the same way they do in the notebook.
+* the repo root, so ``import logreg`` (a package) and ``scripts/`` work;
+* ``tabpfn/`` and ``xgboost/``, folders of scripts rather than packages, so their modules import
+  by name (``import pfn_metrics``, ``import xgb_model``) the same way they do when run directly.
+  Neither folder has an ``__init__.py``, so the installed ``tabpfn`` and ``xgboost`` libraries
+  still win over the folders of the same name.
 """
 
 from __future__ import annotations
@@ -12,14 +15,14 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
-for path in (ROOT / "src", ROOT / "xgboost"):
+for path in (ROOT, ROOT / "src", ROOT / "tabpfn", ROOT / "xgboost"):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
-from xgboost import XGBClassifier  # noqa: E402
-
 import performance  # noqa: E402
 import xgb_model  # noqa: E402
+
+from xgboost import XGBClassifier  # noqa: E402
 
 N_SMALL_TRAIN = 400
 N_SMALL_TEST = 200

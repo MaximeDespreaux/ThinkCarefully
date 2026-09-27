@@ -22,9 +22,9 @@ from __future__ import annotations
 
 import pandas as pd
 from sklearn.metrics import accuracy_score, roc_auc_score
+from xgb_model import load_data, tune_xgboost
 
 from compas_scoring.data import Dataset
-from xgb_model import load_data, tune_xgboost
 
 FEATURE_VARIANTS = {
     "all_features": None,  # every column of the race_blind feature set

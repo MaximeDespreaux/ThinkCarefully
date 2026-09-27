@@ -24,8 +24,6 @@ def engineered(X: pd.DataFrame) -> pd.DataFrame:
         out["no_priors"] = (priors == 0).astype(float)
 
         if "Age_Below_TwentyFive" in out.columns:
-            out["young_x_log_priors"] = (
-                out["Age_Below_TwentyFive"] * out["log_priors"]
-            )
+            out["young_x_log_priors"] = out["Age_Below_TwentyFive"] * out["log_priors"]
 
     return out

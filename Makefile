@@ -15,7 +15,7 @@ RUN     := $(UV) run
 KERNEL  := compas-scoring
 
 .DEFAULT_GOAL := help
-.PHONY: help setup eda eda-plots split-balance proxy-check tabpfn-smoke tabpfn tabpfn-plots tabpfn-test lint format test clean distclean
+.PHONY: help setup app eda eda-plots split-balance proxy-check tabpfn-smoke tabpfn tabpfn-plots tabpfn-test lint format test clean distclean
 
 help: ## Show this help
 	@grep -hE '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) \
@@ -65,13 +65,16 @@ tabpfn-analysis: ## TabPFN: every numbered analysis test, T01 -> last (~3-4 h fr
 		echo "== $$t"; $(RUN) python tabpfn/analysis/$$t.py $(ARGS) || exit 1; \
 	done
 
+app: ## Launch the Streamlit app (comparison of the three models)
+	$(RUN) streamlit run app/app.py
+
 lint: ## Check formatting and lint rules
-	$(RUN) ruff check src scripts tests
-	$(RUN) ruff format --check src scripts tests
+	$(RUN) ruff check src scripts tests logreg xgboost tabpfn
+	$(RUN) ruff format --check src scripts tests logreg xgboost tabpfn
 
 format: ## Auto-fix formatting and lint rules
-	$(RUN) ruff check --fix src scripts tests
-	$(RUN) ruff format src scripts tests
+	$(RUN) ruff check --fix src scripts tests logreg xgboost tabpfn
+	$(RUN) ruff format src scripts tests logreg xgboost tabpfn
 
 test: ## Run the test suite
 	$(RUN) pytest

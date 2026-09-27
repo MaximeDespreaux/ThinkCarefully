@@ -228,17 +228,20 @@ def _is_degenerate(y_pred) -> bool:
     return rate >= DEGENERATE_RATE or rate <= 1 - DEGENERATE_RATE
 
 
-def fairness_table(y_true, y_score, groups: pd.DataFrame, strata: pd.Series) -> pd.DataFrame:
+def fairness_table(
+    y_true, y_score, groups: pd.DataFrame, strata: pd.Series, at: dict[str, float] | None = None
+) -> pd.DataFrame:
     """Every protocol metric, for every threshold and comparison, as one long table.
 
     ``y_true``, ``y_score``, ``groups`` and ``strata`` must share an index (the defendants).
+    ``at`` overrides the thresholds ({name: value}); by default the protocol's two.
     """
     y_true = pd.Series(np.asarray(y_true), index=groups.index)
     y_score = pd.Series(np.asarray(y_score, dtype=float), index=groups.index)
     strata = strata.reindex(groups.index)
 
     rows = []
-    for t_name, t in thresholds().items():
+    for t_name, t in (at or thresholds()).items():
         y_pred = (y_score >= t).astype(int)
         for comparison in CONFIG.fairness.comparisons:
             index, protected = comparison_rows(groups, comparison)
