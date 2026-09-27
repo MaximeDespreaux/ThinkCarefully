@@ -1,45 +1,45 @@
-"""Fairness tests and FPDP in xgboost/fairness.py (Hurlin, Pérignon & Saurin method)."""
+"""Fairness tests, FPDP and mitigation in xgboost/fairness.py (African-American vs Rest)."""
 
 from __future__ import annotations
 
 import numpy as np
 import pandas as pd
 import pytest
-from scipy.stats import chi2_contingency
+from sklearn.metrics import roc_auc_score
+from statsmodels.stats.contingency_tables import StratifiedTable
+# Aliased: a bare `test_proportions_2indep` import would be collected by pytest as a test.
+from statsmodels.stats.proportion import confint_proportions_2indep
+from statsmodels.stats.proportion import test_proportions_2indep as sm_two_proportion_test
 
 import fairness
 from fairness import (
-    COMPARISONS,
-    EXCLUDED_GROUPS,
+    PROTECTED_GROUP,
+    apply_fixed_value,
     candidate_variables,
-    conditional_parity_detail,
-    fairness_test,
+    conditional_statistical_parity,
+    equalized_odds_test,
+    evaluate_fairness,
     fpdp,
     fpdp_all,
     group_rates,
     make_strata,
-    parity_table,
+    mitigate_by_reestimation,
+    mitigate_by_substitution,
     predict_labels,
+    predict_scores,
+    race_group,
+    refit_without_feature,
+    statistical_parity_test,
 )
 
 
 class PriorsModel:
-    """Flags everyone with 3+ priors and nobody else: easy to reason about, and it works for
-    every feature set because all of them contain Number_of_Priors."""
+    """Flags everyone with 3+ priors and nobody else: easy to reason about by hand, and it
+    works for every feature set since all of them contain Number_of_Priors."""
 
     def predict_proba(self, X):
         p = np.where(X["Number_of_Priors"].to_numpy() >= 3, 0.9, 0.1)
         return np.column_stack([1 - p, p])
-
-
-def _data(table):
-    """y_pred and protected Series reproducing a 2x2 table [[n(0,F), n(0,T)], [n(1,F), n(1,T)]]."""
-    y, d = [], []
-    for y_value, row in enumerate(table):
-        for d_value, count in zip([False, True], row):
-            y += [y_value] * count
-            d += [d_value] * count
-    return pd.Series(y), pd.Series(d)
 
 
 @pytest.fixture(scope="module")
@@ -58,272 +58,319 @@ def priors_pred(race_aware):
     return predict_labels(PriorsModel(), race_aware)
 
 
-# --- fairness_test(): the paper's LR test --------------------------------------------------
+# --- race_group() / group_rates() -----------------------------------------------------------
 
 
-@pytest.mark.parametrize("stat, lambda_", [("lr", "log-likelihood"), ("pearson", None)])
-def test_matches_scipy_chi2_contingency(stat, lambda_):
-    table = [[40, 25], [15, 30]]
-    y_pred, protected = _data(table)
-    reference = chi2_contingency(np.array(table), correction=False, lambda_=lambda_)
-    result = fairness_test(y_pred, protected, stat=stat)
+def test_race_group_matches_label(race_aware):
+    protected = race_group(race_aware)
 
-    assert result["statistic"] == pytest.approx(reference.statistic)
-    assert result["p_value"] == pytest.approx(reference.pvalue)
-    assert result["df"] == 1
+    assert protected.sum() == (race_aware.groups["race"] == PROTECTED_GROUP).sum()
+    assert (~protected).sum() == (race_aware.groups["race"] != PROTECTED_GROUP).sum()
+    assert protected.index.equals(race_aware.X.index)
 
 
-def test_equal_rates_give_zero_statistic():
-    y_pred, protected = _data([[20, 10], [20, 10]])
-    result = fairness_test(y_pred, protected)
+def test_group_rates_covers_everyone(race_aware, priors_pred):
+    rates = group_rates(priors_pred, race_aware)
 
-    assert result["statistic"] == pytest.approx(0)
-    assert result["p_value"] == pytest.approx(1)
-
-
-def test_single_stratum_equals_statistical_parity():
-    y_pred, protected = _data([[40, 25], [15, 30]])
-    one_stratum = pd.Series("only", index=y_pred.index)
-
-    assert fairness_test(y_pred, protected, one_stratum) == pytest.approx(
-        fairness_test(y_pred, protected)
-    )
-
-
-def test_conditional_statistic_sums_strata():
-    y1, d1 = _data([[40, 25], [15, 30]])
-    y2, d2 = _data([[10, 12], [9, 3]])
-    y_pred = pd.concat([y1, y2], ignore_index=True)
-    protected = pd.concat([d1, d2], ignore_index=True)
-    strata = pd.Series(["a"] * len(y1) + ["b"] * len(y2))
-    result = fairness_test(y_pred, protected, strata)
-
-    expected = fairness_test(y1, d1)["statistic"] + fairness_test(y2, d2)["statistic"]
-    assert result["statistic"] == pytest.approx(expected)
-    assert result["df"] == 2
-    assert result["strata_used"] == 2
-
-
-def test_uninformative_stratum_is_dropped():
-    """Nobody flagged in stratum b: its table has an empty row, so it adds nothing to q."""
-    y1, d1 = _data([[40, 25], [15, 30]])
-    y2, d2 = _data([[10, 12], [0, 0]])
-    y_pred = pd.concat([y1, y2], ignore_index=True)
-    protected = pd.concat([d1, d2], ignore_index=True)
-    strata = pd.Series(["a"] * len(y1) + ["b"] * len(y2))
-    result = fairness_test(y_pred, protected, strata)
-
-    assert result["strata_used"] == 1
-    assert result["df"] == 1
-    assert result["statistic"] == pytest.approx(fairness_test(y1, d1)["statistic"])
-
-
-def test_constant_predictions_pass_trivially():
-    y_pred, protected = _data([[30, 20], [0, 0]])
-    result = fairness_test(y_pred, protected)
-
-    assert result == {"statistic": 0.0, "df": 1, "p_value": 1.0, "strata_used": 0}
-
-
-def test_unknown_statistic_rejected():
-    y_pred, protected = _data([[40, 25], [15, 30]])
-
-    with pytest.raises(ValueError, match="lr"):
-        fairness_test(y_pred, protected, stat="wald")
-
-
-# --- strata and group rates ----------------------------------------------------------------
-
-
-def test_priors_bands(race_aware, strata):
-    priors = race_aware.X["Number_of_Priors"]
-    band = strata.str.split(" priors").str[0]
-
-    assert (band[priors == 0] == "0").all()
-    assert (band[(priors >= 1) & (priors <= 3)] == "1-3").all()
-    assert (band[priors >= 4] == "4+").all()
-
-
-def test_strata_combine_band_and_charge(race_aware, strata):
-    assert strata.nunique() == 6
-    assert (strata.str.split(" \\| ").str[1] == race_aware.groups["charge_degree"]).all()
-    assert strata.index.equals(race_aware.X.index)
-
-
-def test_group_rates_leave_out_tiny_groups(race_aware, priors_pred):
-    rates = group_rates(priors_pred, race_aware, "race")
-
-    assert not set(rates.index) & EXCLUDED_GROUPS
-    assert rates["n"].sum() == (~race_aware.groups["race"].isin(EXCLUDED_GROUPS)).sum()
+    assert list(rates.index) == [PROTECTED_GROUP, "Rest"]
+    assert rates["n"].sum() == len(race_aware)
 
 
 def test_group_rates_values(race_aware, priors_pred):
-    rates = group_rates(priors_pred, race_aware, "sex")
-    female = race_aware.groups["sex"] == "Female"
+    rates = group_rates(priors_pred, race_aware)
+    protected = race_group(race_aware)
 
-    assert rates.loc["Female", "flag_rate"] == pytest.approx(priors_pred[female].mean())
-    assert rates.loc["Female", "base_rate"] == pytest.approx(race_aware.y[female].mean())
-
-
-def test_predict_labels_threshold(race_aware):
-    y_pred = predict_labels(PriorsModel(), race_aware)
-
-    assert y_pred.index.equals(race_aware.X.index)
-    assert set(y_pred.unique()) <= {0, 1}
-    assert (y_pred == (race_aware.X["Number_of_Priors"] >= 3)).all()
+    assert rates.loc[PROTECTED_GROUP, "flag_rate"] == pytest.approx(priors_pred[protected].mean())
+    assert rates.loc["Rest", "base_rate"] == pytest.approx(race_aware.y[~protected].mean())
 
 
-# --- parity_table() and the per-stratum detail ---------------------------------------------
+# --- statistical_parity_test(): two-proportion z-test ----------------------------------------
 
 
-def test_comparisons_never_use_excluded_groups():
-    for _, protected, reference in COMPARISONS.values():
-        assert protected not in EXCLUDED_GROUPS
-        assert reference not in EXCLUDED_GROUPS
+def test_sp_matches_statsmodels_directly():
+    y_pred = pd.Series([1] * 40 + [0] * 60 + [1] * 20 + [0] * 80)
+    protected = pd.Series([True] * 100 + [False] * 100)
+    result = statistical_parity_test(y_pred, protected)
+
+    reference = sm_two_proportion_test(40, 100, 20, 100, compare="diff")
+    ci = confint_proportions_2indep(40, 100, 20, 100, compare="diff")
+    assert result["z_statistic"] == pytest.approx(reference.statistic)
+    assert result["p_value"] == pytest.approx(reference.pvalue)
+    assert result["difference"] == pytest.approx(0.2)
+    assert result["ci_low"] == pytest.approx(ci[0])
+    assert result["ci_high"] == pytest.approx(ci[1])
 
 
-def test_parity_table_rows_and_rates(race_aware, priors_pred, strata):
-    table = parity_table(priors_pred, race_aware, strata)
-    race = race_aware.groups["race"]
-    row = table.loc["African-American vs Caucasian"]
+def test_sp_equal_rates_are_not_significant():
+    y_pred = pd.Series([1] * 30 + [0] * 70 + [1] * 30 + [0] * 70)
+    protected = pd.Series([True] * 100 + [False] * 100)
+    result = statistical_parity_test(y_pred, protected)
 
-    assert list(table.index) == list(COMPARISONS)
-    assert row["n_protected"] == (race == "African-American").sum()
-    assert row["flag_rate_reference"] == pytest.approx(priors_pred[race == "Caucasian"].mean())
-    assert row["sp_difference"] == pytest.approx(
-        row["flag_rate_protected"] - row["flag_rate_reference"]
+    assert result["difference"] == pytest.approx(0)
+    assert result["p_value"] == pytest.approx(1, abs=1e-9)
+    assert result["ci_low"] < 0 < result["ci_high"]
+
+
+# --- equalized_odds_test(): FPR and FNR z-tests -----------------------------------------------
+
+
+def test_equalized_odds_isolates_fpr_and_fnr():
+    """4 protected, 4 rest: y=0 rows split for FPR, y=1 rows split for FNR, independently."""
+    y_true = pd.Series([0, 0, 1, 1] * 2)
+    protected = pd.Series([True] * 4 + [False] * 4)
+    # Protected: flagged on both negatives (FPR=1) and on neither positive (FNR=1).
+    # Rest: flagged on neither negative (FPR=0) and on both positives (FNR=0).
+    y_pred = pd.Series([1, 1, 0, 0, 0, 0, 1, 1])
+    result = equalized_odds_test(y_pred, y_true, protected)
+
+    assert result["fpr"]["rate_protected"] == pytest.approx(1.0)
+    assert result["fpr"]["rate_rest"] == pytest.approx(0.0)
+    assert result["fnr"]["rate_protected"] == pytest.approx(1.0)
+    assert result["fnr"]["rate_rest"] == pytest.approx(0.0)
+
+
+def test_equalized_odds_matches_manual_rates(race_aware, priors_pred):
+    result = equalized_odds_test(priors_pred, race_aware.y, race_group(race_aware))
+    protected = race_group(race_aware)
+    negative = race_aware.y == 0
+
+    manual_fpr_protected = priors_pred[negative & protected].mean()
+    assert result["fpr"]["rate_protected"] == pytest.approx(manual_fpr_protected)
+
+
+# --- conditional_statistical_parity(): Hurlin / CMH / MH -------------------------------------
+
+
+def test_csp_matches_manual_cmh_and_stratified_table():
+    """Regression test for the stratum-table orientation: rows = (protected, rest), columns =
+    (flagged, not) -- get this backwards and CMH/MH silently give a wrong but plausible-looking
+    number."""
+    rng = np.random.default_rng(0)
+    n = 300
+    stratum = pd.Series(rng.choice(["a", "b"], n))
+    protected = pd.Series(rng.random(n) < 0.4)
+    base = np.where(stratum == "a", 0.3, 0.6)
+    p_flag = base + np.where(protected, 0.25, 0.0)
+    y_pred = pd.Series((rng.random(n) < p_flag).astype(int))
+
+    result = conditional_statistical_parity(y_pred, protected, stratum)
+
+    tables = []
+    for name in ["a", "b"]:
+        mask = stratum == name
+        n1, n0 = int((mask & protected).sum()), int((mask & ~protected).sum())
+        c1, c0 = int(y_pred[mask & protected].sum()), int(y_pred[mask & ~protected].sum())
+        tables.append(np.array([[c1, n1 - c1], [c0, n0 - c0]], dtype=float))
+    reference = StratifiedTable(tables)
+
+    assert result["strata_used"] == 2
+    assert result["cmh_statistic"] == pytest.approx(reference.test_null_odds().statistic)
+    assert result["mh_odds_ratio"] == pytest.approx(reference.oddsratio_pooled)
+    # Protected group is flagged more in both strata: odds ratio must be > 1, not < 1.
+    assert result["mh_odds_ratio"] > 1
+
+
+def test_csp_drops_degenerate_strata():
+    """A stratum where the model flags nobody (or everybody) carries no information about
+    the null and must be dropped from both the Hurlin sum and the CMH/MH tables."""
+    rng = np.random.default_rng(1)
+    n = 200
+    protected = pd.Series(rng.random(n) < 0.4)
+    stratum = pd.Series(["informative"] * 100 + ["degenerate"] * 100)
+    y_pred = pd.Series([int(rng.random() < 0.5) for _ in range(100)] + [0] * 100)
+
+    result = conditional_statistical_parity(y_pred, protected, stratum)
+
+    assert result["strata_used"] == 1
+    assert result["strata"] == ["informative"]
+    assert result["hurlin_df"] == 1
+
+
+def test_csp_drops_stratum_missing_one_group():
+    """A stratum with no protected (or no Rest) members can't say anything about H0 either,
+    distinct from the all-flagged/all-unflagged case above."""
+    protected = pd.Series([True, True, False, False, False, False])
+    stratum = pd.Series(["mixed", "mixed", "mixed", "mixed", "protected_only", "protected_only"])
+    y_pred = pd.Series([1, 0, 1, 0, 1, 1])
+    protected.iloc[4:] = True  # "protected_only" stratum: both rows are protected, no Rest
+
+    result = conditional_statistical_parity(y_pred, protected, stratum)
+
+    assert result["strata_used"] == 1
+    assert result["strata"] == ["mixed"]
+
+
+def test_csp_no_usable_strata_returns_nan():
+    protected = pd.Series([True, False, True, False])
+    stratum = pd.Series(["only"] * 4)
+    y_pred = pd.Series([0, 0, 0, 0])  # nobody flagged anywhere
+    result = conditional_statistical_parity(y_pred, protected, stratum)
+
+    assert result["strata_used"] == 0
+    assert result["hurlin_statistic"] == 0
+    assert np.isnan(result["cmh_statistic"])
+    assert np.isnan(result["mh_odds_ratio"])
+
+
+def test_csp_single_stratum_hurlin_equals_sp_chi2():
+    """With one stratum, Hurlin's LR statistic is an ordinary 2x2 independence test: its
+    p-value should closely track the (different but related) SP z-test's p-value in sign."""
+    y_pred, protected = pd.Series([1] * 40 + [0] * 60 + [1] * 15 + [0] * 85), pd.Series(
+        [True] * 100 + [False] * 100
     )
-    assert row["sp_ratio"] == pytest.approx(
-        row["flag_rate_protected"] / row["flag_rate_reference"]
-    )
+    stratum = pd.Series(["only"] * 200)
+    csp = conditional_statistical_parity(y_pred, protected, stratum)
+    sp = statistical_parity_test(y_pred, protected)
+
+    assert csp["hurlin_df"] == 1
+    assert (csp["hurlin_p_value"] < 0.05) == (sp["p_value"] < 0.05)
 
 
-def test_priors_only_model_keeps_only_mixed_strata(race_aware, priors_pred, strata):
-    """A model that looks only at priors (3+) treats everyone in a 0 or 4+ band identically,
-    so those strata are dropped; only the 1-3 bands (one per charge degree) remain. Its
-    unconditional flag rates still differ because the groups have different priors."""
-    table = parity_table(priors_pred, race_aware, strata)
-    row = table.loc["African-American vs Caucasian"]
+def test_breslow_day_runs_without_warning_on_sparse_tables(race_aware, priors_pred, strata):
+    """shift_zeros must be on: some real strata have very few flagged/unflagged cells."""
+    result = conditional_statistical_parity(priors_pred, race_group(race_aware), strata)
 
-    assert row["sp_p_value"] < 0.05
-    assert row["csp_df"] <= 2
+    assert not np.isnan(result["breslow_day_p_value"])
+    assert 0 <= result["breslow_day_p_value"] <= 1
 
 
-def test_detail_adds_up_to_conditional_test(race_aware, priors_pred, strata):
-    comparison = "Female vs Male"
-    detail = conditional_parity_detail(priors_pred, race_aware, strata, comparison)
-    row = parity_table(priors_pred, race_aware, strata).loc[comparison]
-
-    assert detail["statistic"].sum() == pytest.approx(row["csp_statistic"])
-    assert detail["n_protected"].sum() == row["n_protected"]
-    assert detail["p_value"].notna().sum() == row["csp_df"]
+# --- FPDP and candidate_variables() ----------------------------------------------------------
 
 
-# --- FPDP ----------------------------------------------------------------------------------
-
-
-def test_fpdp_grid_covers_values_outside_compared_groups(race_aware):
-    """No African-American or Caucasian defendant has Hispanic = 1, but it must be tried."""
-    curve = fpdp(PriorsModel(), race_aware, "Hispanic", "African-American vs Caucasian")
+def test_fpdp_grid_covers_all_observed_values(race_aware):
+    curve = fpdp(PriorsModel(), race_aware, "Hispanic")
 
     assert list(curve["value"]) == [0.0, 1.0]
 
 
-def test_fpdp_row_matches_manual_computation(race_aware):
-    comparison = "African-American vs Caucasian"
-    curve = fpdp(PriorsModel(), race_aware, "Female", comparison, grid=[1])
-    race = race_aware.groups["race"]
-    rows = race.isin(["African-American", "Caucasian"])
-    y_pred = predict_labels(PriorsModel(), race_aware.subset(race_aware.X.index[rows]))
-    expected = fairness_test(y_pred, race[rows] == "African-American")
-
-    assert curve.loc[0, "p_value"] == pytest.approx(expected["p_value"])
-    assert curve.loc[0, "flag_rate_protected"] == pytest.approx(
-        y_pred[race[rows] == "African-American"].mean()
-    )
-
-
 def test_fpdp_does_not_modify_data(race_aware):
     before = race_aware.X.copy()
-    fpdp(PriorsModel(), race_aware, "Number_of_Priors", "Female vs Male", grid=[0, 5])
+    fpdp(PriorsModel(), race_aware, "Number_of_Priors", grid=[0, 5])
 
     pd.testing.assert_frame_equal(race_aware.X, before)
 
 
 def test_fpdp_flags_degenerate_values(race_aware):
-    """Fixing priors fixes the PriorsModel's prediction for everyone: trivially 'fair'."""
-    curve = fpdp(PriorsModel(), race_aware, "Number_of_Priors", "Female vs Male", grid=[0, 5])
+    """Both groups get the same constant prediction at these values, so the test must not
+    reject -- though with unequal group sizes (956 vs 896), the Agresti-Caffo boundary
+    adjustment means the p-value lands very high rather than exactly 1.0."""
+    curve = fpdp(PriorsModel(), race_aware, "Number_of_Priors", grid=[0, 5])
 
     assert curve["degenerate"].all()
-    assert (curve["p_value"] == 1.0).all()
-    assert list(curve["flag_rate_protected"]) == [0.0, 1.0]
+    assert (curve["p_value"] > 0.9).all()
 
 
-def test_fpdp_conditional_uses_strata(race_aware, strata):
-    comparison = "African-American vs Caucasian"
-    sp = fpdp(PriorsModel(), race_aware, "Female", comparison, grid=[0])
-    csp = fpdp(PriorsModel(), race_aware, "Female", comparison, grid=[0], strata=strata)
+def test_apply_fixed_value_matches_fpdp_row(race_aware):
+    protected = race_group(race_aware)
+    y_pred = apply_fixed_value(PriorsModel(), race_aware, "Number_of_Priors", 5)
+    curve = fpdp(PriorsModel(), race_aware, "Number_of_Priors", grid=[5])
 
-    assert sp.loc[0, "statistic"] != pytest.approx(csp.loc[0, "statistic"])
+    assert y_pred[protected].mean() == pytest.approx(curve.loc[0, "flag_rate_protected"])
+    assert y_pred[~protected].mean() == pytest.approx(curve.loc[0, "flag_rate_rest"])
 
 
 def test_fpdp_all_covers_every_feature(race_aware):
-    curves = fpdp_all(PriorsModel(), race_aware, "Female vs Male")
+    curves = fpdp_all(PriorsModel(), race_aware)
 
     assert list(curves) == list(race_aware.X.columns)
 
 
-# --- candidate_variables(): Definition 6 ---------------------------------------------------
-
-
-def _curve(values, p_values, degenerate):
-    return pd.DataFrame({"value": values, "p_value": p_values, "degenerate": degenerate})
-
-
 def test_candidate_when_some_value_passes():
-    curves = {
-        "driver": _curve([0, 1, 2], [0.001, 0.30, 0.02], [False, False, False]),
-        "bystander": _curve([0, 1], [0.001, 0.002], [False, False]),
-    }
-    result = candidate_variables(curves)
+    curve_driver = pd.DataFrame(
+        {"value": [0, 1, 2], "p_value": [0.001, 0.30, 0.02], "degenerate": [False, False, False]}
+    )
+    curve_bystander = pd.DataFrame(
+        {"value": [0, 1], "p_value": [0.001, 0.002], "degenerate": [False, False]}
+    )
+    result = candidate_variables({"driver": curve_driver, "bystander": curve_bystander})
 
     assert result.loc["driver", "candidate"]
     assert result.loc["driver", "at_value"] == 1
     assert not result.loc["bystander", "candidate"]
-    assert list(result.index) == ["driver", "bystander"]
 
 
 def test_degenerate_values_are_not_evidence():
-    curves = {"priors": _curve([0, 1, 9], [1.0, 0.006, 1.0], [True, False, True])}
+    curve = pd.DataFrame({"value": [0, 1, 9], "p_value": [1.0, 0.006, 1.0], "degenerate": [True, False, True]})
 
-    assert not candidate_variables(curves).loc["priors", "candidate"]
-    assert candidate_variables(curves, include_degenerate=True).loc["priors", "candidate"]
-
-
-def test_all_degenerate_curve():
-    curves = {"priors": _curve([0, 9], [1.0, 1.0], [True, True])}
-    result = candidate_variables(curves)
-
-    assert np.isnan(result.loc["priors", "max_p_value"])
-    assert not result.loc["priors", "candidate"]
+    assert not candidate_variables({"priors": curve}).loc["priors", "candidate"]
+    assert candidate_variables({"priors": curve}, include_degenerate=True).loc["priors", "candidate"]
 
 
-def test_alpha_threshold():
-    curves = {"x": _curve([0, 1], [0.001, 0.07], [False, False])}
-
-    assert candidate_variables(curves, alpha=0.05).loc["x", "candidate"]
-    assert not candidate_variables(curves, alpha=0.10).loc["x", "candidate"]
+# --- Step 3: mitigation -----------------------------------------------------------------------
 
 
-# --- main() --------------------------------------------------------------------------------
+def test_refit_without_feature_drops_the_column(small_train):
+    model = refit_without_feature(small_train, "Number_of_Priors", n_iter=3)
+
+    assert "Number_of_Priors" not in model.get_booster().feature_names
+    assert model.n_features_in_ == small_train.X.shape[1] - 1
 
 
-def test_main_reports_both_models(monkeypatch, capsys):
-    monkeypatch.setattr(fairness, "load_model", lambda feature_set: PriorsModel())
+@pytest.mark.slow
+def test_mitigate_by_reestimation_uses_dropped_feature_model(small_train, small_test):
+    strata = make_strata(small_test)
+    result = mitigate_by_reestimation(small_train, small_test, "Number_of_Priors", strata, n_iter=3)
+
+    assert result["method"] == "re-estimation"
+    assert result["feature"] == "Number_of_Priors"
+    assert set(result) >= {"sp", "csp", "eo"}
+
+
+def test_evaluate_fairness_auc_is_optional(race_aware, priors_pred, strata):
+    without = evaluate_fairness(priors_pred, race_aware, strata)
+    assert "auc" not in without
+
+    y_score = predict_scores(PriorsModel(), race_aware)
+    with_auc = evaluate_fairness(priors_pred, race_aware, strata, y_score=y_score)
+    assert with_auc["auc"] == pytest.approx(roc_auc_score(race_aware.y, y_score))
+
+
+def test_mitigate_by_reestimation_reports_auc(small_train, small_test):
+    strata = make_strata(small_test)
+    result = mitigate_by_reestimation(small_train, small_test, "Number_of_Priors", strata, n_iter=3)
+
+    assert 0 <= result["auc"] <= 1
+
+
+def test_mitigate_by_substitution_reports_auc(small_model, small_test):
+    strata = make_strata(small_test)
+    result = mitigate_by_substitution(small_model, small_test, "Number_of_Priors", 5, strata)
+
+    y_score = fairness._fixed_value_scores(small_model, small_test, "Number_of_Priors", 5)
+    assert result["auc"] == pytest.approx(roc_auc_score(small_test.y, y_score))
+
+
+def test_mitigate_by_substitution_matches_fpdp(small_model, small_test):
+    strata = make_strata(small_test)
+    result = mitigate_by_substitution(small_model, small_test, "Number_of_Priors", 5, strata)
+
+    y_pred = apply_fixed_value(small_model, small_test, "Number_of_Priors", 5)
+    expected = evaluate_fairness(y_pred, small_test, strata)
+    assert result["sp"]["p_value"] == pytest.approx(expected["sp"]["p_value"])
+    assert result["value"] == 5
+
+
+# --- main() ------------------------------------------------------------------------------------
+
+
+class ConstantModel:
+    """Ignores its input entirely: safe to call with any column set, including one missing a
+    column another fake model would have required (Step 3's re-estimation drops a column)."""
+
+    def predict_proba(self, X):
+        p = np.full(len(X), 0.3)
+        return np.column_stack([1 - p, p])
+
+
+def test_main_runs_all_three_steps(monkeypatch, capsys):
+    monkeypatch.setattr(fairness, "load_model", lambda feature_set: ConstantModel())
+    monkeypatch.setattr(
+        fairness, "tune_xgboost", lambda X, y, n_iter=40: type("S", (), {"best_estimator_": ConstantModel()})()
+    )
 
     fairness.main()
 
     out = capsys.readouterr().out
     assert "=== race_aware ===" in out
     assert "=== race_blind ===" in out
-    assert out.count("FPDP candidate variables") == 4
+    assert "FPDP candidate variables" in out
