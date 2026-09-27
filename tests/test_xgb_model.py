@@ -7,11 +7,8 @@ from types import SimpleNamespace
 
 import numpy as np
 import pytest
-from sklearn.metrics import roc_auc_score
-
 import xgb_model
-from compas_scoring.config import CONFIG
-from compas_scoring.data import build_dataset
+from sklearn.metrics import roc_auc_score
 from xgb_model import (
     SEARCH_SPACE,
     load_data,
@@ -21,6 +18,9 @@ from xgb_model import (
     save_model,
     tune_xgboost,
 )
+
+from compas_scoring.config import CONFIG
+from compas_scoring.data import build_dataset
 
 META_KEYS = {
     "feature_set",

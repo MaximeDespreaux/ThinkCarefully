@@ -3,9 +3,8 @@
 from __future__ import annotations
 
 import pytest
-from sklearn.metrics import accuracy_score, roc_auc_score
-
 from race_proxy import FEATURE_VARIANTS, evaluate_proxy, fit_proxy, race_proxy_table, race_target
+from sklearn.metrics import accuracy_score, roc_auc_score
 
 
 def test_race_target_matches_group_label(small_test):

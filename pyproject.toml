@@ -53,6 +53,8 @@ packages = ["src/compas_scoring"]
 [tool.ruff]
 line-length = 100
 target-version = "py313"
+# Notebooks are exploration logs with saved outputs; lint the scripts they call instead.
+extend-exclude = ["*.ipynb"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP"]

@@ -66,12 +66,12 @@ tabpfn-analysis: ## TabPFN: every numbered analysis test, T01 -> last (~3-4 h fr
 	done
 
 lint: ## Check formatting and lint rules
-	$(RUN) ruff check src scripts tests
-	$(RUN) ruff format --check src scripts tests
+	$(RUN) ruff check src scripts tests logreg xgboost tabpfn
+	$(RUN) ruff format --check src scripts tests logreg xgboost tabpfn
 
 format: ## Auto-fix formatting and lint rules
-	$(RUN) ruff check --fix src scripts tests
-	$(RUN) ruff format src scripts tests
+	$(RUN) ruff check --fix src scripts tests logreg xgboost tabpfn
+	$(RUN) ruff format src scripts tests logreg xgboost tabpfn
 
 test: ## Run the test suite
 	$(RUN) pytest

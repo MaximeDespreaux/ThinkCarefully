@@ -2,16 +2,10 @@
 
 from __future__ import annotations
 
+import fairness
 import numpy as np
 import pandas as pd
 import pytest
-from sklearn.metrics import roc_auc_score
-from statsmodels.stats.contingency_tables import StratifiedTable
-# Aliased: a bare `test_proportions_2indep` import would be collected by pytest as a test.
-from statsmodels.stats.proportion import confint_proportions_2indep
-from statsmodels.stats.proportion import test_proportions_2indep as sm_two_proportion_test
-
-import fairness
 from fairness import (
     PROTECTED_GROUP,
     apply_fixed_value,
@@ -31,6 +25,12 @@ from fairness import (
     refit_without_feature,
     statistical_parity_test,
 )
+from sklearn.metrics import roc_auc_score
+from statsmodels.stats.contingency_tables import StratifiedTable
+
+# Aliased: a bare `test_proportions_2indep` import would be collected by pytest as a test.
+from statsmodels.stats.proportion import confint_proportions_2indep
+from statsmodels.stats.proportion import test_proportions_2indep as sm_two_proportion_test
 
 
 class PriorsModel:
@@ -215,8 +215,9 @@ def test_csp_no_usable_strata_returns_nan():
 def test_csp_single_stratum_hurlin_equals_sp_chi2():
     """With one stratum, Hurlin's LR statistic is an ordinary 2x2 independence test: its
     p-value should closely track the (different but related) SP z-test's p-value in sign."""
-    y_pred, protected = pd.Series([1] * 40 + [0] * 60 + [1] * 15 + [0] * 85), pd.Series(
-        [True] * 100 + [False] * 100
+    y_pred, protected = (
+        pd.Series([1] * 40 + [0] * 60 + [1] * 15 + [0] * 85),
+        pd.Series([True] * 100 + [False] * 100),
     )
     stratum = pd.Series(["only"] * 200)
     csp = conditional_statistical_parity(y_pred, protected, stratum)
@@ -290,10 +291,14 @@ def test_candidate_when_some_value_passes():
 
 
 def test_degenerate_values_are_not_evidence():
-    curve = pd.DataFrame({"value": [0, 1, 9], "p_value": [1.0, 0.006, 1.0], "degenerate": [True, False, True]})
+    curve = pd.DataFrame(
+        {"value": [0, 1, 9], "p_value": [1.0, 0.006, 1.0], "degenerate": [True, False, True]}
+    )
 
     assert not candidate_variables({"priors": curve}).loc["priors", "candidate"]
-    assert candidate_variables({"priors": curve}, include_degenerate=True).loc["priors", "candidate"]
+    assert candidate_variables({"priors": curve}, include_degenerate=True).loc[
+        "priors", "candidate"
+    ]
 
 
 # --- Step 3: mitigation -----------------------------------------------------------------------
@@ -365,7 +370,9 @@ class ConstantModel:
 def test_main_runs_all_three_steps(monkeypatch, capsys):
     monkeypatch.setattr(fairness, "load_model", lambda feature_set: ConstantModel())
     monkeypatch.setattr(
-        fairness, "tune_xgboost", lambda X, y, n_iter=40: type("S", (), {"best_estimator_": ConstantModel()})()
+        fairness,
+        "tune_xgboost",
+        lambda X, y, n_iter=40: type("S", (), {"best_estimator_": ConstantModel()})(),
     )
 
     fairness.main()

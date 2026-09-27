@@ -35,11 +35,11 @@ from sklearn.metrics import (
     roc_auc_score,
 )
 from sklearn.model_selection import train_test_split
-from xgboost import XGBClassifier
+from xgb_model import load_metadata
 
 from compas_scoring.config import CONFIG
 from compas_scoring.data import Dataset, build_dataset
-from xgb_model import load_metadata
+from xgboost import XGBClassifier
 
 
 def _fit_xgb(train: Dataset, feature_set: str = "race_aware") -> XGBClassifier:

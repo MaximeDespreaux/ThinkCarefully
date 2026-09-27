@@ -4,10 +4,8 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
-import pytest
-from sklearn.metrics import roc_auc_score
-
 import performance
+import pytest
 from performance import (
     calculate_xper,
     load_xper,
@@ -16,6 +14,7 @@ from performance import (
     xper_paths,
     xper_sample,
 )
+from sklearn.metrics import roc_auc_score
 
 # XPER's AUC cost grows ~N^2-N^3 in rows and linearly in coalitions, so the real-XPER tests
 # stay tiny: they check wiring and the decomposition, not the real values.

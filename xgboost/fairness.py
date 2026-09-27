@@ -40,9 +40,9 @@ from scipy.stats import chi2
 from sklearn.metrics import roc_auc_score
 from statsmodels.stats.contingency_tables import StratifiedTable
 from statsmodels.stats.proportion import confint_proportions_2indep, test_proportions_2indep
+from xgb_model import load_data, load_model, tune_xgboost
 
 from compas_scoring.data import Dataset
-from xgb_model import load_data, load_model, tune_xgboost
 
 PROTECTED_GROUP = "African-American"
 PRIORS_BANDS = {"0": (-np.inf, 0), "1-3": (0, 3), "4+": (3, np.inf)}
@@ -77,7 +77,11 @@ def group_rates(y_pred: pd.Series, data: Dataset) -> pd.DataFrame:
     """Size, flag rate and actual re-offence rate of African-American defendants vs the rest."""
     protected = race_group(data)
     frame = pd.DataFrame(
-        {"group": protected.map({True: PROTECTED_GROUP, False: "Rest"}), "y_pred": y_pred, "y_true": data.y}
+        {
+            "group": protected.map({True: PROTECTED_GROUP, False: "Rest"}),
+            "y_pred": y_pred,
+            "y_true": data.y,
+        }
     )
     return (
         frame.groupby("group")
@@ -89,7 +93,9 @@ def group_rates(y_pred: pd.Series, data: Dataset) -> pd.DataFrame:
 def _two_proportion_test(count1: int, n1: int, count0: int, n0: int, alpha: float) -> dict:
     """z-test (Agresti-Caffo) and 95% CI for the difference of two independent proportions."""
     result = test_proportions_2indep(count1, n1, count0, n0, compare="diff")
-    ci_low, ci_high = confint_proportions_2indep(count1, n1, count0, n0, compare="diff", alpha=alpha)
+    ci_low, ci_high = confint_proportions_2indep(
+        count1, n1, count0, n0, compare="diff", alpha=alpha
+    )
     return {
         "n_protected": n1,
         "n_rest": n0,
@@ -111,7 +117,9 @@ def statistical_parity_test(y_pred: pd.Series, protected: pd.Series, alpha: floa
     return _two_proportion_test(count1, n1, count0, n0, alpha)
 
 
-def equalized_odds_test(y_pred: pd.Series, y_true: pd.Series, protected: pd.Series, alpha: float = 0.05) -> dict:
+def equalized_odds_test(
+    y_pred: pd.Series, y_true: pd.Series, protected: pd.Series, alpha: float = 0.05
+) -> dict:
     """Two independent z-tests of H0: Y_hat ⊥ D | Y: one on the false-positive-rate gap (among
     defendants who did not re-offend), one on the false-negative-rate gap (among those who did).
     """
@@ -130,7 +138,9 @@ def equalized_odds_test(y_pred: pd.Series, y_true: pd.Series, protected: pd.Seri
     }
 
 
-def _stratum_tables(y_pred: pd.Series, protected: pd.Series, strata: pd.Series) -> tuple[list, list]:
+def _stratum_tables(
+    y_pred: pd.Series, protected: pd.Series, strata: pd.Series
+) -> tuple[list, list]:
     """One 2x2 table per usable stratum: rows = (protected, rest), columns = (flagged, not).
 
     A stratum is dropped if the model gives everyone in it the same prediction, or if it has
@@ -142,7 +152,10 @@ def _stratum_tables(y_pred: pd.Series, protected: pd.Series, strata: pd.Series) 
         n1, n0 = int(part["protected"].sum()), int((~part["protected"]).sum())
         if n1 == 0 or n0 == 0:
             continue
-        c1, c0 = int(part.loc[part["protected"], "y_pred"].sum()), int(part.loc[~part["protected"], "y_pred"].sum())
+        c1, c0 = (
+            int(part.loc[part["protected"], "y_pred"].sum()),
+            int(part.loc[~part["protected"], "y_pred"].sum()),
+        )
         table = np.array([[c1, n1 - c1], [c0, n0 - c0]], dtype=float)
         if (table.sum(axis=0) == 0).any():  # nobody flagged, or everybody flagged, in this stratum
             continue
@@ -171,11 +184,20 @@ def conditional_statistical_parity(
     Breslow-Day statistic checks the common-odds-ratio assumption CMH/MH rely on."""
     tables, used = _stratum_tables(y_pred, protected, strata)
     hurlin = _hurlin_lr_statistic(tables)
-    result = {"strata_used": len(tables), "strata": used, **{f"hurlin_{k}": v for k, v in hurlin.items()}}
+    result = {
+        "strata_used": len(tables),
+        "strata": used,
+        **{f"hurlin_{k}": v for k, v in hurlin.items()},
+    }
     if not tables:
         result.update(
-            cmh_statistic=np.nan, cmh_p_value=np.nan, mh_odds_ratio=np.nan,
-            mh_ci_low=np.nan, mh_ci_high=np.nan, breslow_day_statistic=np.nan, breslow_day_p_value=np.nan,
+            cmh_statistic=np.nan,
+            cmh_p_value=np.nan,
+            mh_odds_ratio=np.nan,
+            mh_ci_low=np.nan,
+            mh_ci_high=np.nan,
+            breslow_day_statistic=np.nan,
+            breslow_day_p_value=np.nan,
         )
         return result
 
@@ -198,7 +220,11 @@ def conditional_statistical_parity(
 
 
 def evaluate_fairness(
-    y_pred: pd.Series, data: Dataset, strata: pd.Series, alpha: float = 0.05, y_score: np.ndarray | None = None
+    y_pred: pd.Series,
+    data: Dataset,
+    strata: pd.Series,
+    alpha: float = 0.05,
+    y_score: np.ndarray | None = None,
 ) -> dict:
     """SP, CSP and EO bundled into one result, for baseline/mitigation comparisons. Pass
     `y_score` (predicted probabilities) to also report the recidivism-prediction AUC alongside
@@ -223,7 +249,9 @@ def _fixed_value_scores(model, data: Dataset, feature: str, value) -> np.ndarray
     return model.predict_proba(X_fixed)[:, 1]
 
 
-def apply_fixed_value(model, data: Dataset, feature: str, value, threshold: float = 0.5) -> pd.Series:
+def apply_fixed_value(
+    model, data: Dataset, feature: str, value, threshold: float = 0.5
+) -> pd.Series:
     """Predictions with `feature` set to `value` for every defendant (paper, Definitions 5-6)."""
     y_score = _fixed_value_scores(model, data, feature, value)
     return pd.Series((y_score >= threshold).astype(int), index=data.X.index, name="y_pred")
@@ -294,7 +322,12 @@ def refit_without_feature(train: Dataset, feature: str, n_iter: int = 40):
 
 
 def mitigate_by_reestimation(
-    train: Dataset, test: Dataset, feature: str, strata: pd.Series, threshold: float = 0.5, n_iter: int = 40
+    train: Dataset,
+    test: Dataset,
+    feature: str,
+    strata: pd.Series,
+    threshold: float = 0.5,
+    n_iter: int = 40,
 ) -> dict:
     """Retrain without `feature`, then re-run every fairness test on the held-out test set."""
     model = refit_without_feature(train, feature, n_iter=n_iter)
@@ -332,9 +365,11 @@ def _print_fairness(label: str, result: dict) -> None:
         f" z={sp['z_statistic']:.2f}, p={sp['p_value']:.4f}"
     )
     print(
-        f"  CSP: Hurlin chi2({csp['hurlin_df']})={csp['hurlin_statistic']:.2f} p={csp['hurlin_p_value']:.4f} | "
+        f"  CSP: Hurlin chi2({csp['hurlin_df']})={csp['hurlin_statistic']:.2f} "
+        f"p={csp['hurlin_p_value']:.4f} | "
         f"CMH chi2(1)={csp['cmh_statistic']:.2f} p={csp['cmh_p_value']:.4f} | "
-        f"MH odds ratio={csp['mh_odds_ratio']:.2f} [{csp['mh_ci_low']:.2f}, {csp['mh_ci_high']:.2f}] | "
+        f"MH odds ratio={csp['mh_odds_ratio']:.2f} "
+        f"[{csp['mh_ci_low']:.2f}, {csp['mh_ci_high']:.2f}] | "
         f"Breslow-Day p={csp['breslow_day_p_value']:.4f}"
     )
     print(
@@ -353,10 +388,16 @@ def main() -> None:
         y_pred = predict_labels(model, test)
         strata = make_strata(test)
         loaded[feature_set] = {
-            "train": train, "test": test, "model": model,
-            "y_score": y_score, "y_pred": y_pred, "strata": strata,
+            "train": train,
+            "test": test,
+            "model": model,
+            "y_score": y_score,
+            "y_pred": y_pred,
+            "strata": strata,
         }
-        _print_fairness(f"=== {feature_set} ===", evaluate_fairness(y_pred, test, strata, y_score=y_score))
+        _print_fairness(
+            f"=== {feature_set} ===", evaluate_fairness(y_pred, test, strata, y_score=y_score)
+        )
 
     # Step 2: if so, which features are driving it? (race_aware only, per FPDP scope choice)
     primary = loaded["race_aware"]
@@ -379,7 +420,9 @@ def main() -> None:
 
     for feature, row in to_mitigate.iterrows():
         print(f"\n--- mitigating {feature} ---")
-        re_est = mitigate_by_reestimation(primary["train"], primary["test"], feature, primary["strata"])
+        re_est = mitigate_by_reestimation(
+            primary["train"], primary["test"], feature, primary["strata"]
+        )
         _print_fairness(f"re-estimation (drop {feature})", re_est)
         sub = mitigate_by_substitution(
             primary["model"], primary["test"], feature, row["at_value"], primary["strata"]

@@ -7,9 +7,8 @@ import warnings
 import numpy as np
 import pandas as pd
 import pytest
-from sklearn.metrics import balanced_accuracy_score, roc_auc_score
-
 from performance import confusion, performance, performance_table, roc_data, scores
+from sklearn.metrics import balanced_accuracy_score, roc_auc_score
 
 METRICS = ["auc", "accuracy", "precision", "recall", "f1", "brier"]
 
