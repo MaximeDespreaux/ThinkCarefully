@@ -1,5 +1,5 @@
 # Data is distributed separately, not committed
-data
+# data
 
 # uv-managed environment (uv.lock IS committed -- it is the reproducibility deliverable)
 .venv/
