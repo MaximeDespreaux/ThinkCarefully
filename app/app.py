@@ -13,11 +13,11 @@ st.set_page_config(page_title="COMPAS model comparison", page_icon="⚖️", lay
 
 pages = st.navigation(
     [
-        st.Page("pages/overview.py", title="Overview", icon="🏠", default=True),
-        st.Page("pages/performance.py", title="Performance", icon="🎯"),
-        st.Page("pages/interpretability.py", title="Interpretability", icon="🔍"),
-        st.Page("pages/stability.py", title="Stability", icon="📐"),
-        st.Page("pages/fairness.py", title="Fairness", icon="⚖️"),
+        st.Page("pages/overview.py", title="Overview", default=True),
+        st.Page("pages/performance.py", title="Performance"),
+        st.Page("pages/interpretability.py", title="Interpretability"),
+        st.Page("pages/stability.py", title="Stability"),
+        st.Page("pages/fairness.py", title="Fairness"),
     ]
 )
 with st.sidebar:
